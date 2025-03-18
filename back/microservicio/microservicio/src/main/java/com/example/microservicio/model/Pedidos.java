@@ -25,7 +25,10 @@ public class Pedidos {
     private Date fechaPedido;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PedidosProductos> productos;
+    private List<ProductosPedidos> productos;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Devoluciones> devoluciones;
 
     // Getters y Setters
     public Long getId_pedido() {
@@ -52,11 +55,19 @@ public class Pedidos {
         this.fechaPedido = fechaPedido;
     }
 
-    public List<PedidosProductos> getProductos() {
+    public List<ProductosPedidos> getProductos() {
         return productos;
     }
 
-    public void setProductos(List<PedidosProductos> productos) {
+    public void setProductos(List<ProductosPedidos> productos) {
         this.productos = productos;
+    }
+
+    public List<Devoluciones> getDevoluciones() {
+        return devoluciones;
+    }
+
+    public void setDevoluciones(List<Devoluciones> devoluciones) {
+        this.devoluciones = devoluciones;
     }
 }

@@ -43,7 +43,10 @@ public class Productos {
     private List<Carrito> carrito = new ArrayList<>();
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PedidosProductos> pedidos;
+    private List<ProductosDevoluciones> pedidos;
+
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductosDevoluciones> devoluciones;
 
     // Getters and Setters
     public Long getId_producto() {
@@ -118,11 +121,19 @@ public class Productos {
         this.carrito = carrito;
     }
 
-    public List<PedidosProductos> getPedidos() {
+    public List<ProductosDevoluciones> getPedidos() {
         return pedidos;
     }
 
-    public void setPedidos(List<PedidosProductos> pedidos) {
+    public void setPedidos(List<ProductosDevoluciones> pedidos) {
         this.pedidos = pedidos;
+    }
+
+    public List<ProductosDevoluciones> getDevoluciones() {
+        return devoluciones;
+    }
+
+    public void setDevoluciones(List<ProductosDevoluciones> devoluciones) {
+        this.devoluciones = devoluciones;
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 // Establezco la URL base de la API
-@RequestMapping("/hermes")
+@RequestMapping("/aracne")
 public class ApplicationController {
 
 }

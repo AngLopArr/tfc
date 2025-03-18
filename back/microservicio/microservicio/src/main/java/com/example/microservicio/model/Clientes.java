@@ -31,11 +31,17 @@ public class Clientes {
 
     private String password;
 
+    @Column(length = 2048)
+    private String image;
+
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Carrito> carrito = new ArrayList<>();
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedidos> pedidos;
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Devoluciones> devoluciones;
 
     public Long getId_cliente() {
         return id_cliente;
@@ -91,5 +97,21 @@ public class Clientes {
 
     public void setPedidos(List<Pedidos> pedidos) {
         this.pedidos = pedidos;
+    }
+
+    public List<Devoluciones> getDevoluciones() {
+        return devoluciones;
+    }
+
+    public void setDevoluciones(List<Devoluciones> devoluciones) {
+        this.devoluciones = devoluciones;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
