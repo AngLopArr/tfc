@@ -14,7 +14,7 @@ public class ProductosService {
     ProductosRepository productosRepository;
 
     public ArrayList<Productos> getAllProducts(){
-        return (ArrayList) productosRepository.findAll();
+        return (ArrayList<Productos>) productosRepository.findAll();
     }
 
     public boolean createProduct(Productos producto){
@@ -74,3 +74,47 @@ public class ProductosService {
         }
     }
 }
+
+/*
+DELIMITER //
+
+CREATE PROCEDURE EliminarProductosViejosDelCarrito()
+BEGIN
+    DECLARE productoId INT;
+    DECLARE cantidad INT;
+
+    -- Cursor para obtener los productos del carrito que han estado por más de 24 horas
+    DECLARE carrito_cursor CURSOR FOR 
+        SELECT id_producto, cantidad FROM carrito WHERE TIMESTAMPDIFF(HOUR, fecha_agregado, NOW()) >= 24;
+
+    -- Abrir el cursor
+    OPEN carrito_cursor;
+
+    -- Obtener el primer registro
+    FETCH carrito_cursor INTO productoId, cantidad;
+
+    -- Recorrer todos los productos en el carrito
+    WHILE DONE = 0 DO
+        -- Actualizar el stock del producto
+        UPDATE productos
+        SET stock = stock + cantidad
+        WHERE id_producto = productoId;
+
+        -- Obtener el siguiente producto
+        FETCH carrito_cursor INTO productoId, cantidad;
+    END WHILE;
+
+    -- Cerrar el cursor
+    CLOSE carrito_cursor;
+
+    -- Eliminar los productos del carrito
+    DELETE FROM carrito WHERE TIMESTAMPDIFF(HOUR, fecha_agregado, NOW()) >= 24;
+END;
+//
+
+DELIMITER ;
+
+CREATE EVENT IF NOT EXISTS eliminar_productos_viejos
+ON SCHEDULE EVERY 1 DAY
+DO CALL EliminarProductosViejosDelCarrito();
+ */

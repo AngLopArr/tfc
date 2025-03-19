@@ -35,7 +35,7 @@ public class Clientes {
     private String image;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Carrito> carrito = new ArrayList<>();
+    private List<ProductosCarrito> carrito = new ArrayList<>();
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedidos> pedidos;
@@ -83,11 +83,11 @@ public class Clientes {
         this.password = password;
     }
 
-    public List<Carrito> getCarrito() {
+    public List<ProductosCarrito> getCarrito() {
         return carrito;
     }
 
-    public void setCarrito(List<Carrito> carrito) {
+    public void setCarrito(List<ProductosCarrito> carrito) {
         this.carrito = carrito;
     }
 

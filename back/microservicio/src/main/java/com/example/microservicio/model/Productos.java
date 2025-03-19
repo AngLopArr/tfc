@@ -40,7 +40,7 @@ public class Productos {
     private String image;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Carrito> carrito = new ArrayList<>();
+    private List<ProductosCarrito> carritos = new ArrayList<>();
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductosDevoluciones> pedidos;
@@ -113,12 +113,12 @@ public class Productos {
         this.image = image;
     }
 
-    public List<Carrito> getCarrito() {
-        return carrito;
+    public List<ProductosCarrito> getCarritos() {
+        return carritos;
     }
 
-    public void setCarrito(List<Carrito> carrito) {
-        this.carrito = carrito;
+    public void setCarritos(List<ProductosCarrito> carritos) {
+        this.carritos = carritos;
     }
 
     public List<ProductosDevoluciones> getPedidos() {

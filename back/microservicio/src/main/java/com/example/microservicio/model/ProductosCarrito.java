@@ -1,6 +1,6 @@
 package com.example.microservicio.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,10 +12,10 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "carrito")
-public class Carrito {
+public class ProductosCarrito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_carrito;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "id_cliente")
@@ -25,17 +25,18 @@ public class Carrito {
     @JoinColumn(name = "id_producto")
     private Productos producto;
 
-    private int cantidad;
-    
-    private Date fechaAgregado;
+    private String talla;
 
-    // Getters y Setters
-    public Long getId_carrito() {
-        return id_carrito;
+    private int cantidad;
+
+    private LocalDateTime fechaAgregado;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setId_carrito(Long id_carrito) {
-        this.id_carrito = id_carrito;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Clientes getCliente() {
@@ -53,6 +54,14 @@ public class Carrito {
     public void setProducto(Productos producto) {
         this.producto = producto;
     }
+    
+    public String getTalla() {
+        return talla;
+    }
+
+    public void setTalla(String talla) {
+        this.talla = talla;
+    }
 
     public int getCantidad() {
         return cantidad;
@@ -62,11 +71,11 @@ public class Carrito {
         this.cantidad = cantidad;
     }
 
-    public Date getFechaAgregado() {
+    public LocalDateTime getFechaAgregado() {
         return fechaAgregado;
     }
 
-    public void setFechaAgregado(Date fechaAgregado) {
+    public void setFechaAgregado(LocalDateTime fechaAgregado) {
         this.fechaAgregado = fechaAgregado;
     }
 }

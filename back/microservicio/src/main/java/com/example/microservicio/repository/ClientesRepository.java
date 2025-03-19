@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 import com.example.microservicio.model.Clientes;
 
 @Repository
-public interface ClientesRepository extends JpaRepository<Clientes, Long> {}
+public interface ClientesRepository extends JpaRepository<Clientes, Long> {
+    Clientes findByUsername(String username);
+
+    Clientes findByEmail(String email);
+}

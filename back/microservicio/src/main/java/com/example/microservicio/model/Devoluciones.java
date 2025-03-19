@@ -1,6 +1,6 @@
 package com.example.microservicio.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -28,7 +28,9 @@ public class Devoluciones {
     @JoinColumn(name = "id_pedido", nullable = false)
     private Pedidos pedido;
 
-    private Date fechaDevolucion;
+    private LocalDateTime fechaDevolucion;
+
+    private String motivoDevolucion;
 
     @OneToMany(mappedBy = "devolucion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductosDevoluciones> productosDevueltos;
@@ -57,11 +59,11 @@ public class Devoluciones {
         this.pedido = pedido;
     }
 
-    public Date getFechaDevolucion() {
+    public LocalDateTime getFechaDevolucion() {
         return fechaDevolucion;
     }
 
-    public void setFechaDevolucion(Date fechaDevolucion) {
+    public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
     }
 
@@ -71,6 +73,14 @@ public class Devoluciones {
 
     public void setProductosDevueltos(List<ProductosDevoluciones> productosDevueltos) {
         this.productosDevueltos = productosDevueltos;
+    }
+
+    public String getMotivoDevolucion() {
+        return motivoDevolucion;
+    }
+
+    public void setMotivoDevolucion(String motivoDevolucion) {
+        this.motivoDevolucion = motivoDevolucion;
     }
 }
 

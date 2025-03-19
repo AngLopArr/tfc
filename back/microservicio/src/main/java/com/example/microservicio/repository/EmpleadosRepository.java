@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example.microservicio.model.Empleados;
 
 @Repository
-public interface EmpleadosRepository extends JpaRepository<Empleados, Long> {}
+public interface EmpleadosRepository extends JpaRepository<Empleados, Long> {
+    Empleados findByEmail(String email);
+}

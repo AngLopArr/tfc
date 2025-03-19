@@ -23,9 +23,9 @@ public class ProductosDevoluciones {
     @JoinColumn(name = "id_producto")
     private Productos producto;
 
+    private String talla;
+
     private int cantidadDevuelta;
-    
-    private String motivo; 
 
     public Long getId() {
         return id;
@@ -51,19 +51,19 @@ public class ProductosDevoluciones {
         this.producto = producto;
     }
 
+    public String getTalla() {
+        return talla;
+    }
+
+    public void setTalla(String talla) {
+        this.talla = talla;
+    }
+
     public int getCantidadDevuelta() {
         return cantidadDevuelta;
     }
 
     public void setCantidadDevuelta(int cantidadDevuelta) {
         this.cantidadDevuelta = cantidadDevuelta;
-    }
-
-    public String getMotivo() {
-        return motivo;
-    }
-
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
     }
 }
