@@ -35,6 +35,7 @@ public class Clientes {
     private String image;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JsonBackReference
     private List<ProductosCarrito> carrito = new ArrayList<>();
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
