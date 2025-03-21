@@ -17,10 +17,10 @@ public class ClientesService {
     public Clientes login(Clientes cliente) {
         Clientes clienteComprobar;
         // Tomo el usuario correspondiente al username del usuario pasado
-        if(!cliente.getUsername().equals("")){
+        if(cliente.getUsername() != null){
             clienteComprobar = getClientByUsername(cliente.getUsername());
         }
-        else if (!cliente.getEmail().equals("")){
+        else if (cliente.getEmail() != null){
             clienteComprobar = getClientByEmail(cliente.getEmail());
         }
         else{
@@ -61,7 +61,7 @@ public class ClientesService {
             // Reemplazo la contraseña por su versión hasheada
             cliente.setPassword(passwordHasheada);
             clientesRepository.save(cliente);
-            return "El registro se ha realizado correctamente";
+            return "El registro se ha realizado correctamente.";
         }
     }
 

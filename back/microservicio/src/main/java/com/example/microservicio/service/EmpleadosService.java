@@ -43,12 +43,12 @@ public class EmpleadosService {
         } 
     }
 
-    public ArrayList<Empleados> getAllEmployees(){
-        return (ArrayList<Empleados>) empleadosRepository.findAll();
-    }
-
     public Empleados getEmployeeByEmail(String email){
         return empleadosRepository.findByEmail(email);
+    }
+
+    public ArrayList<Empleados> getAllEmployees(){
+        return (ArrayList<Empleados>) empleadosRepository.findAll();
     }
 
     public boolean createEmployee(Empleados empleado){

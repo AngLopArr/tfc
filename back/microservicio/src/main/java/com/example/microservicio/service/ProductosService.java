@@ -53,7 +53,7 @@ public class ProductosService {
         }
     }
 
-    public boolean updateStockProduct(int change, String talla, Long productoId){
+    public boolean updateStockProduct(Long productoId, String talla, int change){
         Productos productoUpdate = productosRepository.findById(productoId).orElse(null);
 
         if(productoUpdate != null){

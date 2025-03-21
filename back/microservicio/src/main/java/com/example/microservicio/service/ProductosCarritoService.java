@@ -31,7 +31,7 @@ public class ProductosCarritoService {
                 nuevoProductoCarrito.setFechaAgregado(LocalDateTime.now());
                 if(List.of("S", "M", "L", "XL").contains(nuevoProductoCarrito.getTalla())){
                     if(nuevoProductoCarrito.getCantidad() > 0){
-                        productosService.updateStockProduct(-nuevoProductoCarrito.getCantidad(), nuevoProductoCarrito.getTalla(), nuevoProductoCarrito.getProducto().getId_producto());
+                        productosService.updateStockProduct(nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getTalla(), -nuevoProductoCarrito.getCantidad());
                         productosCarritoRepository.save(nuevoProductoCarrito);
                         return "Producto añadido correctamente al carrito.";
                     }
@@ -83,7 +83,9 @@ public class ProductosCarritoService {
     }
 
     public String eliminarProducto(Long idCliente, Long idProducto, String talla){
-        if(productosCarritoRepository.findByClienteIdProductoIdAndTalla(idCliente, idProducto, talla).orElse(null) != null){
+        ProductosCarrito producto = productosCarritoRepository.findByClienteIdProductoIdAndTalla(idCliente, idProducto, talla).orElse(null);
+        if(producto != null){
+            productosService.updateStockProduct(producto.getProducto().getId_producto(), producto.getTalla(), -producto.getCantidad());
             productosCarritoRepository.eliminarProductoDelCarritoPorClienteYProductoYTalla(idCliente, idProducto, talla);
             return "Producto eliminado del carrito con éxito.";
         }

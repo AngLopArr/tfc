@@ -26,4 +26,6 @@ public interface ProductosCarritoRepository extends JpaRepository<ProductosCarri
 
     @Query("SELECT c FROM Carrito c WHERE c.cliente.id = :idCliente AND c.producto.id = :idProducto AND c.talla = :talla")
     Optional<ProductosCarrito> findByClienteIdProductoIdAndTalla(Long idCliente, Long idProducto, String talla);
+
+    // tomar todos los ids de los productos de un cliente en una subconsulta y actualizar todos sus stocks para sumarle la cantidad que se quita del carrito
 }
