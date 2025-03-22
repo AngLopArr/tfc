@@ -1,6 +1,7 @@
 package com.example.microservicio.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,25 @@ public class ProductosCarritoService {
     @Autowired
     ClientesRepository clientesRepository;
 
+    public ArrayList<ProductosCarrito> getAllProductosCarritoCliente(Long idCliente){
+        return (ArrayList<ProductosCarrito>) productosCarritoRepository.findProductosByClienteId(idCliente).orElse(null);
+    }
+
     public String añadirAlCarrito(ProductosCarrito nuevoProductoCarrito){
         if(productosRepository.findById(nuevoProductoCarrito.getProducto().getId_producto()).orElse(null) != null){
             if(clientesRepository.findById(nuevoProductoCarrito.getCliente().getId_cliente()).orElse(null) != null){
                 nuevoProductoCarrito.setFechaAgregado(LocalDateTime.now());
                 if(List.of("S", "M", "L", "XL").contains(nuevoProductoCarrito.getTalla())){
                     if(nuevoProductoCarrito.getCantidad() > 0){
-                        productosService.updateStockProduct(nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getTalla(), -nuevoProductoCarrito.getCantidad());
-                        productosCarritoRepository.save(nuevoProductoCarrito);
-                        return "Producto añadido correctamente al carrito.";
+                        ProductosCarrito productoCarritoExiste = productosCarritoRepository.findByClienteIdProductoIdAndTalla(nuevoProductoCarrito.getCliente().getId_cliente(), nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getTalla()).orElse(null);
+                        if(productoCarritoExiste != null){
+                            return updateCantidad(productoCarritoExiste.getId(), nuevoProductoCarrito.getCantidad());
+                        }
+                        else{
+                            productosService.updateStockProduct(nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getTalla(), -nuevoProductoCarrito.getCantidad());
+                            productosCarritoRepository.save(nuevoProductoCarrito);
+                            return "Producto añadido correctamente al carrito.";
+                        }
                     }
                     else{ 
                         return "La cantidad no es válida.";
@@ -52,50 +63,70 @@ public class ProductosCarritoService {
         }
     }
 
-    public String updateCantidad(Long idCliente, Long idProducto, String talla, int cantidad){
+    public String updateCantidad(Long idProductoCarrito, int cantidad){
         if(cantidad > 0){
-            ProductosCarrito productoUpdate = productosCarritoRepository.findByClienteIdProductoIdAndTalla(idCliente, idProducto, talla).orElse(null);
-            productoUpdate.setCantidad(cantidad);
-            productosCarritoRepository.save(productoUpdate);
-            return "El producto se ha actualizado correctamente.";
+            ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
+            if(productoCarrito != null){
+                productoCarrito.setCantidad(cantidad);
+                productosCarritoRepository.save(productoCarrito);
+                return "El producto se ha actualizado correctamente.";
+            }
+            else{
+                return "El producto indicado no existe.";
+            }
         }
         else{ 
             return "Cantidad no válida.";
         }
     }
 
-    public String updateTalla(Long idCliente, Long idProducto, String tallaActual, String tallaUpdate){
-        if(List.of("S", "M", "L", "XL").contains(tallaUpdate)){
-            ProductosCarrito productoUpdate = productosCarritoRepository.findByClienteIdProductoIdAndTalla(idCliente, idProducto, tallaActual).orElse(null);
-            ProductosCarrito productoTallaUpdate = productosCarritoRepository.findByClienteIdProductoIdAndTalla(idCliente, idProducto, tallaUpdate).orElse(null);
-            if(productoTallaUpdate != null){
-                productoTallaUpdate.setCantidad(productoTallaUpdate.getCantidad() + productoUpdate.getCantidad());
+    public String updateTalla(Long idProductoCarrito, String tallaUpdate){
+        ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
+        if(productoCarrito != null){
+            if(List.of("S", "M", "L", "XL").contains(tallaUpdate)){
+                ProductosCarrito productoTallaUpdate = productosCarritoRepository.findByClienteIdProductoIdAndTalla(productoCarrito.getCliente().getId_cliente(), productoCarrito.getProducto().getId_producto(), tallaUpdate).orElse(null);
+                if(productoTallaUpdate != null){
+                    productoTallaUpdate.setCantidad(productoTallaUpdate.getCantidad() + productoCarrito.getCantidad());
+                    productosCarritoRepository.delete(productoCarrito);
+                    productosCarritoRepository.save(productoTallaUpdate);
+                }
+                else{
+                    productoCarrito.setTalla(tallaUpdate);
+                    productosCarritoRepository.save(productoCarrito);
+                }
+                return "El producto se ha actualizado correctamente.";
             }
-            else{
-                productoUpdate.setTalla(tallaUpdate);
+            else{ 
+                return "Talla no válida.";
             }
-            productosCarritoRepository.save(productoUpdate);
-            return "El producto se ha actualizado correctamente.";
-        }
-        else{ 
-            return "Talla no válida.";
-        }
-    }
-
-    public String eliminarProducto(Long idCliente, Long idProducto, String talla){
-        ProductosCarrito producto = productosCarritoRepository.findByClienteIdProductoIdAndTalla(idCliente, idProducto, talla).orElse(null);
-        if(producto != null){
-            productosService.updateStockProduct(producto.getProducto().getId_producto(), producto.getTalla(), -producto.getCantidad());
-            productosCarritoRepository.eliminarProductoDelCarritoPorClienteYProductoYTalla(idCliente, idProducto, talla);
-            return "Producto eliminado del carrito con éxito.";
         }
         else{
-            return "Error al encontrar el producto.";
+            return "El producto indicado no existe.";
         }
     }
 
-    public String vaciarCarrito(Long clienteId){
-        productosCarritoRepository.eliminarProductosDelCarrito(clienteId);
-        return "Carrito vaciado con éxito.";
+    public boolean eliminarProducto(Long idProductoCarrito){
+        ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
+        if(productoCarrito != null){
+            productosCarritoRepository.delete(productoCarrito);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean vaciarCarrito(Long clienteId){
+        ArrayList<ProductosCarrito> productosCarrito = getAllProductosCarritoCliente(clienteId);
+        if(productosCarrito != null){
+            for (int i = 0; i < productosCarrito.size(); i++) {
+                productosService.updateStockProduct(productosCarrito.get(i).getProducto().getId_producto(), productosCarrito.get(i).getTalla(), productosCarrito.get(i).getCantidad());
+            }
+            productosCarritoRepository.eliminarProductosDelCarrito(clienteId);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

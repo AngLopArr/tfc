@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.example.microservicio.model.Productos;
 import com.example.microservicio.model.ProductosCarrito;
 
 @Repository
@@ -17,15 +16,9 @@ public interface ProductosCarritoRepository extends JpaRepository<ProductosCarri
     @Query("DELETE FROM Carrito c WHERE c.cliente.id = :clienteId")
     void eliminarProductosDelCarrito(Long clienteId);
 
-    @Query("SELECT c.producto FROM Carrito c WHERE c.cliente.id = :idCliente")
-    List<Productos> findProductosByClienteId(Long idCliente);
-
-    @Modifying
-    @Query("DELETE FROM Carrito c WHERE c.cliente.id = :clienteId AND c.producto.id = :productoId AND c.talla = :talla")
-    void eliminarProductoDelCarritoPorClienteYProductoYTalla(Long clienteId, Long productoId, String talla);
+    @Query("SELECT c FROM Carrito c WHERE c.cliente.id = :idCliente")
+    Optional<List<ProductosCarrito>> findProductosByClienteId(Long idCliente);
 
     @Query("SELECT c FROM Carrito c WHERE c.cliente.id = :idCliente AND c.producto.id = :idProducto AND c.talla = :talla")
     Optional<ProductosCarrito> findByClienteIdProductoIdAndTalla(Long idCliente, Long idProducto, String talla);
-
-    // tomar todos los ids de los productos de un cliente en una subconsulta y actualizar todos sus stocks para sumarle la cantidad que se quita del carrito
 }

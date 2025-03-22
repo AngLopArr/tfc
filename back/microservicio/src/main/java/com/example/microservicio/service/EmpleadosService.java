@@ -43,8 +43,12 @@ public class EmpleadosService {
         } 
     }
 
+    public Empleados getEmployeeById(Long id){
+        return empleadosRepository.findById(id).orElse(null);
+    }
+
     public Empleados getEmployeeByEmail(String email){
-        return empleadosRepository.findByEmail(email);
+        return empleadosRepository.findByEmail(email).orElse(null);
     }
 
     public ArrayList<Empleados> getAllEmployees(){

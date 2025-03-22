@@ -104,13 +104,18 @@ public class ClientesService {
         }
     }
 
+    // Método para buscar un usuario por su id
+    public Clientes getClientById(Long id) {
+        return clientesRepository.findById(id).orElse(null);
+    }
+
     // Método para buscar un usuario por su nombre de usuario
     public Clientes getClientByUsername(String username) {
-        return clientesRepository.findByUsername(username);
+        return clientesRepository.findByUsername(username).orElse(null);
     }
 
     // Método para buscar un usuario por su email
     public Clientes getClientByEmail(String email) {
-        return clientesRepository.findByEmail(email);
+        return clientesRepository.findByEmail(email).orElse(null);
     }
 }

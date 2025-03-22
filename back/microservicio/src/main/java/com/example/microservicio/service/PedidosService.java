@@ -17,15 +17,18 @@ public class PedidosService {
     @Autowired
     ProductosPedidosRepository productosPedidosRepository;
 
+    public Pedidos getPedidoById(Long id){
+        return pedidosRepository.findById(id).orElse(null);
+    }
+
     public Pedidos createPedidoSinTotal(Pedidos pedido){
         pedido.setFechaPedido(LocalDateTime.now());
         pedidosRepository.save(pedido);
         return pedido;
     }
 
-    public String calcularTotalPedido(Pedidos pedido){
+    public void calcularTotalPedido(Pedidos pedido){
         double total = productosPedidosRepository.calcularTotalPedido(pedido.getId_pedido());
         pedido.setTotalPedido(total);
-        return "El total se ha calculado correctamente.";
     }
 }

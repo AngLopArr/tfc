@@ -13,12 +13,16 @@ public class ProductosService {
     @Autowired 
     ProductosRepository productosRepository;
 
+    public Productos getProductById(Long id){
+        return productosRepository.findById(id).orElse(null);
+    }
+
     public ArrayList<Productos> getAllProducts(){
         return (ArrayList<Productos>) productosRepository.findAll();
     }
 
     public boolean createProduct(Productos producto){
-        Productos productoExiste = productosRepository.findByName(producto.getName());
+        Productos productoExiste = productosRepository.findByName(producto.getName()).orElse(null);
 
         if(productoExiste != null){
             return false;
