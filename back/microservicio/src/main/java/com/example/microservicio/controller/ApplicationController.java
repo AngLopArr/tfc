@@ -565,7 +565,42 @@ public class ApplicationController {
         return ResponseEntity.ok(response);
     }
 
-    // Aprobar o rechazar
+    // Empleo el método POST para registrar un usuario
+    @PutMapping("/devoluciones/update/{id}")
+    public ResponseEntity<Map<String, Object>> updateEstadoDevolucion(@PathVariable Long id, @RequestBody boolean estado) {
+        boolean successfulUpdate = devolucionesService.cambiarEstadoDevolucion(id, estado);
 
-    // Devolver producto al usuario (crear pedido?)
+        // Creo un map para indicar la respuesta
+        Map<String, Object> response = new HashMap<>();
+
+        // Introduzco la respuesta en el map
+        response.put("success", successfulUpdate);
+
+        // Retorno la respuesta
+        return ResponseEntity.ok(response);
+    }
+
+    // Empleo el método POST para registrar un usuario
+    @PutMapping("/devoluciones/devolver/{id}")
+    public ResponseEntity<Map<String, Object>> devolverProductoCliente(@PathVariable Long idDevolucion, @RequestBody boolean estado) {
+        boolean successfulUpdate = devolucionesService.reenviarAlCliente(idDevolucion, estado);
+        Devoluciones devolucion = devolucionesService.getDevolucion(idDevolucion);
+
+        if(successfulUpdate && estado && devolucion != null){
+            Pedidos pedido = new Pedidos();
+            pedido.setCliente(devolucion.getCliente());
+            pedidosService.createPedidoSinTotal(pedido);
+            productosPedidosService.añadirProductosPedido(pedido, productosDevolucionesService.changeProductosDevolucionToProductosPedido(idDevolucion));
+            pedidosService.calcularTotalPedido(pedido);
+        }
+
+        // Creo un map para indicar la respuesta
+        Map<String, Object> response = new HashMap<>();
+
+        // Introduzco la respuesta en el map
+        response.put("success", successfulUpdate);
+
+        // Retorno la respuesta
+        return ResponseEntity.ok(response);
+    }
 }

@@ -13,31 +13,35 @@ public class DevolucionesService {
     @Autowired 
     DevolucionesRepository devolucionesRepository;
 
+    public Devoluciones getDevolucion(Long id){
+        return devolucionesRepository.findById(id).orElse(null);
+    }
+
     public Devoluciones createDevolucion(Devoluciones devolucion){
         devolucion.setFechaDevolucion(LocalDateTime.now());
         devolucionesRepository.save(devolucion);
         return devolucion;
     }
 
-    public String cambiarEstadoDevolucion(boolean estado, Long idDevolucion){
+    public boolean cambiarEstadoDevolucion(Long idDevolucion, boolean estado){
         Devoluciones devolucion = devolucionesRepository.findById(idDevolucion).orElse(null);
         if(devolucion != null){
             devolucion.setAceptada(estado);
-            return "Estado modificado con éxito.";
+            return true;
         }
         else{
-            return "La devolución indicada no existe.";
+            return false;
         }
     }
 
-    public String reenviarAlCliente(boolean reenviar, Long idDevolucion){
+    public boolean reenviarAlCliente(Long idDevolucion, boolean reenviar){
         Devoluciones devolucion = devolucionesRepository.findById(idDevolucion).orElse(null);
         if(devolucion != null){
             devolucion.setDevolverProductosACliente(reenviar);
-            return "La operación se ha procesado con éxito.";
+            return true;
         }
         else{
-            return "La devolución indicada no existe.";
+            return false;
         }
     }
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Aracne</title>
+        <!-- Establezco un icono para la página -->
+        <link rel="shortcut icon" href="imagenes/icono.png">
+        <!-- Establezco el CSS para la página -->
+        <link rel="stylesheet" href="css/login.css" type="text/css">
+    </head>
+    <body style="background: #e6d7ff;">
+        <!-- Página de Login -->
+        <div class="container">
+            <!-- Establezco el título del login -->
+            <div class="header">
+                <h1>Aracne</h1>
+                <p><b>Inicio de sesión</b></p>
+            </div>
+            <!-- Establezco el formulario del login -->
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Email</label>
+                    <input type="text" id="login-username" placeholder="Ingresa tu email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" placeholder="Ingresa tu contraseña" required>
+                </div>
+                <button class="btn" id="boton-login" style="background: #e6d7ff;">Iniciar sesión</button>
+            </form>
+            <br><br>
+        </div>
+    </body>
+    <!-- Establezco el script de la página -->
+    <script src="js/login.js"></script>
+</html>

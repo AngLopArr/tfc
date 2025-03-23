@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aracne</title>
+    <!-- Establezco un icono para la página -->
+    <link rel="shortcut icon" href="imagenes/icono.png">
+    <!-- Establezco el CSS para la página -->
+    <link rel="stylesheet" href="css/shop.css" type="text/css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function showSection(sectionId) {
+                document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+                let section = document.getElementById(sectionId);
+                if (section) {
+                    section.classList.remove('hidden');
+                }
+            }
+            
+            function toggleDetalle(id) {
+                let detalle = document.getElementById(id);
+                if (detalle) {
+                    detalle.style.display = detalle.style.display === 'none' ? 'block' : 'none';
+                }
+            }
+            
+            window.showSection = showSection;
+            window.toggleDetalle = toggleDetalle;
+        });
+
+        function toggleNumberInput(checkbox) {
+            const container = checkbox.closest(".talla-item");
+            const numberInput = container.querySelector("input[type='number']");
+            numberInput.style.display = checkbox.checked ? "inline-block" : "none";
+        }
+    </script>
+</head>
+<body>
+    <div class="topbar">
+        <a href="products.html">Productos</a>
+        <a href="create-edit-products.html">Añadir Producto</a>
+        <a href="users.html">Usuarios</a>
+        <a href="create-edit-users.html">Añadir Usuario</a>
+        <a href="returns.html">Devoluciones</a>
+    </div>
+    
+    <div class="container">
+        <div id="devoluciones">
+            <h2>Gestión de Devoluciones</h2>
+            <div class="devolucion" onclick="toggleDetalle('detalle1')">
+                <h3>Devolución realizada 15/01/2024</h3>
+                <p>En proceso - 2 artículos</p>
+            </div>
+            <div id="detalle1" class="devolucion-detalle">
+                <div class="producto">
+                    <p>Camiseta Blanca x1 <br><b>Talla M</b> - 15.00 €</p>
+                </div>
+                <div class="producto">
+                    <p>Pantalón Azul x1 <br><b>Talla L</b> - 25.00 €</p>
+                </div>
+                <br>
+                <button class="accept-btn">Aceptar</button>
+                <button class="reject-btn">Rechazar</button>
+            </div>
+            <div class="devolucion" onclick="toggleDetalle('detalle2')">
+                <h3>Devolución realizada 15/01/2024</h3>
+                <p>En proceso - 2 artículos</p>
+            </div>
+            <div id="detalle2" class="devolucion-detalle">
+                <div class="producto">
+                    <p>Camiseta Blanca x1 <br><b>Talla M</b> - 15.00 €</p>
+                </div>
+                <div class="producto">
+                    <p>Pantalón Azul x1 <br><b>Talla L</b> - 25.00 €</p>
+                </div>
+                <br>
+                <button class="accept-btn">Aceptar</button>
+                <button class="reject-btn">Rechazar</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

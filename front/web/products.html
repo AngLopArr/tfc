@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aracne</title>
+    <!-- Establezco un icono para la página -->
+    <link rel="shortcut icon" href="imagenes/icono.png">
+    <!-- Establezco el CSS para la página -->
+    <link rel="stylesheet" href="css/shop.css" type="text/css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function showSection(sectionId) {
+                document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+                let section = document.getElementById(sectionId);
+                if (section) {
+                    section.classList.remove('hidden');
+                }
+            }
+            
+            function toggleDetalle(id) {
+                let detalle = document.getElementById(id);
+                if (detalle) {
+                    detalle.style.display = detalle.style.display === 'none' ? 'block' : 'none';
+                }
+            }
+            
+            window.showSection = showSection;
+            window.toggleDetalle = toggleDetalle;
+        });
+
+        function toggleNumberInput(checkbox) {
+            const container = checkbox.closest(".talla-item");
+            const numberInput = container.querySelector("input[type='number']");
+            numberInput.style.display = checkbox.checked ? "inline-block" : "none";
+        }
+    </script>
+</head>
+<body>
+    <div class="topbar">
+        <a href="products.html">Productos</a>
+        <a href="create-edit-products.html">Añadir Producto</a>
+        <a href="users.html">Usuarios</a>
+        <a href="create-edit-users.html">Añadir Usuario</a>
+        <a href="returns.html">Devoluciones</a>
+    </div>
+    
+    <div class="container">
+        <div id="productos">
+            <h2>Lista de Productos</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>S</th>
+                    <th>M</th>
+                    <th>L</th>
+                    <th>XL</th>
+                    <th>Acciones</th>
+                </tr>
+                <tr>
+                    <td class="id">1</td>
+                    <td>Camiseta Blanca</td>
+                    <td class="precio">15.00 €</td>
+                    <td class="talla">15</td>
+                    <td class="talla">12</td>
+                    <td class="talla">1</td>
+                    <td class="talla">0</td>
+                    <td class="acciones"><button class="edit-btn">Editar</button> <button class="delete-btn">Eliminar</button></td>
+                </tr>
+                <tr>
+                    <td class="id">2</td>
+                    <td>Pantalón Azul</td>
+                    <td class="precio">25.00 €</td>
+                    <td class="talla">23</td>
+                    <td class="talla">5</td>
+                    <td class="talla">2</td>
+                    <td class="talla">10</td>
+                    <td class="acciones"><button class="edit-btn">Editar</button> <button class="delete-btn">Eliminar</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

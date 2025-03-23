@@ -1,0 +1,141 @@
+html, body { 
+    font-family: Arial, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    background: #ede3ff; 
+}
+.topbar { 
+    background: #d4beff; 
+    padding: 25px; 
+    text-align: center; 
+    margin-top: 0;
+}
+.topbar a { 
+    color: white; 
+    margin: 0 15px; 
+    text-decoration: none; 
+    font-size: 18px; 
+    font-weight: bold; 
+    cursor: pointer; 
+}
+.topbar a:hover { 
+    color: #b18cfa;
+}
+.container { 
+    max-width: 1200px; 
+    margin: 20px auto; 
+    padding: 20px; 
+    background: white; 
+    border-radius: 8px; 
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1); 
+    padding-top: 1px;
+}
+.hidden { 
+    display: none; 
+}
+button { 
+    padding: 8px 12px; 
+    border: none; 
+    cursor: pointer; 
+    border-radius: 4px; 
+}
+.edit-btn { 
+    background: #FFC107; 
+    color: white; 
+}
+.delete-btn { 
+    background: #D32F2F; 
+    color: white; 
+}
+.accept-btn { 
+    background: #4CAF50; 
+    color: white; 
+}
+.reject-btn { 
+    background: #D32F2F; 
+    color: white; 
+}
+.boton-form:hover{
+    background-color: rgb(227, 224, 224);
+}
+.devolucion { 
+    background: #e6d7ff; 
+    padding: 15px; 
+    padding-bottom: 5px; 
+    margin-bottom: 10px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+}
+.devolucion:hover { 
+    background: #ede3ff; 
+}
+.devolucion h3 { 
+    margin: 0; 
+}
+.devolucion-detalle { 
+    display: none; 
+    padding-top: 0px; 
+    border-top: 2px solid #d4beff; 
+    margin-bottom: 15px;
+}
+.devolucion-detalle:last-child { 
+    margin-bottom: 0px; 
+}
+.producto { 
+    display: flex; 
+    align-items: center; 
+    margin-top: 5px; 
+    margin-bottom: -15px;
+}
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-top: 10px; 
+}
+th { 
+    padding: 13px; 
+    border: 1px solid #ddd; 
+    text-align: left; 
+}
+td { 
+    padding: 10px; 
+    border: 1px solid #ddd; 
+    text-align: left; 
+}
+th { 
+    background: #d4beff; 
+    color: white; 
+}
+.talla-group { 
+    display: flex; 
+    flex-direction: column; 
+}
+.talla-item { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 10px; 
+}
+.talla-item input[type="number"] { 
+    display: none; 
+    margin-left: 10px; 
+}
+.acciones { 
+    width: 145px; 
+    padding-right: 0;
+}
+.precio { 
+    width: 90px; 
+    padding-right: 0;
+}
+.talla { 
+    width: 60px; 
+    padding-right: 0; 
+}
+.id { 
+    width: 60px; 
+    padding-right: 0; 
+}
+form { 
+    align-content: center; 
+}

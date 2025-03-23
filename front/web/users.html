@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aracne</title>
+    <!-- Establezco un icono para la página -->
+    <link rel="shortcut icon" href="imagenes/icono.png">
+    <!-- Establezco el CSS para la página -->
+    <link rel="stylesheet" href="css/shop.css" type="text/css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function showSection(sectionId) {
+                document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
+                let section = document.getElementById(sectionId);
+                if (section) {
+                    section.classList.remove('hidden');
+                }
+            }
+            
+            function toggleDetalle(id) {
+                let detalle = document.getElementById(id);
+                if (detalle) {
+                    detalle.style.display = detalle.style.display === 'none' ? 'block' : 'none';
+                }
+            }
+            
+            window.showSection = showSection;
+            window.toggleDetalle = toggleDetalle;
+        });
+
+        function toggleNumberInput(checkbox) {
+            const container = checkbox.closest(".talla-item");
+            const numberInput = container.querySelector("input[type='number']");
+            numberInput.style.display = checkbox.checked ? "inline-block" : "none";
+        }
+    </script>
+</head>
+<body>
+    <div class="topbar">
+        <a href="products.html">Productos</a>
+        <a href="create-edit-products.html">Añadir Producto</a>
+        <a href="users.html">Usuarios</a>
+        <a href="create-edit-users.html">Añadir Usuario</a>
+        <a href="returns.html">Devoluciones</a>
+    </div>
+    
+    <div class="container">
+        <div id="usuarios">
+            <h2>Lista de Usuarios</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+                <tr>
+                    <td class="id">1</td>
+                    <td>Carmen García</td>
+                    <td>carmen@example.com</td>
+                    <td>Administrador</td>
+                    <td class="acciones"><button class="edit-btn">Editar</button></td>
+                </tr>
+                <tr>
+                    <td class="id">2</td>
+                    <td>Juan Pérez</td>
+                    <td>juan@example.com</td>
+                    <td>Empleado</td>
+                    <td class="acciones"><button class="edit-btn">Editar</button> <button class="delete-btn">Eliminar</button></td>
+                </tr>
+                <tr>
+                    <td class="id">3</td>
+                    <td>María López</td>
+                    <td>maria@example.com</td>
+                    <td>Gerente</td>
+                    <td class="acciones"><button class="edit-btn">Editar</button> <button class="delete-btn">Eliminar</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
