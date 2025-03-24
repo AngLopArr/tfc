@@ -41,25 +41,30 @@
         <a href="products.html">Productos</a>
         <a href="create-edit-products.html">Añadir Producto</a>
         <a href="users.html">Usuarios</a>
-        <a href="create-edit-users.html">Añadir Usuario</a>
+        <a href="add-modify-users.html">Añadir Usuario</a>
         <a href="returns.html">Devoluciones</a>
+        <a id="logout">Logout</a>
     </div>
     
     <div class="container">
         <div id="add-usuario">
             <h2>Añadir Usuario</h2>
             <form>
-                <label>Nombre: <input type="text"></label>
-                <br><br>
-                <label>Email: <input type="email"></label>
-                <br><br>
-                <label>Rol: <input type="text"></label>
-                <br><br>
-                <label>Contraseña: <input type="password"></label>
-                <br><br>
-                <button style="margin-top: 3px;" type="submit" class="boton-form">Guardar</button>
+                <div class="input-text">
+                    <label>Nombre</label><input type="text">
+                    <br>
+                    <label>Email</label><input type="email">
+                    <br>
+                    <label>Rol</label><input type="text">
+                    <br>
+                    <label>Contraseña</label><input type="password">
+                    <br>
+                </div>
+                <button style="margin-top: 10px;" type="submit" class="boton-form">Guardar</button>
             </form>
         </div>
     </div>
 </body>
+<script src="js/shop.js"></script>
+<script src="js/add-modify-users.js"></script>
 </html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paginación con JavaScript</title>
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            margin: 0 5px;
+            padding: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .pagination button:hover {
+            background-color: #45a049;
+        }
+        .content {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <h2>Lista de Elementos (Paginados)</h2>
+        <ul id="item-list">
+            <!-- Los elementos se agregarán aquí dinámicamente -->
+        </ul>
+    </div>
+
+    <div class="pagination" id="pagination">
+        <!-- Los botones de paginación se generarán aquí dinámicamente -->
+    </div>
+
+    <script>
+        const itemsPerPage = 10; // Número de elementos por página
+        let currentPage = 1; // Página actual
+        const data = []; // Array de datos (simulando que son elementos que vienen del servidor)
+
+// Llenar datos simulados
+        for (let i = 1; i <= 100; i++) {
+            data.push(`Elemento ${i}`);
+        }
+
+        // Función para generar la lista de elementos según la página actual
+        function renderItems() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const itemsToShow = data.slice(startIndex, endIndex);
+
+            const itemList = document.getElementById('item-list');
+            itemList.innerHTML = '';
+            itemsToShow.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.textContent = item;
+                itemList.appendChild(listItem);
+            });
+        }
+
+        // Función para generar los botones de paginación
+        function renderPagination() {
+            const totalPages = Math.ceil(data.length / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = ''; // Limpiar la paginación antes de agregarla
+
+            // Botón "Anterior"
+            const prevButton = document.createElement('button');
+            prevButton.textContent = 'Anterior';
+            prevButton.disabled = currentPage === 1;
+            prevButton.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderItems();
+                    renderPagination();
+                }
+            };
+            pagination.appendChild(prevButton);
+
+            // Botones de página
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.disabled = i === currentPage;
+                pageButton.onclick = () => {
+                    currentPage = i;
+                    renderItems();
+                    renderPagination();
+                };
+                pagination.appendChild(pageButton);
+            }
+
+            // Botón "Siguiente"
+            const nextButton = document.createElement('button');
+            nextButton.textContent = 'Siguiente';
+            nextButton.disabled = currentPage === totalPages;
+            nextButton.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderItems();
+                    renderPagination();
+                }
+            };
+            pagination.appendChild(nextButton);
+        }
+
+        // Inicializar
+        renderItems();
+        renderPagination();
+    </script>
+
+</body>
+</html>

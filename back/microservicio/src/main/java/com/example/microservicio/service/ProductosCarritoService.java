@@ -12,6 +12,8 @@ import com.example.microservicio.repository.ClientesRepository;
 import com.example.microservicio.repository.ProductosCarritoRepository;
 import com.example.microservicio.repository.ProductosRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProductosCarritoService {
     @Autowired 
@@ -105,6 +107,7 @@ public class ProductosCarritoService {
         }
     }
 
+    @Transactional
     public boolean eliminarProducto(Long idProductoCarrito){
         ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
         if(productoCarrito != null){

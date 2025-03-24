@@ -24,11 +24,11 @@ html, body {
 .container { 
     max-width: 1200px; 
     margin: 20px auto; 
-    padding: 20px; 
+    padding: 30px; 
     background: white; 
     border-radius: 8px; 
     box-shadow: 0px 0px 10px rgba(0,0,0,0.1); 
-    padding-top: 1px;
+    padding-top: 8px;
 }
 .hidden { 
     display: none; 
@@ -54,6 +54,9 @@ button {
 .reject-btn { 
     background: #D32F2F; 
     color: white; 
+}
+.boton-form {
+    font-size: 14.5px;
 }
 .boton-form:hover{
     background-color: rgb(227, 224, 224);
@@ -95,17 +98,15 @@ table {
 }
 th { 
     padding: 13px; 
-    border: 1px solid #ddd; 
+    border: 1px solid #c9afff; 
     text-align: left; 
+    background: #d4beff; 
+    color: white; 
 }
 td { 
     padding: 10px; 
     border: 1px solid #ddd; 
     text-align: left; 
-}
-th { 
-    background: #d4beff; 
-    color: white; 
 }
 .talla-group { 
     display: flex; 
@@ -133,9 +134,54 @@ th {
     padding-right: 0; 
 }
 .id { 
-    width: 60px; 
+    width: 50px; 
     padding-right: 0; 
 }
 form { 
     align-content: center; 
+}
+footer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+footer button {
+    margin-left: 15px;
+    margin-right: 15px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background: #d4beff; 
+    color: white;
+}
+footer button:hover {
+    background: #c1a3fc;
+}
+footer a {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+.input-text {
+  display: flex;
+  flex-direction: column;
+}
+.input-text label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.input-text input {
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+.input-text input:focus {
+    border-color: #ae85ff;
+    outline: none;
+}
+#imagen {
+    margin-bottom: 10px;
 }

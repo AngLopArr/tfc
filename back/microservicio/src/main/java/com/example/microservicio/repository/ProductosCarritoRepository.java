@@ -13,12 +13,12 @@ import com.example.microservicio.model.ProductosCarrito;
 @Repository
 public interface ProductosCarritoRepository extends JpaRepository<ProductosCarrito, Long> {
     @Modifying
-    @Query("DELETE FROM Carrito c WHERE c.cliente.id = :clienteId")
+    @Query("DELETE FROM ProductosCarrito pc WHERE pc.cliente.id_cliente = :clienteId")
     void eliminarProductosDelCarrito(Long clienteId);
 
-    @Query("SELECT c FROM Carrito c WHERE c.cliente.id = :idCliente")
+    @Query("SELECT pc FROM ProductosCarrito pc WHERE pc.cliente.id_cliente = :idCliente")
     Optional<List<ProductosCarrito>> findProductosByClienteId(Long idCliente);
 
-    @Query("SELECT c FROM Carrito c WHERE c.cliente.id = :idCliente AND c.producto.id = :idProducto AND c.talla = :talla")
+    @Query("SELECT pc FROM ProductosCarrito pc WHERE pc.cliente.id_cliente = :idCliente AND pc.producto.id_producto = :idProducto AND pc.talla = :talla")
     Optional<ProductosCarrito> findByClienteIdProductoIdAndTalla(Long idCliente, Long idProducto, String talla);
 }

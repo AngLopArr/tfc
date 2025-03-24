@@ -236,14 +236,14 @@ public class ApplicationController {
     @PostMapping("/employees/login")
     public ResponseEntity<Map<String, Object>> loginEmployee(@RequestBody Empleados empleado) {
         // Se toma el resultado de intentar hacer login con el usuario pasado
-        Boolean successfulLogin = empleadosService.login(empleado) != null;
+        Empleados employee = empleadosService.login(empleado);
 
         // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
 
-        if(successfulLogin){
+        if(employee != null){
             response.put("success", true);
-            response.put("role", empleado.getRole());
+            response.put("role", employee.getRole());
         }
         else{
             response.put("success", false);

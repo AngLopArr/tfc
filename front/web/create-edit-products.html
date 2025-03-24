@@ -8,73 +8,60 @@
     <link rel="shortcut icon" href="imagenes/icono.png">
     <!-- Establezco el CSS para la página -->
     <link rel="stylesheet" href="css/shop.css" type="text/css">
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function showSection(sectionId) {
-                document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
-                let section = document.getElementById(sectionId);
-                if (section) {
-                    section.classList.remove('hidden');
-                }
-            }
-            
-            function toggleDetalle(id) {
-                let detalle = document.getElementById(id);
-                if (detalle) {
-                    detalle.style.display = detalle.style.display === 'none' ? 'block' : 'none';
-                }
-            }
-            
-            window.showSection = showSection;
-            window.toggleDetalle = toggleDetalle;
-        });
-
-        function toggleNumberInput(checkbox) {
-            const container = checkbox.closest(".talla-item");
-            const numberInput = container.querySelector("input[type='number']");
-            numberInput.style.display = checkbox.checked ? "inline-block" : "none";
-        }
-    </script>
 </head>
 <body>
     <div class="topbar">
         <a href="products.html">Productos</a>
         <a href="create-edit-products.html">Añadir Producto</a>
         <a href="users.html">Usuarios</a>
-        <a href="create-edit-users.html">Añadir Usuario</a>
+        <a href="add-modify-users.html">Añadir Usuario</a>
         <a href="returns.html">Devoluciones</a>
+        <a id="logout">Logout</a>
     </div>
     
     <div class="container">
         <div id="add-producto">
             <h2>Crear Producto</h2>
             <form>
-                <label>Nombre: <input type="text"></label>
+                <div class="input-text">
+                    <label>Nombre</label>
+                    <input type="text" id="nombre" required>
+                    <br>
+                    <label>Precio</label>
+                    <input type="number" id="precio" min="0" required>
+                    <br>
+                    <label>Imagen</label>
+                </div>
+                <input type="file" id="imagen" required>
                 <br><br>
-                <label>Precio: <input type="number"></label>
-                <br><br>
+                <div class="input-text">
+                    <label>Tallas</label>
+                </div>
                 <div class="talla-group">
                     <div class="talla-item">
-                        <label><input type="checkbox" name="tallaS" onclick="toggleNumberInput(this)"> S</label>
-                        <input type="number" min="1" max="10">
+                        <label><input type="checkbox" id="tallaS" onclick="toggleNumberInput(this)"> S</label>
+                        <input type="number" min="1" id="tallaSInput">
                     </div>
                     <div class="talla-item">
-                        <label><input type="checkbox" name="tallaM" onclick="toggleNumberInput(this)"> M</label>
-                        <input type="number" min="1" max="10">
+                        <label><input type="checkbox" id="tallaM" onclick="toggleNumberInput(this)"> M</label>
+                        <input type="number" min="1" id="tallaMInput">
                     </div>
                     <div class="talla-item">
-                        <label><input type="checkbox" name="tallaL" onclick="toggleNumberInput(this)"> L</label>
-                        <input type="number" min="1" max="10">
+                        <label><input type="checkbox" id="tallaL" onclick="toggleNumberInput(this)"> L</label>
+                        <input type="number" min="1" id="tallaLInput">
                     </div>
                     <div class="talla-item">
-                        <label><input type="checkbox" name="tallaXL" onclick="toggleNumberInput(this)"> XL</label>
-                        <input type="number" min="1" max="10">
+                        <label><input type="checkbox" id="tallaXL" onclick="toggleNumberInput(this)"> XL</label>
+                        <input type="number" min="1" id="tallaXLInput">
                     </div>
                 </div>
                 <br>
-                <button type="submit">Guardar</button>
+                <button id="boton-productos" class="boton-form">Guardar</button>
             </form>
         </div>
     </div>
 </body>
+<!-- Establezco los scripts de la página -->
+<script src="js/shop.js"></script>
+<script src="js/create-edit-products.js"></script>
 </html>

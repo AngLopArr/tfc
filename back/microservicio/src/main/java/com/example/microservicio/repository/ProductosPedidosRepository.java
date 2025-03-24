@@ -8,6 +8,6 @@ import com.example.microservicio.model.ProductosPedidos;
 
 @Repository
 public interface ProductosPedidosRepository extends JpaRepository<ProductosPedidos, Long> {
-    @Query("SELECT SUM(pp.producto.precio * pp.cantidad) FROM ProductoPedido pp WHERE pp.pedido.id = :idPedido")
+    @Query("SELECT SUM(pp.producto.price * pp.cantidad) FROM ProductosPedidos pp WHERE pp.pedido.id = :idPedido")
     double calcularTotalPedido(Long idPedido);
 }
