@@ -182,6 +182,18 @@ footer a {
     border-color: #ae85ff;
     outline: none;
 }
+.input-block {
+    display: flex;
+    flex-direction: row;
+}
+.input-block span {
+    margin-left: 12px;
+    margin-top: 10px;
+    color: red;
+}
+.input-block #span-imagen-producto{
+    margin-top: 1px;
+}
 #imagen {
     margin-bottom: 10px;
 }

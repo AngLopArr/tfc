@@ -3,8 +3,6 @@ package com.example.microservicio.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,15 +35,12 @@ public class Clientes {
     private String image;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
     private List<ProductosCarrito> carrito = new ArrayList<>();
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
     private List<Pedidos> pedidos;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
     private List<Devoluciones> devoluciones;
 
     public Long getId_cliente() {

@@ -28,15 +28,14 @@ public class Productos {
     // Contraseña del usuario
     private double price;
 
-    private int S;
+    private int s;
 
-    private int M;
+    private int m;
 
-    private int L;
+    private int l;
 
-    private int XL;
+    private int xl;
 
-    @Column(length = 2048)
     private String image;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -74,35 +73,35 @@ public class Productos {
     }
 
     public int getS() {
-        return S;
+        return s;
     }
 
-    public void setS(int S) {
-        this.S = S;
+    public void setS(int s) {
+        this.s = s;
     }
 
     public int getM() {
-        return M;
+        return m;
     }
 
-    public void setM(int M) {
-        this.M = M;
+    public void setM(int m) {
+        this.m = m;
     }
 
     public int getL() {
-        return L;
+        return l;
     }
 
-    public void setL(int L) {
-        this.L = L;
+    public void setL(int l) {
+        this.l = l;
     }
 
     public int getXL() {
-        return XL;
+        return xl;
     }
 
-    public void setXL(int XL) {
-        this.XL = XL;
+    public void setXL(int xl) {
+        this.xl = xl;
     }
 
     public String getImage() {

@@ -40,6 +40,7 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
+    margin-bottom: -2px;
 }
 .form-group input:focus {
     border-color: #ae85ff;
@@ -55,7 +56,7 @@ body {
     margin-left: 10px;
     width: 95%;
     font-size: 16px;
-    margin-top: 10px;
+    margin-top: 7px;
 }
 .btn:hover {
     background: #d4beff;
