@@ -39,9 +39,9 @@
 <body>
     <div class="topbar">
         <a href="products.html">Productos</a>
-        <a href="create-edit-products.html">Añadir Producto</a>
+        <a href="create-products.html">Añadir Producto</a>
         <a href="users.html">Usuarios</a>
-        <a href="add-modify-users.html">Añadir Usuario</a>
+        <a href="add-users.html">Añadir Usuario</a>
         <a href="returns.html">Devoluciones</a>
         <a id="logout">Logout</a>
     </div>
@@ -49,22 +49,38 @@
     <div class="container">
         <div id="add-usuario">
             <h2>Añadir Usuario</h2>
-            <form>
+            <form id="form-add-users">
                 <div class="input-text">
-                    <label>Nombre</label><input type="text">
+                    <label>Nombre</label>
+                    <div class="input-block">
+                        <input type="text" id="nombre">
+                        <span id="span-nombre-user"></span>
+                    </div>
                     <br>
-                    <label>Email</label><input type="email">
+                    <label>Email</label>
+                    <div class="input-block">
+                        <input type="text" id="email">
+                        <span id="span-email-user"></span>
+                    </div>
                     <br>
-                    <label>Rol</label><input type="text">
+                    <label>Rol</label>
+                    <div class="input-block">
+                        <select id="select-rols"></select>
+                        <span id="span-rol-user"></span>
+                    </div>
                     <br>
-                    <label>Contraseña</label><input type="password">
+                    <label>Contraseña</label>
+                    <div class="input-block">
+                        <input type="password" id="password">
+                        <span id="span-password-user"></span>
+                    </div>
                     <br>
                 </div>
-                <button style="margin-top: 10px;" type="submit" class="boton-form">Guardar</button>
+                <button style="margin-top: 10px;" type="submit" class="boton-form" id="boton-users">Guardar</button>
             </form>
         </div>
     </div>
 </body>
 <script src="js/shop.js"></script>
-<script src="js/add-modify-users.js"></script>
+<script src="js/add-users.js"></script>
 </html>

@@ -47,41 +47,24 @@
     </div>
     
     <div class="container">
-        <div id="devoluciones">
-            <h2>Gestión de Devoluciones</h2>
-            <div class="devolucion" onclick="toggleDetalle('detalle1')">
-                <h3>Devolución realizada 15/01/2024</h3>
-                <p>En proceso - 2 artículos</p>
-            </div>
-            <div id="detalle1" class="devolucion-detalle">
-                <div class="producto">
-                    <p>Camiseta Blanca x1 <br><b>Talla M</b> - 15.00 €</p>
+        <div id="add-usuario">
+            <h2>Añadir Usuario</h2>
+            <form>
+                <div class="input-text">
+                    <label>Nombre</label><input type="text">
+                    <br>
+                    <label>Email</label><input type="email">
+                    <br>
+                    <label>Rol</label><input type="text">
+                    <br>
+                    <label>Contraseña</label><input type="password">
+                    <br>
                 </div>
-                <div class="producto">
-                    <p>Pantalón Azul x1 <br><b>Talla L</b> - 25.00 €</p>
-                </div>
-                <br>
-                <button class="accept-btn">Aceptar</button>
-                <button class="reject-btn">Rechazar</button>
-            </div>
-            <div class="devolucion" onclick="toggleDetalle('detalle2')">
-                <h3>Devolución realizada 15/01/2024</h3>
-                <p>En proceso - 2 artículos</p>
-            </div>
-            <div id="detalle2" class="devolucion-detalle">
-                <div class="producto">
-                    <p>Camiseta Blanca x1 <br><b>Talla M</b> - 15.00 €</p>
-                </div>
-                <div class="producto">
-                    <p>Pantalón Azul x1 <br><b>Talla L</b> - 25.00 €</p>
-                </div>
-                <br>
-                <button class="accept-btn">Aceptar</button>
-                <button class="reject-btn">Rechazar</button>
-            </div>
+                <button style="margin-top: 10px;" type="submit" class="boton-form">Guardar</button>
+            </form>
         </div>
     </div>
 </body>
 <script src="js/shop.js"></script>
-<script src="js/returns.js"></script>
+<script src="js/modify-users.js"></script>
 </html>

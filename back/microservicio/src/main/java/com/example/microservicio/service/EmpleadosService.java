@@ -51,8 +51,13 @@ public class EmpleadosService {
         return empleadosRepository.findByEmail(email).orElse(null);
     }
 
-    public ArrayList<Empleados> getAllEmployees(){
-        return (ArrayList<Empleados>) empleadosRepository.findAll();
+    public ArrayList<Empleados> get10Employees(int group){
+        int offset = (group * 5) - 5;
+        return empleadosRepository.get10Employees(offset).orElse(null);
+    }
+
+    public int getTotalEmployees(){
+        return empleadosRepository.findAll().size();
     }
 
     public boolean createEmployee(Empleados empleado){

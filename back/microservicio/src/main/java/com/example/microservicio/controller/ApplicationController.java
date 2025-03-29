@@ -20,6 +20,7 @@ import com.example.microservicio.model.Clientes;
 import com.example.microservicio.model.Devoluciones;
 import com.example.microservicio.model.Empleados;
 import com.example.microservicio.model.Pedidos;
+import com.example.microservicio.model.Producto;
 import com.example.microservicio.model.Productos;
 import com.example.microservicio.model.ProductosCarrito;
 import com.example.microservicio.model.ProductosDevoluciones;
@@ -66,7 +67,7 @@ public class ApplicationController {
     // CLIENTES
 
     // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
-    @GetMapping("/clientes/{username}")
+    @GetMapping("/clientes/username/{username}")
     public ResponseEntity<Map<String, Boolean>> getClientByUsername(@PathVariable String username) {
         // Almaceno la existencia del usuario en una variable boolean
         boolean clientExists = clientesService.getClientByUsername(username) != null;
@@ -82,7 +83,7 @@ public class ApplicationController {
     }
 
     // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
-    @GetMapping("/clientes/{email}")
+    @GetMapping("/clientes/email/{email}")
     public ResponseEntity<Map<String, Boolean>> getClientByEmail(@PathVariable String email) {
         // Almaceno la existencia del usuario en una variable boolean
         boolean clientExists = clientesService.getClientByEmail(email) != null;
@@ -195,7 +196,7 @@ public class ApplicationController {
     // EMPLEADOS
 
     // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
-    @GetMapping("/employees/{email}")
+    @GetMapping("/employees/email/{email}")
     public ResponseEntity<Map<String, Boolean>> getEmployeeByEmail(@PathVariable String email) {
         // Almaceno la existencia del usuario en una variable boolean
         boolean employeeExists = empleadosService.getEmployeeByEmail(email) != null;
@@ -210,10 +211,23 @@ public class ApplicationController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/employees")
-    public ResponseEntity<ArrayList<Empleados>> getAllEmployees() {
+    @GetMapping("/employees/id/{id}")
+    public ResponseEntity<Empleados> getEmployee(@PathVariable Long id) {
         // Almaceno la existencia del usuario en una variable boolean
-        ArrayList<Empleados> empleados = empleadosService.getAllEmployees();
+        Empleados empleado = empleadosService.getEmployeeById(id);
+
+        if(empleado == null){
+            return ResponseEntity.notFound().build();
+        }
+        else{
+            return ResponseEntity.ok(empleado);
+        }
+    }
+
+    @GetMapping("/employees/group/{group}")
+    public ResponseEntity<ArrayList<Empleados>> get10Employees(@PathVariable int group) {
+        // Almaceno la existencia del usuario en una variable boolean
+        ArrayList<Empleados> empleados = empleadosService.get10Employees(group);
 
         if(empleados.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -221,6 +235,18 @@ public class ApplicationController {
         else{
             return ResponseEntity.ok(empleados);
         }
+    }
+
+    @GetMapping("/employees")
+    public ResponseEntity<Map<String, Integer>> getTotalEmployees() {
+        // Almaceno la existencia del usuario en una variable boolean
+        int total = empleadosService.getTotalEmployees();
+
+        Map<String, Integer> response = new HashMap<>();
+
+        response.put("total", total);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/employees/roles")
@@ -304,17 +330,61 @@ public class ApplicationController {
 
     // PRODUCTOS
 
-    @GetMapping("/inventory")
-    public ResponseEntity<ArrayList<Productos>> getAllProducts() {
+    @GetMapping("/inventory/name/{name}")
+    public ResponseEntity<Map<String, Boolean>> productExists(@PathVariable String name) {
         // Almaceno la existencia del usuario en una variable boolean
-        ArrayList<Productos> productos = productosService.getAllProducts();
+        Productos producto = productosService.productExists(name);
+
+        Map<String, Boolean> response = new HashMap<>();
+
+        if(producto != null){
+            response.put("exists", true);
+        }
+        else{
+            response.put("exists", false);
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/inventory/id/{id}")
+    public ResponseEntity<Producto> getProducts(@PathVariable Long id) {
+        // Almaceno la existencia del usuario en una variable boolean
+        Productos producto = productosService.getProductById(id);
+
+        if(producto == null){
+            return ResponseEntity.notFound().build();
+        }
+        else{
+            Producto productoEnviar = new Producto(producto.getId_producto(), producto.getName(), producto.getPrice(), producto.getS(), producto.getM(), producto.getL(), producto.getXL(), producto.getImage());
+            return ResponseEntity.ok(productoEnviar);
+        }
+    }
+
+    @GetMapping("/inventory/group/{group}")
+    public ResponseEntity<ArrayList<Producto>> get10Products(@PathVariable int group) {
+        // Almaceno la existencia del usuario en una variable boolean
+        ArrayList<Productos> productos = productosService.get10Products(group);
 
         if(productos.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         else{
-            return ResponseEntity.ok(productos);
+            ArrayList<Producto> productosEnviar = productosService.getProductosEnviar(productos);
+            return ResponseEntity.ok(productosEnviar);
         }
+    }
+
+    @GetMapping("/inventory")
+    public ResponseEntity<Map<String, Integer>> getTotalProducts() {
+        // Almaceno la existencia del usuario en una variable boolean
+        int total = productosService.getTotalProducts();
+
+        Map<String, Integer> response = new HashMap<>();
+
+        response.put("total", total);
+
+        return ResponseEntity.ok(response);
     }
 
     // Empleo el método POST para registrar un usuario

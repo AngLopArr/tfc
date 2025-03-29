@@ -15,20 +15,16 @@ let tallaXL = document.getElementById("tallaXLInput");
 let nombreProductoSpan = document.getElementById("span-nombre-producto");
 let precioProductoSpan = document.getElementById("span-precio-producto");
 let imagenFileSpan = document.getElementById("span-imagen-producto");
-let imagen = "";
-
-imagenFile.addEventListener("change", e => {
-    let file = imagenFile.files[0];
-    let reader = new FileReader();
-    reader.addEventListener("load", e => {
-        imagen = reader.result;
-    });
-
-    reader.readAsDataURL(file);
-})
 
 let boton = document.getElementById("boton-productos");
 boton.addEventListener("click", e => creation(e));
+
+async function checkProductName(name){
+    const response = await fetch("http://localhost:8080/aracne/inventory/name/" + name);
+    const data = await response.json();
+    // Se retorna la respuesta, true si este existe, y false si no
+    return data["exists"];
+}
 
 async function creation(event) {
     event.preventDefault();
@@ -53,7 +49,15 @@ async function creation(event) {
         imagenFileSpan.innerText = "";
     }
 
-    if(nombreProducto.value != "" && precioProducto.value != 0 && imagenFile.value != ""){
+    let existeNombre = await checkProductName(nombreProducto.value);
+    if(existeNombre){
+        nombreProductoSpan.innerText = "El nombre indicado ya existe en la base de datos.";
+    }
+    else{
+        nombreProductoSpan.innerText = "";
+    }
+
+    if(nombreProducto.value != "" && precioProducto.value != 0 && imagenFile.value != "" && !existeNombre){
         const producto = {
             name: nombreProducto.value,
             price: precioProducto.value,
@@ -61,7 +65,7 @@ async function creation(event) {
             m: tallaM.value,
             l: tallaL.value,
             xl: tallaXL.value,
-            image: imagen
+            image: imagenFile.value
         };
 
     
@@ -75,6 +79,10 @@ async function creation(event) {
         // Tomamos la respuesta
         const data = await response.json();
         let exito = data["success"];
-        console.log(exito);
+        
+        if(exito){
+            document.getElementById("form-create-products").reset();
+            alert("El producto se ha creado correctamente.")
+        }
     }
 }

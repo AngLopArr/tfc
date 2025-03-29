@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.microservicio.model.Producto;
 import com.example.microservicio.model.Productos;
 import com.example.microservicio.repository.ProductosRepository;
 
@@ -13,12 +14,30 @@ public class ProductosService {
     @Autowired 
     ProductosRepository productosRepository;
 
+    public Productos productExists(String name){
+        return productosRepository.findByName(name).orElse(null);
+    }
+
     public Productos getProductById(Long id){
         return productosRepository.findById(id).orElse(null);
     }
 
-    public ArrayList<Productos> getAllProducts(){
-        return (ArrayList<Productos>) productosRepository.findAll();
+    public ArrayList<Productos> get10Products(int group){
+        int offset = (group * 5) - 5;
+        return productosRepository.get10Productos(offset).orElse(null);
+    }
+
+    public ArrayList<Producto> getProductosEnviar(ArrayList<Productos> productos){
+        ArrayList<Producto> productosEnviar = new ArrayList<>();
+        for (int i = 0; i < productos.size(); i++) {
+            Productos producto = productos.get(i);
+            productosEnviar.add(new Producto(producto.getId_producto(), producto.getName(), producto.getPrice(), producto.getS(), producto.getM(), producto.getL(), producto.getXL(), producto.getImage()));
+        }
+        return productosEnviar;
+    }
+
+    public int getTotalProducts(){
+        return productosRepository.findAll().size();
     }
 
     public boolean createProduct(Productos producto){

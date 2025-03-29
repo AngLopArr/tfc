@@ -22,7 +22,7 @@ public class Productos {
     private Long id_producto;
 
     // Nombre del usuario, este ha de ser único
-    @Column(unique=true)
+    @Column(unique = true)
     private String name;
     
     // Contraseña del usuario
@@ -36,6 +36,7 @@ public class Productos {
 
     private int xl;
 
+    @Column(length = 2048)
     private String image;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)

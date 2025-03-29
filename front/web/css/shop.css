@@ -137,6 +137,9 @@ td {
     width: 50px; 
     padding-right: 0; 
 }
+.imagen {
+    width: 100px;
+}
 form { 
     align-content: center; 
 }
@@ -158,9 +161,10 @@ footer button {
 footer button:hover {
     background: #c1a3fc;
 }
-footer a {
+footer span {
     margin-left: 8px;
     margin-right: 8px;
+    font-size: 16px;
 }
 .input-text {
   display: flex;
@@ -191,9 +195,31 @@ footer a {
     margin-top: 10px;
     color: red;
 }
-.input-block #span-imagen-producto{
-    margin-top: 1px;
-}
 #imagen {
     margin-bottom: 10px;
+}
+select {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 2px solid #c1a3fc;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    color: #333;
+    transition: all 0.3s ease;
+    width: 200px;
+}
+select:focus {
+    border-color: #c1a3fc;
+    outline: none;
+}
+option {
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #ddd;
+}
+#tabla-productos td.imagen img{
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: -4px;
 }
