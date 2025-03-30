@@ -1,20 +1,21 @@
-function toggleNumberInput(checkbox) {
-    const container = checkbox.closest(".talla-item");
-    const numberInput = container.querySelector("input[type='number']");
-    numberInput.style.display = checkbox.checked ? "inline-block" : "none";
-    numberInput.required = checkbox.checked ? true : false;
-}
-
 let nombreProducto = document.getElementById("nombre");
 let precioProducto = document.getElementById("precio");
-let imagenFile = document.getElementById("imagen");
+let imagenProducto = document.getElementById("imagen");
 let tallaS = document.getElementById("tallaSInput");
 let tallaM = document.getElementById("tallaMInput");
 let tallaL = document.getElementById("tallaLInput");
 let tallaXL = document.getElementById("tallaXLInput");
 let nombreProductoSpan = document.getElementById("span-nombre-producto");
 let precioProductoSpan = document.getElementById("span-precio-producto");
-let imagenFileSpan = document.getElementById("span-imagen-producto");
+let imagenProductoSpan = document.getElementById("span-imagen-producto");
+
+function toggleNumberInput(checkbox) {
+    const container = checkbox.closest(".talla-item");
+    const numberInput = container.querySelector("input[type='number']");
+    numberInput.style.display = checkbox.checked ? "inline-block" : "none";
+    numberInput.required = checkbox.checked ? true : false;    
+    numberInput.value = 0;
+}
 
 let boton = document.getElementById("boton-productos");
 boton.addEventListener("click", e => creation(e));
@@ -35,18 +36,18 @@ async function creation(event) {
         nombreProductoSpan.innerText = "";
     }
 
-    if(precioProducto.value == 0){
-        precioProductoSpan.innerText = "Este campo es obligatorio y no puede ser igual a 0.";
+    if(precioProducto.value <= 0){
+        precioProductoSpan.innerText = "Este campo es obligatorio y no puede ser igual o menor que 0.";
     }
     else{
         precioProductoSpan.innerText = "";
     }
 
-    if(imagenFile.value == ""){
-        imagenFileSpan.innerText = "Este campo es obligatorio.";
+    if(imagenProducto.value == ""){
+        imagenProductoSpan.innerText = "Este campo es obligatorio.";
     }
     else{
-        imagenFileSpan.innerText = "";
+        imagenProductoSpan.innerText = "";
     }
 
     let existeNombre = await checkProductName(nombreProducto.value);
@@ -57,7 +58,7 @@ async function creation(event) {
         nombreProductoSpan.innerText = "";
     }
 
-    if(nombreProducto.value != "" && precioProducto.value != 0 && imagenFile.value != "" && !existeNombre){
+    if(nombreProducto.value != "" && precioProducto.value != 0 && imagenProducto.value != "" && !existeNombre){
         const producto = {
             name: nombreProducto.value,
             price: precioProducto.value,
@@ -65,7 +66,7 @@ async function creation(event) {
             m: tallaM.value,
             l: tallaL.value,
             xl: tallaXL.value,
-            image: imagenFile.value
+            image: imagenProducto.value
         };
 
     

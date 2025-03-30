@@ -39,12 +39,20 @@ button {
     cursor: pointer; 
     border-radius: 4px; 
 }
-.edit-btn { 
-    background: #FFC107; 
+.boton-editar { 
+    background: #ffc30f; 
     color: white; 
 }
-.delete-btn { 
+.boton-editar:hover { 
+    background: #ffb700; 
+    color: white; 
+}
+.boton-eliminar { 
     background: #D32F2F; 
+    color: white; 
+}
+.boton-eliminar:hover { 
+    background: #ab1212; 
     color: white; 
 }
 .accept-btn { 
@@ -120,6 +128,7 @@ td {
 .talla-item input[type="number"] { 
     display: none; 
     margin-left: 10px; 
+    width: 80px;
 }
 .acciones { 
     width: 145px; 
@@ -160,6 +169,11 @@ footer button {
 }
 footer button:hover {
     background: #c1a3fc;
+}
+footer button:disabled {
+    background: #eae0ff;
+    color: #f6f6f6;
+    cursor: default;
 }
 footer span {
     margin-left: 8px;

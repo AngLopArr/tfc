@@ -39,11 +39,30 @@ async function fillTable(){
                 <img src="${producto.image}" alt="${producto.nombre}">
             </td>
             <td class="acciones">
-                <button class="edit-btn">Editar</button> 
-                <button class="delete-btn">Eliminar</button>
+                <button class="boton-editar" id_producto="${producto.id_producto}">Editar</button> 
+                <button class="boton-eliminar" id_producto="${producto.id_producto}">Eliminar</button>
             </td>
         `;
         tabla.appendChild(fila);
+    }
+
+    const botonesEliminar =  document.querySelectorAll(".boton-eliminar");
+
+    for (let index = 0; index < botonesEliminar.length; index++) {
+        botonesEliminar[index].addEventListener("click", () => {
+            let confirmacion = confirm("Esta acción eliminará el producto permanentemente. ¿Está seguro/a de que desea continuar?");
+            if(confirmacion){
+                eliminarProducto(botonesEliminar[index]);
+            }
+        });
+    }
+
+    const botonesEditar =  document.querySelectorAll(".boton-editar");
+
+    for (let index = 0; index < botonesEditar.length; index++) {
+        botonesEditar[index].addEventListener("click", () => {
+            irFormularioEditar(botonesEditar[index]);
+        });
     }
 }
 
@@ -115,3 +134,29 @@ botonRetroceder.addEventListener("click", () => {
         botonRetroceder.disabled = false;
     }
 });
+
+async function eliminarProducto(botonEliminar){
+    let id = botonEliminar.getAttribute("id_producto");
+
+    const response = await fetch("http://localhost:8080/aracne/inventory/delete/" + id, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+    });
+
+    // Tomamos la respuesta
+    const data = await response.json();
+    let exito = data["success"];
+    
+    if(exito){
+        alert("El producto se ha eliminado correctamente.");
+        location.reload();
+    }
+    else{
+        alert("No se ha podido eliminar el producto.");
+    }
+}
+
+function irFormularioEditar(botonEditar){
+    let id = botonEditar.getAttribute("id_producto");
+    window.location.href = 'edit-products.html?id=' + id;
+}
