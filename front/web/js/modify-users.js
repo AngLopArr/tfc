@@ -1,3 +1,4 @@
+const idEmpleado = new URLSearchParams((location.href).split("?")[1]).get("id");
 let nombreEmployee = document.getElementById("nombre");
 let emailEmployee = document.getElementById("email");
 let passwordEmployee = document.getElementById("password");
@@ -6,9 +7,10 @@ let nombreEmployeeSpan = document.getElementById("span-nombre-user");
 let emailEmployeeSpan = document.getElementById("span-email-user");
 let passwordEmployeeSpan = document.getElementById("span-password-user");
 let showPassword = document.getElementById("password-eye");
+let emailOriginal;
 
 let boton = document.getElementById("boton-users");
-boton.addEventListener("click", e => creation(e));
+boton.addEventListener("click", e => editarEmpleado(e));
 
 async function getRoles(){
     const response = await fetch("http://localhost:8080/aracne/employees/roles");
@@ -28,6 +30,18 @@ async function getRoles(){
 
 getRoles();
 
+async function fillForm(){
+    const response = await fetch("http://localhost:8080/aracne/employees/id/" + idEmpleado);
+    const data = await response.json();
+
+    nombreEmployee.value = data.name;
+    emailEmployee.value = data.email;
+    emailOriginal = data.email;
+    selectorRoles.value = data.role;
+}
+
+fillForm();
+
 async function checkEmployeeEmail(email){
     const response = await fetch("http://localhost:8080/aracne/employees/email/" + email);
     const data = await response.json();
@@ -35,7 +49,7 @@ async function checkEmployeeEmail(email){
     return data["exists"];
 }
 
-async function creation(event) {
+async function editarEmpleado(event) {
     event.preventDefault();
     if(nombreEmployee.value == ""){
         nombreEmployeeSpan.innerText = "Este campo es obligatorio.";
@@ -60,15 +74,17 @@ async function creation(event) {
 
     let existeEmail = await checkEmployeeEmail(emailEmployee.value);
 
-    if(existeEmail){
+    if(existeEmail && (emailEmployee.value != emailOriginal)){
         emailEmployeeSpan.innerText = "El email indicado ya existe en la base de datos.";
     }
     else{
         emailEmployeeSpan.innerText = "";
+        existeEmail = false;
     }
 
     if(nombreEmployee.value != "" && emailEmployee.value != "" && passwordEmployee.value != "" && !existeEmail && validatePassword(passwordEmployee.value) && validateEmail(emailEmployee.value)){
         const empleado = {
+            id_empleado: idEmpleado,
             email: emailEmployee.value,
             name: nombreEmployee.value,
             role: selectorRoles.value,
@@ -77,8 +93,8 @@ async function creation(event) {
 
     
         // Se realiza la petición de login a la API pasándole el usuario
-        const response = await fetch("http://localhost:8080/aracne/employees/create", {
-            method: "POST",
+        const response = await fetch("http://localhost:8080/aracne/employees/update", {
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(empleado)
         });
@@ -88,8 +104,8 @@ async function creation(event) {
         let exito = data["success"];
         
         if(exito){
-            document.getElementById("form-add-users").reset();
-            alert("El empleado ha sido añadido con éxito.")
+            alert("El empleado ha sido modificado con éxito.");
+            window.location.href = 'users.html';
         }
     }
 }

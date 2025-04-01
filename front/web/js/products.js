@@ -1,15 +1,18 @@
-let pagina_actual = 1;
-let total_products = 0;
 const tabla = document.getElementById("tabla-productos"); 
 const totalPaginas = document.getElementById("paginas-totales"); 
 const botonAvanzar = document.getElementById("boton-avanzar");
 const botonRetroceder = document.getElementById("boton-retroceder");
 const paginaActualSpan = document.getElementById("pagina-actual");
+const barraBusqueda = document.getElementById("barra-busqueda");
+const lupa = document.getElementById("lupa");
+
+let pagina_actual = 1;
+let total_products = 0;
 paginaActualSpan.innerText = pagina_actual;
 
 async function fillTable(){
-    const response = await fetch("http://localhost:8080/aracne/inventory/group/" + pagina_actual);
-    const data = await response.json();
+    let data;
+
     tabla.innerHTML = `
         <tr>
             <th>ID</th>
@@ -23,6 +26,29 @@ async function fillTable(){
             <th>Acciones</th>
         </tr>
     `;
+
+    if(barraBusqueda.value == ""){
+        const response = await fetch("http://localhost:8080/aracne/inventory/group/" + pagina_actual);
+
+        if(response.status === 404){
+            pagina_actual = 0;
+            paginaActualSpan.innerText = pagina_actual;
+            return;
+        }
+
+        data = await response.json();
+    }
+    else{
+        const response = await fetch("http://localhost:8080/aracne/inventory/search/" + pagina_actual + "/" + barraBusqueda.value);
+
+        if(response.status === 404){
+            pagina_actual = 0;
+            paginaActualSpan.innerText = pagina_actual;
+            return;
+        }
+
+        data = await response.json();
+    }
 
     for (let index = 0; index < data.length; index++) {
         const producto = data[index];
@@ -69,15 +95,38 @@ async function fillTable(){
 fillTable();
 
 async function getTotalProducts(){
-    const response = await fetch("http://localhost:8080/aracne/inventory");
-    const data = await response.json();
+    let data;
 
-    total_products = data["total"];
-    if(Number.isInteger(total_products / 5)){
-        totalPaginas.innerText = (total_products / 5);
+    if(barraBusqueda.value == ""){
+        const response = await fetch("http://localhost:8080/aracne/inventory");
+
+        if(response.status === 404){
+            pagina_actual = 0;
+            paginaActualSpan.innerText = pagina_actual;
+            return;
+        }
+
+        data = await response.json();
     }
     else{
-        totalPaginas.innerText = ((total_products / 5) + 1).toString().replace(/\..*/, "");
+        const response = await fetch("http://localhost:8080/aracne/inventory/total/" + barraBusqueda.value);
+
+        if(response.status === 404){
+            pagina_actual = 0;
+            paginaActualSpan.innerText = pagina_actual;
+            return;
+        }
+
+        data = await response.json();
+    }
+
+    total_products = data["total"];
+
+    if(Number.isInteger(total_products / 4)){
+        totalPaginas.innerText = (total_products / 4);
+    }
+    else{
+        totalPaginas.innerText = ((total_products / 4) + 1).toString().replace(/\..*/, "");
     }
 
     if(pagina_actual.toString() === totalPaginas.innerText){
@@ -87,7 +136,7 @@ async function getTotalProducts(){
         botonAvanzar.disabled = false;
     }
     
-    if(pagina_actual === 1){
+    if(pagina_actual === 1 || pagina_actual === 0){
         botonRetroceder.disabled = true;
     }
     else{
@@ -108,7 +157,7 @@ botonAvanzar.addEventListener("click", () => {
         botonAvanzar.disabled = false;
     }
 
-    if(pagina_actual === 1){
+    if(pagina_actual === 1 || pagina_actual === 0){
         botonRetroceder.disabled = true;
     }
     else{
@@ -127,7 +176,7 @@ botonRetroceder.addEventListener("click", () => {
         botonAvanzar.disabled = false;
     }
 
-    if(pagina_actual === 1){
+    if(pagina_actual === 1 || pagina_actual === 0){
         botonRetroceder.disabled = true;
     }
     else{
@@ -160,3 +209,20 @@ function irFormularioEditar(botonEditar){
     let id = botonEditar.getAttribute("id_producto");
     window.location.href = 'edit-products.html?id=' + id;
 }
+
+
+barraBusqueda.addEventListener("input", () => {
+    if(barraBusqueda.value == ""){
+        pagina_actual = 1;
+        paginaActualSpan.innerText = pagina_actual;
+        getTotalProducts();
+        fillTable();
+    }
+});
+
+lupa.addEventListener("click", () => {
+    pagina_actual = 1;
+    paginaActualSpan.innerText = pagina_actual;
+    getTotalProducts();
+    fillTable();
+})

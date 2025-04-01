@@ -48,37 +48,16 @@
     
     <div class="container">
         <div id="usuarios">
-            <h2>Lista de Usuarios</h2>
-            <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                    <th>Acciones</th>
-                </tr>
-                <tr>
-                    <td class="id">1</td>
-                    <td>Carmen García</td>
-                    <td>carmen@example.com</td>
-                    <td>Administrador</td>
-                    <td class="acciones"><button class="boton-editar">Editar</button></td>
-                </tr>
-                <tr>
-                    <td class="id">2</td>
-                    <td>Juan Pérez</td>
-                    <td>juan@example.com</td>
-                    <td>Empleado</td>
-                    <td class="acciones"><button class="boton-editar">Editar</button> <button class="boton-eliminar">Eliminar</button></td>
-                </tr>
-                <tr>
-                    <td class="id">3</td>
-                    <td>María López</td>
-                    <td>maria@example.com</td>
-                    <td>Gerente</td>
-                    <td class="acciones"><button class="boton-editar">Editar</button> <button class="boton-eliminar">Eliminar</button></td>
-                </tr>
-            </table>
+            <div class="barra-superior">
+                <h2>Lista de Usuarios</h2>
+                <div class="barra-busqueda">
+                    <input type="text" id="barra-busqueda" placeholder="Buscar usuario por nombre"/>
+                    <img id="lupa" src="imagenes/lupa.png"/>
+                </div>
+            </div>
+            <table id="tabla-usuarios"></table>
+            <br>
+            <footer><button id="boton-retroceder"><</button><span id="pagina-actual"></span> ... <span id="paginas-totales"></span><button id="boton-avanzar">></button></footer>
         </div>
     </div>
 </body>

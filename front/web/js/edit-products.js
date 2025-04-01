@@ -24,13 +24,6 @@ function toggleNumberInput(checkbox) {
     numberInput.value = 0;
 }
 
-async function checkProductName(name){
-    const response = await fetch("http://localhost:8080/aracne/inventory/name/" + name);
-    const data = await response.json();
-    // Se retorna la respuesta, true si este existe, y false si no
-    return data["exists"];
-}
-
 async function fillForm(){
     const response = await fetch("http://localhost:8080/aracne/inventory/id/" + idProducto);
     const data = await response.json();
@@ -66,6 +59,12 @@ async function fillForm(){
 
 fillForm();
 
+async function checkProductName(name){
+    const response = await fetch("http://localhost:8080/aracne/inventory/name/" + name);
+    const data = await response.json();
+    return data["exists"];
+}
+
 async function editarProducto(event){
     event.preventDefault();
     if(nombreProducto.value == ""){
@@ -95,6 +94,7 @@ async function editarProducto(event){
     }
     else{
         nombreProductoSpan.innerText = "";
+        existeNombre = false;
     }
 
     if(nombreProducto.value != "" && precioProducto.value != 0 && imagenProducto.value != "" && !existeNombre){

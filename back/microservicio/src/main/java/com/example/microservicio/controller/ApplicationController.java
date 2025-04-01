@@ -225,9 +225,22 @@ public class ApplicationController {
     }
 
     @GetMapping("/employees/group/{group}")
-    public ResponseEntity<ArrayList<Empleados>> get10Employees(@PathVariable int group) {
+    public ResponseEntity<ArrayList<Empleados>> get5Employees(@PathVariable int group) {
         // Almaceno la existencia del usuario en una variable boolean
-        ArrayList<Empleados> empleados = empleadosService.get10Employees(group);
+        ArrayList<Empleados> empleados = empleadosService.get5Employees(group);
+
+        if(empleados.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        else{
+            return ResponseEntity.ok(empleados);
+        }
+    }
+
+    @GetMapping("/employees/search/{group}/{name}")
+    public ResponseEntity<ArrayList<Empleados>> get5EmployeesByName(@PathVariable int group, @PathVariable String name) {
+        // Almaceno la existencia del usuario en una variable boolean
+        ArrayList<Empleados> empleados = empleadosService.get5EmployeesByName(name, group);
 
         if(empleados.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -241,6 +254,18 @@ public class ApplicationController {
     public ResponseEntity<Map<String, Integer>> getTotalEmployees() {
         // Almaceno la existencia del usuario en una variable boolean
         int total = empleadosService.getTotalEmployees();
+
+        Map<String, Integer> response = new HashMap<>();
+
+        response.put("total", total);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/employees/total/{name}")
+    public ResponseEntity<Map<String, Integer>> getTotalEmployeesByName(@PathVariable String name) {
+        // Almaceno la existencia del usuario en una variable boolean
+        int total = empleadosService.getTotalEmployeesByName(name);
 
         Map<String, Integer> response = new HashMap<>();
 
@@ -322,7 +347,7 @@ public class ApplicationController {
         Map<String, Boolean> response = new HashMap<>();
 
         // Establezco que el mapa contenga una clave 'exists' y el contenido será true o false dependiendo de si el usuario existe o no
-        response.put("exists", successfulDeletion);
+        response.put("success", successfulDeletion);
 
         // Retorno la respuesta
         return ResponseEntity.ok(response);
@@ -362,9 +387,23 @@ public class ApplicationController {
     }
 
     @GetMapping("/inventory/group/{group}")
-    public ResponseEntity<ArrayList<Producto>> get10Products(@PathVariable int group) {
+    public ResponseEntity<ArrayList<Producto>> get4Products(@PathVariable int group) {
         // Almaceno la existencia del usuario en una variable boolean
-        ArrayList<Productos> productos = productosService.get10Products(group);
+        ArrayList<Productos> productos = productosService.get4Products(group);
+
+        if(productos.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        else{
+            ArrayList<Producto> productosEnviar = productosService.getProductosEnviar(productos);
+            return ResponseEntity.ok(productosEnviar);
+        }
+    }
+
+    @GetMapping("/inventory/search/{group}/{name}")
+    public ResponseEntity<ArrayList<Producto>> get4ProductsByName(@PathVariable int group, @PathVariable String name) {
+        // Almaceno la existencia del usuario en una variable boolean
+        ArrayList<Productos> productos = productosService.get4ProductsByName(name, group);
 
         if(productos.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -379,6 +418,18 @@ public class ApplicationController {
     public ResponseEntity<Map<String, Integer>> getTotalProducts() {
         // Almaceno la existencia del usuario en una variable boolean
         int total = productosService.getTotalProducts();
+
+        Map<String, Integer> response = new HashMap<>();
+
+        response.put("total", total);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/inventory/total/{name}")
+    public ResponseEntity<Map<String, Integer>> getTotalProductsByName(@PathVariable String name) {
+        // Almaceno la existencia del usuario en una variable boolean
+        int total = productosService.getTotalProductsByName(name);
 
         Map<String, Integer> response = new HashMap<>();
 

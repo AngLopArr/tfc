@@ -8,33 +8,6 @@
     <link rel="shortcut icon" href="imagenes/icono.png">
     <!-- Establezco el CSS para la página -->
     <link rel="stylesheet" href="css/shop.css" type="text/css">
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function showSection(sectionId) {
-                document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
-                let section = document.getElementById(sectionId);
-                if (section) {
-                    section.classList.remove('hidden');
-                }
-            }
-            
-            function toggleDetalle(id) {
-                let detalle = document.getElementById(id);
-                if (detalle) {
-                    detalle.style.display = detalle.style.display === 'none' ? 'block' : 'none';
-                }
-            }
-            
-            window.showSection = showSection;
-            window.toggleDetalle = toggleDetalle;
-        });
-
-        function toggleNumberInput(checkbox) {
-            const container = checkbox.closest(".talla-item");
-            const numberInput = container.querySelector("input[type='number']");
-            numberInput.style.display = checkbox.checked ? "inline-block" : "none";
-        }
-    </script>
 </head>
 <body>
     <div class="topbar">
@@ -71,7 +44,10 @@
                     <br>
                     <label>Contraseña</label>
                     <div class="input-block">
-                        <input type="password" id="password">
+                        <div class="password-block">
+                            <input type="password" id="password">
+                            <img id="password-eye" src="imagenes/eye.png"/>
+                        </div>
                         <span id="span-password-user"></span>
                     </div>
                     <br>

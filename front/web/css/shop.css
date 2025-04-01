@@ -213,17 +213,22 @@ footer span {
     margin-bottom: 10px;
 }
 select {
-    padding: 8px 12px;
+    padding: 10px 12px;
     font-size: 16px;
-    border: 2px solid #c1a3fc;
+    border: 1.5px solid #c1a3fc;
     border-radius: 5px;
     background-color: #f1f1f1;
     color: #333;
     transition: all 0.3s ease;
     width: 200px;
+    padding-right: 20px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url("https://cdn-icons-png.flaticon.com/512/8066/8066258.png") no-repeat right 11px center;
+    background-size: 18px;
 }
 select:focus {
-    border-color: #c1a3fc;
     outline: none;
 }
 option {
@@ -236,4 +241,56 @@ option {
     height: 100px;
     object-fit: cover;
     margin-bottom: -4px;
+}
+.barra-superior {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.barra-superior input {
+    height: 20px;
+    width: 300px;
+    padding-bottom: 8px;
+    padding-top: 9px;
+    padding-inline: 12px;
+    border-radius: 10px;
+    border: 1.5px solid #c1a3fc;
+}
+.barra-superior input:focus {
+    border-color: #ae85ff;
+    outline: none;
+}
+.barra-superior h2 {
+    padding-left: 3px;
+    padding-top: 3px;
+}
+.barra-busqueda {
+    width: 360px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.barra-busqueda img{
+    width: 27px;
+    padding-top: 1.25px;
+    padding-right: 1px;
+    cursor: pointer;
+}
+.password-block {
+    width: 658px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.password-block input {
+    width: 600px;
+}
+.password-block img {
+    width: 27px;
+    padding-top: 1.25px;
+    padding-right: 1px;
+    cursor: pointer;
 }
