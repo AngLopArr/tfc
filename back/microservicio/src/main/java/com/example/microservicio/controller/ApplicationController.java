@@ -559,9 +559,9 @@ public class ApplicationController {
 
     // Empleo el método POST para registrar un usuario
     @PutMapping("/carrito/update/talla/{id}")
-    public ResponseEntity<Map<String, Object>> updateTallaProductCarritoCliente(@PathVariable Long id, @RequestBody String talla) {
+    public ResponseEntity<Map<String, Object>> updateTallaProductCarritoCliente(@PathVariable Long id, @RequestBody Map<String, String> talla) {
         // Se comprueba si la creación ha sido exitosa
-        String update = productosCarritoService.updateTalla(id, talla);
+        String update = productosCarritoService.updateTalla(id, talla.get("talla"));
 
         boolean successfulUpdate = update.equals("El producto se ha actualizado correctamente.");
 
@@ -578,9 +578,9 @@ public class ApplicationController {
 
     // Empleo el método POST para registrar un usuario
     @PutMapping("/carrito/update/cantidad/{id}")
-    public ResponseEntity<Map<String, Object>> updateCantidadProductCarritoCliente(@PathVariable Long id, @RequestBody int cantidad) {
+    public ResponseEntity<Map<String, Object>> updateCantidadProductCarritoCliente(@PathVariable Long id, @RequestBody Map<String, Integer> cantidad) {
         // Se comprueba si la creación ha sido exitosa
-        String update = productosCarritoService.updateCantidad(id, cantidad);
+        String update = productosCarritoService.updateCantidad(id, cantidad.get("cantidad"));
 
         boolean successfulUpdate = update.equals("El producto se ha actualizado correctamente.");
 
@@ -688,8 +688,8 @@ public class ApplicationController {
 
     // Empleo el método POST para registrar un usuario
     @PutMapping("/devoluciones/update/{id}")
-    public ResponseEntity<Map<String, Object>> updateEstadoDevolucion(@PathVariable Long id, @RequestBody boolean estado) {
-        boolean successfulUpdate = devolucionesService.cambiarEstadoDevolucion(id, estado);
+    public ResponseEntity<Map<String, Object>> updateEstadoDevolucion(@PathVariable Long id, @RequestBody Map<String, Boolean> estado) {
+        boolean successfulUpdate = devolucionesService.cambiarEstadoDevolucion(id, estado.get("estado"));
 
         // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
@@ -703,11 +703,11 @@ public class ApplicationController {
 
     // Empleo el método POST para registrar un usuario
     @PutMapping("/devoluciones/devolver/{id}")
-    public ResponseEntity<Map<String, Object>> devolverProductoCliente(@PathVariable Long idDevolucion, @RequestBody boolean estado) {
-        boolean successfulUpdate = devolucionesService.reenviarAlCliente(idDevolucion, estado);
+    public ResponseEntity<Map<String, Object>> devolverProductoCliente(@PathVariable Long idDevolucion, @RequestBody Map<String, Boolean> estado) {
+        boolean successfulUpdate = devolucionesService.reenviarAlCliente(idDevolucion, estado.get("estado"));
         Devoluciones devolucion = devolucionesService.getDevolucion(idDevolucion);
 
-        if(successfulUpdate && estado && devolucion != null){
+        if(successfulUpdate && estado.get("estado") && devolucion != null){
             Pedidos pedido = new Pedidos();
             pedido.setCliente(devolucion.getCliente());
             pedidosService.createPedidoSinTotal(pedido);
