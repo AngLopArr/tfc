@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Aracne</string>
+    <string name="products">PRODUCTOS</string>
+    <string name="cart">MI CARRITO</string>
+    <string name="profile">MI PERFIL</string>
+</resources>
