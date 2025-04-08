@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.aracne.model.MainViewModel
+import com.aracne.ui.screens.ProductScreen
 import com.aracne.ui.screens.ProductsScreen
 import com.aracne.ui.screens.ProfileScreen
 import com.aracne.ui.screens.ShoppingCartScreen
@@ -62,7 +63,7 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, m
     }*/
     NavHost(navController = navController, startDestination = Destinations.PRODUCTOS, modifier = Modifier.padding(innerPadding)){
         composable(Destinations.PRODUCTOS) {
-            ProductsScreen()
+            ProductsScreen(navController)
         }
         composable(Destinations.CART) {
             ShoppingCartScreen()
@@ -70,10 +71,12 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, m
         composable(Destinations.PROFILE) {
             ProfileScreen()
         }
-        /*composable(route = "${Destinations.MATERIALES}/{id_categoria}", arguments = listOf(navArgument("id_categoria") { type = NavType.IntType })) {
+        composable(route = "${Destinations.PRODUCTO}/{id_producto}", arguments = listOf(navArgument("id_producto") { type = NavType.IntType })) {
             parametros ->
-            val categoria = parametros.arguments?.getInt("id_categoria") ?: 0
+            val producto = parametros.arguments?.getInt("id_producto") ?: 0
+            ProductScreen(productoId = producto)
         }
+        /*
         composable(route = "${Destinatns.MATERIAL}/{id_material}", arguments = listOf(navArgument("id_material") { type = NavType.IntType })) {
                 parametros ->
             val material = parametros.arguments?.getInt("id_material") ?: 1
