@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -71,15 +72,19 @@ fun ProductsScreen(navController: NavHostController){
         OutlinedTextField(
             value = busqueda,
             onValueChange = { busqueda = it },
-            placeholder = { Text("Buscar productos") },
+            placeholder = { Text("Buscar productos",
+                style = TextStyle(
+                    fontSize = 14.sp
+                )) },
             modifier = Modifier.fillMaxWidth().padding(PaddingValues(15.dp, 15.dp, 15.dp, 0.dp)).border(width = 3.dp,
-                color = colorResource(id = R.color.purple_001), shape = RoundedCornerShape(3.5.dp)),
+                color = colorResource(id = R.color.purple_001), shape = RoundedCornerShape(3.5.dp)).height(50.dp),
+            textStyle = TextStyle(fontSize = 14.sp),
             colors = coloresTextFieldLogin(),
             trailingIcon = {
                 Image(
                     painter = painterResource(id = R.drawable.lupa),
                     contentDescription = stringResource(id = R.string.products),
-                    modifier = Modifier.size(32.dp).padding(0.dp, 0.dp,4.dp, 0.dp).clickable {
+                    modifier = Modifier.size(28.dp).padding(0.dp, 0.dp,4.dp, 0.dp).clickable {
                         // realizar busqueda api
                     }
                 )

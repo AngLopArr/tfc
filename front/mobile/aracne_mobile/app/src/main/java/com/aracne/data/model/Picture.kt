@@ -1,5 +1,5 @@
 package com.aracne.data.model
 
-data class Image (
+data class Picture (
     val id: Long,
 )

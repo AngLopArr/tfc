@@ -74,7 +74,7 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, m
         composable(route = "${Destinations.PRODUCTO}/{id_producto}", arguments = listOf(navArgument("id_producto") { type = NavType.IntType })) {
             parametros ->
             val producto = parametros.arguments?.getInt("id_producto") ?: 0
-            ProductScreen(productoId = producto)
+            ProductScreen(productoId = producto, navController = navController)
         }
         /*
         composable(route = "${Destinatns.MATERIAL}/{id_material}", arguments = listOf(navArgument("id_material") { type = NavType.IntType })) {
