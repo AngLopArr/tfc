@@ -46,6 +46,9 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
+import com.aracne.ui.components.BotonProductoCantidad
+import com.aracne.ui.components.BotonProductoTalla
+import com.aracne.ui.components.ProductoCantidad
 import com.aracne.ui.navigation.Destinations
 
 @Composable
@@ -149,83 +152,6 @@ fun ProductScreen(productoId: Int, navController: NavHostController){
                 }
             }
         }
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun BotonProductoTalla(contenido: String, isPressed: Boolean, selectTalla: () -> Unit){
-    val backgroundColorTalla = if (isPressed) R.color.purple_001 else R.color.purple_002
-    Box(contentAlignment = Alignment.Center,
-        modifier = Modifier.size(40.dp).background(
-            color = colorResource(backgroundColorTalla),
-            shape = RoundedCornerShape(12.dp))
-            .pointerInteropFilter {
-                when (it.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        selectTalla()
-                        true
-                    }
-                    else -> false
-                }
-            }
-    )
-    {
-        Text(
-            contenido,
-            style = TextStyle(
-                fontSize = 15.sp
-            )
-        )
-    }
-}
-
-@Composable
-fun ProductoCantidad(contenido: String){
-    Box(contentAlignment = Alignment.Center,
-        modifier = Modifier.size(40.dp).background(
-            color = colorResource(R.color.light_gray),
-            shape = RoundedCornerShape(12.dp))
-    )
-    {
-        Text(
-            contenido,
-            style = TextStyle(
-                fontSize = 16.sp
-            )
-        )
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun BotonProductoCantidad(imagen: Int){
-    var isPressed by remember { mutableStateOf(false) }
-    val backgroundColorCantidad = if (isPressed) R.color.gray else R.color.light_gray
-    Box(contentAlignment = Alignment.Center,
-        modifier = Modifier.size(40.dp)
-            .clickable {  }
-            .background(color = colorResource(backgroundColorCantidad), shape = RoundedCornerShape(12.dp))
-            .pointerInteropFilter {
-                when (it.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        isPressed = true
-                        true
-                    }
-                    MotionEvent.ACTION_UP,
-                    MotionEvent.ACTION_CANCEL -> {
-                        isPressed = false
-                        true
-                    }
-                    else -> false
-                }
-            }
-    ) {
-        Image(
-            painter = painterResource(imagen),
-            contentDescription = "",
-            modifier = Modifier.size(30.dp)
-        )
     }
 }
 
