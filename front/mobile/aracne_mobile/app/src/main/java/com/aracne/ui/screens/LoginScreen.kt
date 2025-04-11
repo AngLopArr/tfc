@@ -67,17 +67,17 @@ fun LoginScreen(){
                 modifier = Modifier.size(440.dp).padding(20.dp, 45.dp, 20.dp, 0.dp)
             )
             Card(
-                modifier = Modifier.fillMaxWidth().height(400.dp).padding(25.dp, 0.dp, 25.dp, 45.dp),
+                modifier = Modifier.fillMaxWidth().height(350.dp).padding(25.dp, 0.dp, 25.dp, 45.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = colorResource(R.color.white),
                 )
             ){
+                Spacer(modifier = Modifier.height(30.dp))
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.Center
                 ){
-                    Spacer(modifier = Modifier.height(75.dp))
                     OutlinedTextField(
                         value = username,
                         onValueChange = { username = it },

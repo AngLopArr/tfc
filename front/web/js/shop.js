@@ -5,13 +5,6 @@ window.onload = function() {
         window.location.href = 'login.html';
     }
 
-    if(localStorage.getItem('role') !== 'admin'){
-        let enlaces = document.getElementsByClassName('admin');
-        for (let index = 0; index < enlaces.length; index++) {
-            enlaces[index].hidden = true;
-        }
-    }
-
     // Se crea un evento de click para el botón de logout
     document.getElementById('logout').addEventListener('click', function() {
         // Se borrará el elemento del local storage que almacena el estado de acceso

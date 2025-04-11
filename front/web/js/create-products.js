@@ -83,7 +83,7 @@ async function creation(event) {
         
         if(exito){
             document.getElementById("form-create-products").reset();
-            alert("El producto se ha creado correctamente.")
+            alert("El producto se ha creado correctamente.");
         }
     }
 }

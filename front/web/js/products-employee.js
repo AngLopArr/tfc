@@ -209,7 +209,7 @@ async function eliminarProducto(botonEliminar){
 
 function irFormularioEditar(botonEditar){
     let id = botonEditar.getAttribute("id_producto");
-    window.location.href = 'edit-products.html?id=' + id;
+    window.location.href = 'edit-products-employee.html?id=' + id;
 }
 
 

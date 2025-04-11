@@ -7,6 +7,19 @@ botonLogin.addEventListener('click', async function(e) {
     login();
 });
 
+let showPassword = document.getElementById("password-eye");
+showPassword.addEventListener("click", () => {
+    let type = document.getElementById('login-password').getAttribute("type");
+    if(type === "password"){
+        showPassword.src = "imagenes/closed_eye.png";
+        document.getElementById('login-password').type ="text";
+    }
+    else{
+        showPassword.src = "imagenes/eye.png";
+        document.getElementById('login-password').type ="password";
+    }
+});
+
 // Función que permite a un usuario hacer login
 async function login(){
     // Se toma el contenido de los campos de texto del formulario
@@ -34,14 +47,22 @@ async function login(){
     console.log(exito);
 
     // Si la respuesta es positiva
-    if (exito) {
+    if (exito && role == "admin") {
         // Se almacena en el local storage que el estado de acceso es true
         localStorage.setItem('loggedIn', 'true');
         // Se almacena en el local storage el nombre del usuario logueado
         localStorage.setItem('role', role);
         // Se redirige al usuario a la página principal del chat
         window.location.href = 'products.html';
-    } else {
+    } 
+    else if (exito && role == "employee") {
+        localStorage.setItem('loggedIn', 'true');
+        // Se almacena en el local storage el nombre del usuario logueado
+        localStorage.setItem('role', role);
+        // Se redirige al usuario a la página principal del chat
+        window.location.href = 'products-employee.html';
+    }
+    else{
         // Si la respuesta del login es negativa, se indica que las credenciales deben ser incorrectas
         alert('Usuario o contraseña incorrectos.');
     }

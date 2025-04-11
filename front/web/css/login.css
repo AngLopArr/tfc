@@ -61,3 +61,19 @@ body {
 .btn:hover {
     background: #d4beff;
 }
+.password-block {
+    width: 97.5%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.password-block input {
+    width: 85%;
+}
+.password-block img {
+    width: 27px;
+    padding-top: 2px;
+    padding-left: 7px;
+    cursor: pointer;
+}

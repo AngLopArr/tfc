@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aracne</title>
+    <!-- Establezco un icono para la página -->
+    <link rel="shortcut icon" href="imagenes/icono.png">
+    <!-- Establezco el CSS para la página -->
+    <link rel="stylesheet" href="css/shop.css" type="text/css">
+</head>
+<body>
+    <div class="topbar">
+        <a href="products-employee.html">Productos</a>
+        <a href="create-products-employee.html">Añadir Producto</a>
+        <a href="returns-employee.html">Devoluciones</a>
+        <a id="logout">Logout</a>
+    </div>
+    
+    <div class="container">
+        <div id="add-producto">
+            <h2>Crear Producto</h2>
+            <form id="form-create-products">
+                <div class="input-text">
+                    <label>Nombre</label>
+                    <div class="input-block">
+                        <input type="text" id="nombre">
+                        <span id="span-nombre-producto"></span>
+                    </div>
+                    <br>
+                    <label>Precio</label>
+                    <div class="input-block">
+                        <input type="number" id="precio" min="0">
+                        <span id="span-precio-producto"></span>
+                    </div>
+                    <br>
+                    <label>Imagen</label>
+                    <div class="input-block">
+                        <input type="text" id="imagen">
+                        <span id="span-imagen-producto"></span>
+                    </div>
+                    <br>
+                </div>
+                <div class="input-text">
+                    <label>Tallas</label>
+                </div>
+                <div class="talla-group">
+                    <div class="talla-item">
+                        <label><input type="checkbox" id="tallaS" onclick="toggleNumberInput(this)"> S</label>
+                        <input type="number" min="0" id="tallaSInput">
+                    </div>
+                    <div class="talla-item">
+                        <label><input type="checkbox" id="tallaM" onclick="toggleNumberInput(this)"> M</label>
+                        <input type="number" min="0" id="tallaMInput">
+                    </div>
+                    <div class="talla-item">
+                        <label><input type="checkbox" id="tallaL" onclick="toggleNumberInput(this)"> L</label>
+                        <input type="number" min="0" id="tallaLInput">
+                    </div>
+                    <div class="talla-item">
+                        <label><input type="checkbox" id="tallaXL" onclick="toggleNumberInput(this)"> XL</label>
+                        <input type="number" min="0" id="tallaXLInput">
+                    </div>
+                </div>
+                <br>
+                <button id="boton-productos" class="boton-form">Guardar</button>
+            </form>
+        </div>
+    </div>
+</body>
+<!-- Establezco los scripts de la página -->
+<script src="js/shop.js"></script>
+<script src="js/create-products.js"></script>
+</html>

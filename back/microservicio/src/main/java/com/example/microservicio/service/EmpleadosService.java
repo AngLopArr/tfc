@@ -90,6 +90,10 @@ public class EmpleadosService {
         Empleados empleadoUpdate = empleadosRepository.findById(empleado.getId_empleado()).orElse(null);
 
         if(empleadoUpdate != null){
+            String passwordHasheada = passwordCheck.hashString(empleado.getPassword());
+
+            // Reemplazo la contraseña por su versión hasheada
+            empleado.setPassword(passwordHasheada);
             empleadosRepository.save(empleado);
             return true;
         }

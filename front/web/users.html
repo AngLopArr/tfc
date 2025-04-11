@@ -8,33 +8,6 @@
     <link rel="shortcut icon" href="imagenes/icono.png">
     <!-- Establezco el CSS para la página -->
     <link rel="stylesheet" href="css/shop.css" type="text/css">
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function showSection(sectionId) {
-                document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
-                let section = document.getElementById(sectionId);
-                if (section) {
-                    section.classList.remove('hidden');
-                }
-            }
-            
-            function toggleDetalle(id) {
-                let detalle = document.getElementById(id);
-                if (detalle) {
-                    detalle.style.display = detalle.style.display === 'none' ? 'block' : 'none';
-                }
-            }
-            
-            window.showSection = showSection;
-            window.toggleDetalle = toggleDetalle;
-        });
-
-        function toggleNumberInput(checkbox) {
-            const container = checkbox.closest(".talla-item");
-            const numberInput = container.querySelector("input[type='number']");
-            numberInput.style.display = checkbox.checked ? "inline-block" : "none";
-        }
-    </script>
 </head>
 <body>
     <div class="topbar">
@@ -62,6 +35,5 @@
     </div>
 </body>
 <!-- Establezco los scripts de la página -->
-<script src="js/shop.js"></script>
 <script src="js/users.js"></script>
 </html>
