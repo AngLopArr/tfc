@@ -16,6 +16,8 @@ public class Devolucion {
 
     private ArrayList<ProductoDevolucion> productosDevueltos;
 
+    public Devolucion() {}
+
     public Devolucion(Long id_devolucion, Long id_pedido, LocalDateTime fechaDevolucion, String motivoDevolucion, boolean aceptada) {
         this.id_devolucion = id_devolucion;
         this.id_pedido = id_pedido;

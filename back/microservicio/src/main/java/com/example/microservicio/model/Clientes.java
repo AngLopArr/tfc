@@ -12,8 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-// Clase que representa los mensajes de los usuarios una vez descifrados: esta clase existe puramente para mostrar el contenido de los mensajes a los usuario, no
-// se almacenan mensajes descifrados en la base de datos
 @Entity
 @Table(name = "clientes")
 public class Clientes {

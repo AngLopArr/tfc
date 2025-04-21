@@ -26,7 +26,7 @@ import com.example.microservicio.model.Producto;
 import com.example.microservicio.model.ProductoCarrito;
 import com.example.microservicio.model.Productos;
 import com.example.microservicio.model.ProductosCarrito;
-import com.example.microservicio.model.ProductosDevoluciones;
+import com.example.microservicio.model.ProductosPedidos;
 import com.example.microservicio.repository.ProductosCarritoRepository;
 import com.example.microservicio.service.ClientesService;
 import com.example.microservicio.service.DevolucionesService;
@@ -37,10 +37,8 @@ import com.example.microservicio.service.ProductosDevolucionesService;
 import com.example.microservicio.service.ProductosPedidosService;
 import com.example.microservicio.service.ProductosService;
 
-// Acepto peticiones por parte de esta URL para que el cliente funcione
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
-// Establezco la URL base de la API
 @RequestMapping("/aracne")
 public class ApplicationController {
     @Autowired
@@ -72,45 +70,35 @@ public class ApplicationController {
 
     // CLIENTES
 
-    // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
     @GetMapping("/clientes/username/{username}")
     public ResponseEntity<Map<String, Boolean>> getClientByUsername(@PathVariable String username) {
-        // Almaceno la existencia del usuario en una variable boolean
+
         boolean clientExists = clientesService.getClientByUsername(username) != null;
 
-        // Creo un mapa para almacenar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Establezco que el mapa contenga una clave 'exists' y el contenido será true o false dependiendo de si el usuario existe o no
         response.put("exists", clientExists);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
     @GetMapping("/clientes/email/{email}")
     public ResponseEntity<Map<String, Boolean>> getClientByEmail(@PathVariable String email) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         boolean clientExists = clientesService.getClientByEmail(email) != null;
 
-        // Creo un mapa para almacenar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Establezco que el mapa contenga una clave 'exists' y el contenido será true o false dependiendo de si el usuario existe o no
         response.put("exists", clientExists);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método POST para iniciar sesión
     @PostMapping("/clientes/login")
     public ResponseEntity<Map<String, Object>> loginClient(@RequestBody Clientes cliente) {
-        // Se toma el resultado de intentar hacer login con el usuario pasado
+        
         Clientes client = clientesService.login(cliente);
 
-        // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
 
         if(client != null){
@@ -124,83 +112,66 @@ public class ApplicationController {
             response.put("name", null);
         }
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método POST para registrar un usuario
     @PostMapping("/clientes/register")
     public ResponseEntity<Map<String, Object>> registerClient(@RequestBody Clientes cliente) {
-        // Se toma el resultado de intentar registrar el usuario pasado
+        
         String registration = clientesService.register(cliente);
 
-        // Se comprueba si el resultado ha sido exitoso
         boolean successfulRegistration = registration.equals("El registro se ha realizado correctamente.");
 
-        // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulRegistration);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/clientes/password/{id}")
     public ResponseEntity<Map<String, Object>> changePasswordClient(@PathVariable Long id, @RequestBody Map<String, String> password) {
-        // Se toma el resultado de intentar registrar el usuario pasado
+        
         String newPassword = password.get("password");
 
-        // Se comprueba si el resultado ha sido exitoso
         boolean successfulChange = clientesService.changePassword(id, newPassword);
 
-        // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulChange);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/clientes/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteCliente(@PathVariable Long id) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         boolean clientExists = clientesService.deleteCliente(id);
 
-        // Creo un mapa para almacenar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Establezco que el mapa contenga una clave 'exists' y el contenido será true o false dependiendo de si el usuario existe o no
-        response.put("sucess", clientExists);
+        response.put("success", clientExists);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
     // EMPLEADOS
 
-    // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
     @GetMapping("/employees/email/{email}")
     public ResponseEntity<Map<String, Boolean>> getEmployeeByEmail(@PathVariable String email) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         boolean employeeExists = empleadosService.getEmployeeByEmail(email) != null;
 
-        // Creo un mapa para almacenar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Establezco que el mapa contenga una clave 'exists' y el contenido será true o false dependiendo de si el usuario existe o no
         response.put("exists", employeeExists);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/employees/id/{id}")
     public ResponseEntity<Empleados> getEmployee(@PathVariable Long id) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         Empleados empleado = empleadosService.getEmployeeById(id);
 
         if(empleado == null){
@@ -213,7 +184,7 @@ public class ApplicationController {
 
     @GetMapping("/employees/group/{group}")
     public ResponseEntity<ArrayList<Empleados>> get5Employees(@PathVariable int group) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         ArrayList<Empleados> empleados = empleadosService.get5Employees(group);
 
         if(empleados.isEmpty()){
@@ -226,7 +197,7 @@ public class ApplicationController {
 
     @GetMapping("/employees/search/{group}/{name}")
     public ResponseEntity<ArrayList<Empleados>> get5EmployeesByName(@PathVariable int group, @PathVariable String name) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         ArrayList<Empleados> empleados = empleadosService.get5EmployeesByName(name, group);
 
         if(empleados.isEmpty()){
@@ -239,7 +210,7 @@ public class ApplicationController {
 
     @GetMapping("/employees")
     public ResponseEntity<Map<String, Integer>> getTotalEmployees() {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         int total = empleadosService.getTotalEmployees();
 
         Map<String, Integer> response = new HashMap<>();
@@ -251,7 +222,7 @@ public class ApplicationController {
 
     @GetMapping("/employees/total/{name}")
     public ResponseEntity<Map<String, Integer>> getTotalEmployeesByName(@PathVariable String name) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         int total = empleadosService.getTotalEmployeesByName(name);
 
         Map<String, Integer> response = new HashMap<>();
@@ -263,20 +234,17 @@ public class ApplicationController {
 
     @GetMapping("/employees/roles")
     public ResponseEntity<String[]> getEmployeesRoles() {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         String[] roles = empleadosService.getRoles();
 
-        // Retorno la respuesta
         return ResponseEntity.ok(roles);
     }
 
-    // Empleo el método POST para iniciar sesión
     @PostMapping("/employees/login")
     public ResponseEntity<Map<String, Object>> loginEmployee(@RequestBody Empleados empleado) {
-        // Se toma el resultado de intentar hacer login con el usuario pasado
+        
         Empleados employee = empleadosService.login(empleado);
 
-        // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
 
         if(employee != null){
@@ -288,55 +256,42 @@ public class ApplicationController {
             response.put("role", null);
         }
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método POST para registrar un usuario
     @PostMapping("/employees/create")
     public ResponseEntity<Map<String, Boolean>> createEmployee(@RequestBody Empleados empleado) {
-        // Se comprueba si la creación ha sido exitosa
+
         boolean successfulCreation = empleadosService.createEmployee(empleado);
 
-        // Creo un map para indicar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulCreation);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método POST para registrar un usuario
     @PutMapping("/employees/update")
     public ResponseEntity<Map<String, Boolean>> updateEmployee(@RequestBody Empleados empleado) {
-        // Se comprueba si la creación ha sido exitosa
+        
         boolean successfulUpdate = empleadosService.updateEmployee(empleado);
 
-        // Creo un map para indicar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulUpdate);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
     @DeleteMapping("/employees/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         boolean successfulDeletion = empleadosService.deleteEmployee(id);
 
-        // Creo un mapa para almacenar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Establezco que el mapa contenga una clave 'exists' y el contenido será true o false dependiendo de si el usuario existe o no
         response.put("success", successfulDeletion);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
@@ -344,7 +299,7 @@ public class ApplicationController {
 
     @GetMapping("/inventory/name/{name}")
     public ResponseEntity<Map<String, Boolean>> productExists(@PathVariable String name) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         Productos producto = productosService.productExists(name);
 
         Map<String, Boolean> response = new HashMap<>();
@@ -360,8 +315,8 @@ public class ApplicationController {
     }
 
     @GetMapping("/inventory/id/{id}")
-    public ResponseEntity<Producto> getProducts(@PathVariable Long id) {
-        // Almaceno la existencia del usuario en una variable boolean
+    public ResponseEntity<Producto> getProduct(@PathVariable Long id) {
+        
         Productos producto = productosService.getProductById(id);
 
         if(producto == null){
@@ -375,7 +330,7 @@ public class ApplicationController {
 
     @GetMapping("/inventory/group/{group}")
     public ResponseEntity<ArrayList<Producto>> get4Products(@PathVariable int group) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         ArrayList<Productos> productos = productosService.get4Products(group);
 
         if(productos.isEmpty()){
@@ -389,7 +344,7 @@ public class ApplicationController {
 
     @GetMapping("/inventory/search/{group}/{name}")
     public ResponseEntity<ArrayList<Producto>> get4ProductsByName(@PathVariable int group, @PathVariable String name) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         ArrayList<Productos> productos = productosService.get4ProductsByName(name, group);
 
         if(productos.isEmpty()){
@@ -403,7 +358,7 @@ public class ApplicationController {
 
     @GetMapping("/inventory")
     public ResponseEntity<Map<String, Integer>> getTotalProducts() {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         int total = productosService.getTotalProducts();
 
         Map<String, Integer> response = new HashMap<>();
@@ -415,7 +370,7 @@ public class ApplicationController {
 
     @GetMapping("/inventory/total/{name}")
     public ResponseEntity<Map<String, Integer>> getTotalProductsByName(@PathVariable String name) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         int total = productosService.getTotalProductsByName(name);
 
         Map<String, Integer> response = new HashMap<>();
@@ -425,71 +380,54 @@ public class ApplicationController {
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método POST para registrar un usuario
     @PostMapping("/inventory/create")
     public ResponseEntity<Map<String, Boolean>> createProduct(@RequestBody Productos producto) {
-        // Se comprueba si la creación ha sido exitosa
+        
         boolean successfulCreation = productosService.createProduct(producto);
 
-        // Creo un map para indicar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulCreation);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método POST para registrar un usuario
     @PutMapping("/inventory/update/stock")
     public ResponseEntity<Map<String, Boolean>> updateStockProduct(@RequestBody Map<String, Object> producto) {
         Long idProducto = (Long) producto.get("idProducto");
         String talla = (String) producto.get("talla");
         int change = (int) producto.get("change");
 
-        // Se comprueba si la creación ha sido exitosa
         boolean successfulUpdate = productosService.updateStockProduct(idProducto, talla, change);
 
-        // Creo un map para indicar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulUpdate);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método POST para registrar un usuario
     @PutMapping("/inventory/update")
     public ResponseEntity<Map<String, Boolean>> updateProduct(@RequestBody Productos producto) {
-        // Se comprueba si la creación ha sido exitosa
+        
         boolean successfulUpdate = productosService.updateProduct(producto);
 
-        // Creo un map para indicar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulUpdate);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
     @DeleteMapping("/inventory/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteProduct(@PathVariable Long id) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         boolean successfulDeletion = productosService.deleteProduct(id);
 
-        // Creo un mapa para almacenar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Establezco que el mapa contenga una clave 'exists' y el contenido será true o false dependiendo de si el usuario existe o no
         response.put("success", successfulDeletion);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
@@ -497,7 +435,7 @@ public class ApplicationController {
 
     @GetMapping("/carrito/{id}")
     public ResponseEntity<ArrayList<ProductoCarrito>> getAllProductsCarritoClient(@PathVariable Long id) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         ArrayList<ProductoCarrito> productosCarrito = productosCarritoService.getAllProductosCarritoCliente(id);
 
         if(productosCarrito.isEmpty()){
@@ -509,12 +447,9 @@ public class ApplicationController {
     }
 
     @PostMapping("/carrito/add/{id_cliente}/{id_producto}")
-    public ResponseEntity<?> addProductCarritoCliente(@PathVariable Long id_cliente, @PathVariable Long id_producto, @RequestBody ProductosCarrito productoCarrito) {
+    public ResponseEntity<ProductoCarrito> addProductCarritoCliente(@PathVariable Long id_cliente, @PathVariable Long id_producto, @RequestBody ProductosCarrito productoCarrito) {
         Clientes cliente = clientesService.getClientById(id_cliente);
         Productos producto = productosService.getProductById(id_producto);
-
-        // Creo un map para indicar la respuesta
-        Map<String, Object> response = new HashMap<>();
 
         if(cliente != null){
             if(producto != null){
@@ -522,98 +457,71 @@ public class ApplicationController {
                 productoCarrito.setProducto(producto);
                 ProductoCarrito nuevoProducto = productosCarritoService.añadirAlCarrito(productoCarrito);
                 
-                // Introduzco la respuesta en el map
                 if(nuevoProducto != null){
                     return ResponseEntity.ok(nuevoProducto);
                 }
             }
-            else{
-                // Introduzco la respuesta en el map
-                response.put("success", false);
-            }
-        }
-        else{
-            // Introduzco la respuesta en el map
-            response.put("success", false);
         }
 
-        // Retorno la respuesta
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new ProductoCarrito());
     }
 
-    // Empleo el método POST para registrar un usuario
     @PutMapping("/carrito/update/talla/{id}")
     public ResponseEntity<Map<String, Object>> updateTallaProductCarritoCliente(@PathVariable Long id, @RequestBody Map<String, String> talla) {
-        // Se comprueba si la creación ha sido exitosa
+        
         String update = productosCarritoService.updateTalla(id, talla.get("talla"));
 
         boolean successfulUpdate = update.equals("El producto se ha actualizado correctamente.");
 
-        // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulUpdate);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método POST para registrar un usuario
     @PutMapping("/carrito/update/cantidad/{id}")
     public ResponseEntity<Map<String, Object>> updateCantidadProductCarritoCliente(@PathVariable Long id, @RequestBody Map<String, Integer> cantidad) {
-        // Se comprueba si la creación ha sido exitosa
+        
         String update = productosCarritoService.updateCantidad(id, cantidad.get("cantidad"));
 
         boolean successfulUpdate = update.equals("El producto se ha actualizado correctamente.");
 
-        // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulUpdate);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
     @DeleteMapping("/carrito/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteProductCarritoCliente(@PathVariable Long id) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         boolean successfulDeletion = productosCarritoService.eliminarProducto(id);
 
-        // Creo un mapa para almacenar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Establezco que el mapa contenga una clave 'exists' y el contenido será true o false dependiendo de si el usuario existe o no
         response.put("success", successfulDeletion);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
-    // Empleo el método GET para comprobar la existencia de un usuario, se le pasa por parámetro el nombre del usuario a buscar
     @DeleteMapping("/carrito/empty/{id}")
     public ResponseEntity<Map<String, Boolean>> emptyCarritoCliente(@PathVariable Long id) {
-        // Almaceno la existencia del usuario en una variable boolean
+        
         boolean successfulDeletion = productosCarritoService.vaciarCarrito(id);
 
-        // Creo un mapa para almacenar la respuesta
         Map<String, Boolean> response = new HashMap<>();
 
-        // Establezco que el mapa contenga una clave 'exists' y el contenido será true o false dependiendo de si el usuario existe o no
         response.put("success", successfulDeletion);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 
     // PEDIDOS
 
-    // Empleo el método POST para registrar un usuario
     @PostMapping("/pedidos/create/{id}")
-    public ResponseEntity<?> createPedido(@PathVariable Long id) {
+    public ResponseEntity<Pedido> createPedido(@PathVariable Long id) {
         Clientes cliente = clientesService.getClientById(id);
         ArrayList<ProductosCarrito> productos = (ArrayList<ProductosCarrito>) productosCarritoRepository.findProductosByClienteId(id).orElse(null);
 
@@ -627,16 +535,14 @@ public class ApplicationController {
             return ResponseEntity.ok(pedidoEnviar);
         }
         else{
-            Map<String, Boolean> response = new HashMap<>();
-            response.put("success", false);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(new Pedido());
         }
     }
 
     // DEVOLUCIONES
 
     @PostMapping("/devoluciones/create/{id_cliente}/{id_pedido}")
-    public ResponseEntity<?> createDevolucion(@PathVariable Long id_cliente, @PathVariable Long id_pedido, @RequestBody ArrayList<ProductosDevoluciones> productos) {
+    public ResponseEntity<Devolucion> createDevolucion(@PathVariable Long id_cliente, @PathVariable Long id_pedido, @RequestBody ArrayList<ProductosPedidos> productos) {
         Clientes cliente = clientesService.getClientById(id_cliente);
         Pedidos pedido = pedidosService.getPedidoById(id_pedido);
 
@@ -650,24 +556,19 @@ public class ApplicationController {
             return ResponseEntity.ok(devolucionEnviar);
         }
         else{
-            Map<String, Boolean> response = new HashMap<>();
-            response.put("success", false);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(new Devolucion());
         }
     }
 
-    // Empleo el método POST para registrar un usuario
     @PutMapping("/devoluciones/update/{id}")
     public ResponseEntity<Map<String, Object>> updateEstadoDevolucion(@PathVariable Long id, @RequestBody Map<String, Boolean> estado) {
+
         boolean successfulUpdate = devolucionesService.cambiarEstadoDevolucion(id, estado.get("estado"));
 
-        // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
 
-        // Introduzco la respuesta en el map
         response.put("success", successfulUpdate);
 
-        // Retorno la respuesta
         return ResponseEntity.ok(response);
     }
 }

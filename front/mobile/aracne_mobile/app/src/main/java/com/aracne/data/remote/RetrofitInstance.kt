@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit
  *  .create(FakeStoreService::class.java) -> Crea la instancia del servicio de la API
  */
 object RetrofitInstance {
-    private const val API_URL = "http://81.33.34.215:8003/api/"
+    private const val API_URL = "http://10.0.2.2:8000/aracne/"
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
@@ -59,12 +59,12 @@ object RetrofitInstance {
             chain.proceed(requestBuilder.build())
         }.build()
 
-    val api_laboratorio: FakeStoreService by lazy{
+    val api_shop: ShopService by lazy{
         Retrofit.Builder()
             .baseUrl(API_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(FakeStoreService::class.java)
+            .create(ShopService::class.java)
     }
 }

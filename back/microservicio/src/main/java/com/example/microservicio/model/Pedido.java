@@ -12,6 +12,8 @@ public class Pedido {
 
     private ArrayList<ProductoPedido> productos;
 
+    public Pedido() {}
+
     public Pedido(Long id_pedido, LocalDateTime fechaPedido, double totalPedido) {
         this.id_pedido = id_pedido;
         this.fechaPedido = fechaPedido;
