@@ -17,14 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.microservicio.model.Clientes;
+import com.example.microservicio.model.Devolucion;
 import com.example.microservicio.model.Devoluciones;
 import com.example.microservicio.model.Empleados;
+import com.example.microservicio.model.Pedido;
 import com.example.microservicio.model.Pedidos;
 import com.example.microservicio.model.Producto;
+import com.example.microservicio.model.ProductoCarrito;
 import com.example.microservicio.model.Productos;
 import com.example.microservicio.model.ProductosCarrito;
 import com.example.microservicio.model.ProductosDevoluciones;
-import com.example.microservicio.model.ProductosPedidos;
+import com.example.microservicio.repository.ProductosCarritoRepository;
 import com.example.microservicio.service.ClientesService;
 import com.example.microservicio.service.DevolucionesService;
 import com.example.microservicio.service.EmpleadosService;
@@ -63,6 +66,9 @@ public class ApplicationController {
 
     @Autowired
     ProductosDevolucionesService productosDevolucionesService;
+
+    @Autowired
+    ProductosCarritoRepository productosCarritoRepository;
 
     // CLIENTES
 
@@ -136,7 +142,6 @@ public class ApplicationController {
 
         // Introduzco la respuesta en el map
         response.put("success", successfulRegistration);
-        response.put("content", registration);
 
         // Retorno la respuesta
         return ResponseEntity.ok(response);
@@ -149,24 +154,6 @@ public class ApplicationController {
 
         // Se comprueba si el resultado ha sido exitoso
         boolean successfulChange = clientesService.changePassword(id, newPassword);
-
-        // Creo un map para indicar la respuesta
-        Map<String, Object> response = new HashMap<>();
-
-        // Introduzco la respuesta en el map
-        response.put("success", successfulChange);
-
-        // Retorno la respuesta
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/clientes/picture/{id}")
-    public ResponseEntity<Map<String, Object>> changeProfilePictureClient(@PathVariable Long id, @RequestBody Map<String, String> image) {
-        // Se toma el resultado de intentar registrar el usuario pasado
-        String newPicture = image.get("picture");
-
-        // Se comprueba si el resultado ha sido exitoso
-        boolean successfulChange = clientesService.changeProfilePicture(id, newPicture);
 
         // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();
@@ -509,9 +496,9 @@ public class ApplicationController {
     // CARRITO
 
     @GetMapping("/carrito/{id}")
-    public ResponseEntity<ArrayList<ProductosCarrito>> getAllProductsCarritoClient(@PathVariable Long id) {
+    public ResponseEntity<ArrayList<ProductoCarrito>> getAllProductsCarritoClient(@PathVariable Long id) {
         // Almaceno la existencia del usuario en una variable boolean
-        ArrayList<ProductosCarrito> productosCarrito = productosCarritoService.getAllProductosCarritoCliente(id);
+        ArrayList<ProductoCarrito> productosCarrito = productosCarritoService.getAllProductosCarritoCliente(id);
 
         if(productosCarrito.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -521,9 +508,8 @@ public class ApplicationController {
         }
     }
 
-    // Empleo el método POST para registrar un usuario
     @PostMapping("/carrito/add/{id_cliente}/{id_producto}")
-    public ResponseEntity<Map<String, Object>> addProductCarritoCliente(@PathVariable Long id_cliente, @PathVariable Long id_producto, @RequestBody ProductosCarrito productoCarrito) {
+    public ResponseEntity<?> addProductCarritoCliente(@PathVariable Long id_cliente, @PathVariable Long id_producto, @RequestBody ProductosCarrito productoCarrito) {
         Clientes cliente = clientesService.getClientById(id_cliente);
         Productos producto = productosService.getProductById(id_producto);
 
@@ -534,23 +520,21 @@ public class ApplicationController {
             if(producto != null){
                 productoCarrito.setCliente(cliente);
                 productoCarrito.setProducto(producto);
-                String addition = productosCarritoService.añadirAlCarrito(productoCarrito);
-                boolean successfulAddition = addition.equals("Producto añadido correctamente al carrito.");
+                ProductoCarrito nuevoProducto = productosCarritoService.añadirAlCarrito(productoCarrito);
                 
                 // Introduzco la respuesta en el map
-                response.put("success", successfulAddition);
-                response.put("content", addition);
+                if(nuevoProducto != null){
+                    return ResponseEntity.ok(nuevoProducto);
+                }
             }
             else{
                 // Introduzco la respuesta en el map
                 response.put("success", false);
-                response.put("content", "El producto indicado no existe.");
             }
         }
         else{
             // Introduzco la respuesta en el map
             response.put("success", false);
-            response.put("content", "El cliente indicado no existe.");
         }
 
         // Retorno la respuesta
@@ -570,7 +554,6 @@ public class ApplicationController {
 
         // Introduzco la respuesta en el map
         response.put("success", successfulUpdate);
-        response.put("content", update);
 
         // Retorno la respuesta
         return ResponseEntity.ok(response);
@@ -589,7 +572,6 @@ public class ApplicationController {
 
         // Introduzco la respuesta en el map
         response.put("success", successfulUpdate);
-        response.put("content", update);
 
         // Retorno la respuesta
         return ResponseEntity.ok(response);
@@ -631,38 +613,32 @@ public class ApplicationController {
 
     // Empleo el método POST para registrar un usuario
     @PostMapping("/pedidos/create/{id}")
-    public ResponseEntity<Map<String, Boolean>> createPedido(@PathVariable Long id, @RequestBody ArrayList<ProductosPedidos> productos) {
+    public ResponseEntity<?> createPedido(@PathVariable Long id) {
         Clientes cliente = clientesService.getClientById(id);
-        boolean successfulCreation;
+        ArrayList<ProductosCarrito> productos = (ArrayList<ProductosCarrito>) productosCarritoRepository.findProductosByClienteId(id).orElse(null);
 
-        if(cliente != null && !productos.isEmpty()){
+        if(cliente != null && productos != null){
             Pedidos pedido = new Pedidos();
             pedido.setCliente(cliente);
             pedidosService.createPedidoSinTotal(pedido);
             productosPedidosService.añadirProductosPedido(pedido, productos);
             pedidosService.calcularTotalPedido(pedido);
-            successfulCreation  = true;
+            Pedido pedidoEnviar = pedidosService.changePedidoToSend(pedido.getId_pedido());
+            return ResponseEntity.ok(pedidoEnviar);
         }
         else{
-            successfulCreation  = false;
+            Map<String, Boolean> response = new HashMap<>();
+            response.put("success", false);
+            return ResponseEntity.ok(response);
         }
-
-        // Creo un map para indicar la respuesta
-        Map<String, Boolean> response = new HashMap<>();
-
-        // Introduzco la respuesta en el map
-        response.put("success", successfulCreation);
-
-        // Retorno la respuesta
-        return ResponseEntity.ok(response);
     }
 
     // DEVOLUCIONES
+
     @PostMapping("/devoluciones/create/{id_cliente}/{id_pedido}")
-    public ResponseEntity<Map<String, Boolean>> createDevolucion(@PathVariable Long id_cliente, @PathVariable Long id_pedido, @RequestBody ArrayList<ProductosDevoluciones> productos) {
+    public ResponseEntity<?> createDevolucion(@PathVariable Long id_cliente, @PathVariable Long id_pedido, @RequestBody ArrayList<ProductosDevoluciones> productos) {
         Clientes cliente = clientesService.getClientById(id_cliente);
         Pedidos pedido = pedidosService.getPedidoById(id_pedido);
-        boolean successfulCreation;
 
         if(cliente != null && pedido != null && !productos.isEmpty() && productosPedidosService.comprobarProductosEnUnPedido(id_pedido, productos)){
             Devoluciones devolucion = new Devoluciones();
@@ -670,50 +646,20 @@ public class ApplicationController {
             devolucion.setPedido(pedido);
             devolucionesService.createDevolucion(devolucion);
             productosDevolucionesService.añadirProductosDevolucion(devolucion, productos);
-            successfulCreation  = true;
+            Devolucion devolucionEnviar = devolucionesService.changeDevolucionToSend(devolucion.getId_devolucion());
+            return ResponseEntity.ok(devolucionEnviar);
         }
         else{
-            successfulCreation  = false;
+            Map<String, Boolean> response = new HashMap<>();
+            response.put("success", false);
+            return ResponseEntity.ok(response);
         }
-
-        // Creo un map para indicar la respuesta
-        Map<String, Boolean> response = new HashMap<>();
-
-        // Introduzco la respuesta en el map
-        response.put("success", successfulCreation);
-
-        // Retorno la respuesta
-        return ResponseEntity.ok(response);
     }
 
     // Empleo el método POST para registrar un usuario
     @PutMapping("/devoluciones/update/{id}")
     public ResponseEntity<Map<String, Object>> updateEstadoDevolucion(@PathVariable Long id, @RequestBody Map<String, Boolean> estado) {
         boolean successfulUpdate = devolucionesService.cambiarEstadoDevolucion(id, estado.get("estado"));
-
-        // Creo un map para indicar la respuesta
-        Map<String, Object> response = new HashMap<>();
-
-        // Introduzco la respuesta en el map
-        response.put("success", successfulUpdate);
-
-        // Retorno la respuesta
-        return ResponseEntity.ok(response);
-    }
-
-    // Empleo el método POST para registrar un usuario
-    @PutMapping("/devoluciones/devolver/{id}")
-    public ResponseEntity<Map<String, Object>> devolverProductoCliente(@PathVariable Long idDevolucion, @RequestBody Map<String, Boolean> estado) {
-        boolean successfulUpdate = devolucionesService.reenviarAlCliente(idDevolucion, estado.get("estado"));
-        Devoluciones devolucion = devolucionesService.getDevolucion(idDevolucion);
-
-        if(successfulUpdate && estado.get("estado") && devolucion != null){
-            Pedidos pedido = new Pedidos();
-            pedido.setCliente(devolucion.getCliente());
-            pedidosService.createPedidoSinTotal(pedido);
-            productosPedidosService.añadirProductosPedido(pedido, productosDevolucionesService.changeProductosDevolucionToProductosPedido(idDevolucion));
-            pedidosService.calcularTotalPedido(pedido);
-        }
 
         // Creo un map para indicar la respuesta
         Map<String, Object> response = new HashMap<>();

@@ -1,12 +1,8 @@
 package com.aracne.data.model
 
 data class ReturnedProduct(
-    val id_producto: Long,
-    val name: String,
-    val price: Double,
-    val s: Int,
-    val m: Int,
-    val l: Int,
-    val xl: Int,
-    val image: String,
+    val id: Long,
+    val producto: Product,
+    val cantidad: Int,
+    val talla: String
 )

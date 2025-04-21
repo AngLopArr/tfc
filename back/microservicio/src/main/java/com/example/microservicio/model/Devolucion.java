@@ -1,7 +1,7 @@
 package com.example.microservicio.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.ArrayList;
 
 public class Devolucion {
     private Long id_devolucion;
@@ -14,9 +14,15 @@ public class Devolucion {
 
     private boolean aceptada;
 
-    private boolean devolverProductosACliente;
+    private ArrayList<ProductoDevolucion> productosDevueltos;
 
-    private List<ProductoDevolucion> productosDevueltos;
+    public Devolucion(Long id_devolucion, Long id_pedido, LocalDateTime fechaDevolucion, String motivoDevolucion, boolean aceptada) {
+        this.id_devolucion = id_devolucion;
+        this.id_pedido = id_pedido;
+        this.fechaDevolucion = fechaDevolucion;
+        this.motivoDevolucion = motivoDevolucion;
+        this.aceptada = aceptada;
+    }
 
     public Long getId_devolucion() {
         return id_devolucion;
@@ -58,19 +64,11 @@ public class Devolucion {
         this.aceptada = aceptada;
     }
 
-    public boolean isDevolverProductosACliente() {
-        return devolverProductosACliente;
-    }
-
-    public void setDevolverProductosACliente(boolean devolverProductosACliente) {
-        this.devolverProductosACliente = devolverProductosACliente;
-    }
-
-    public List<ProductoDevolucion> getProductosDevueltos() {
+    public ArrayList<ProductoDevolucion> getProductosDevueltos() {
         return productosDevueltos;
     }
 
-    public void setProductosDevueltos(List<ProductoDevolucion> productosDevueltos) {
+    public void setProductosDevueltos(ArrayList<ProductoDevolucion> productosDevueltos) {
         this.productosDevueltos = productosDevueltos;
     }
 }

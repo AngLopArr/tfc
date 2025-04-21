@@ -36,9 +36,6 @@ public class Devoluciones {
     @Column(nullable = true)
     private boolean aceptada;
 
-    @Column(nullable = true)
-    private boolean devolverProductosACliente;
-
     @OneToMany(mappedBy = "devolucion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductosDevoluciones> productosDevueltos;
 
@@ -96,14 +93,6 @@ public class Devoluciones {
 
     public void setAceptada(boolean aceptada) {
         this.aceptada = aceptada;
-    }
-
-    public boolean isDevolverProductosACliente() {
-        return devolverProductosACliente;
-    }
-
-    public void setDevolverProductosACliente(boolean devolverProductosACliente) {
-        this.devolverProductosACliente = devolverProductosACliente;
     }
 }
 

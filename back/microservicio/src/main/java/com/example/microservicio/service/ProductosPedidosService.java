@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.microservicio.model.Pedidos;
+import com.example.microservicio.model.ProductosCarrito;
 import com.example.microservicio.model.ProductosDevoluciones;
 import com.example.microservicio.model.ProductosPedidos;
 import com.example.microservicio.repository.PedidosRepository;
@@ -19,9 +20,15 @@ public class ProductosPedidosService {
     @Autowired
     PedidosRepository pedidosRepository;
 
-    public void añadirProductosPedido(Pedidos pedido, ArrayList<ProductosPedidos> productosPedido){
+    public void añadirProductosPedido(Pedidos pedido, ArrayList<ProductosCarrito> productosCarrito){
+        ArrayList<ProductosPedidos> productosPedido = new ArrayList<>();
         for (int i = 0; i < productosPedido.size(); i++) {
-            productosPedido.get(i).setPedido(pedido);
+            ProductosPedidos producto = new ProductosPedidos();
+            producto.setPedido(pedido);
+            producto.setProducto(productosCarrito.get(i).getProducto());
+            producto.setCantidad(productosCarrito.get(i).getCantidad());
+            producto.setTalla(productosCarrito.get(i).getTalla());
+            productosPedido.add(producto);
         }
         productosPedidosRepository.saveAll(productosPedido);
     }

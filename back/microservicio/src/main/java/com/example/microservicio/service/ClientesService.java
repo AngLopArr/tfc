@@ -79,19 +79,6 @@ public class ClientesService {
         }
     }
 
-    public boolean changeProfilePicture(Long id, String image){
-        Clientes clienteUpdate = clientesRepository.findById(id).orElse(null);
-
-        if(clienteUpdate != null){ 
-            clienteUpdate.setImage(image);
-            clientesRepository.save(clienteUpdate);
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
     public boolean deleteCliente(Long clienteId){
         Clientes clienteDelete = clientesRepository.findById(clienteId).orElse(null);
 

@@ -13,6 +13,14 @@ public class ProductoCarrito {
 
     private LocalDateTime fechaAgregado;
 
+    public ProductoCarrito(Long id, Producto producto, String talla, int cantidad, LocalDateTime fechaAgregado) {
+        this.id = id;
+        this.producto = producto;
+        this.talla = talla;
+        this.cantidad = cantidad;
+        this.fechaAgregado = fechaAgregado;
+    }
+
     public Long getId() {
         return id;
     }

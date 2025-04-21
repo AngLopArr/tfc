@@ -1,7 +1,7 @@
 package com.example.microservicio.model;
 
 public class ProductoPedido {
-    private Long id_pedidos_productos;
+    private Long id;
 
     private Producto producto;
 
@@ -9,12 +9,12 @@ public class ProductoPedido {
 
     private String talla;
 
-    public Long getId_pedidos_productos() {
-        return id_pedidos_productos;
+    public Long getId() {
+        return id;
     }
 
-    public void setId_pedidos_productos(Long id_pedidos_productos) {
-        this.id_pedidos_productos = id_pedidos_productos;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Producto getProducto() {

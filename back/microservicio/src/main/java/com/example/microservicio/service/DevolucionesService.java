@@ -1,11 +1,15 @@
 package com.example.microservicio.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.microservicio.model.Devolucion;
 import com.example.microservicio.model.Devoluciones;
+import com.example.microservicio.model.Producto;
+import com.example.microservicio.model.ProductoDevolucion;
 import com.example.microservicio.repository.DevolucionesRepository;
 
 @Service
@@ -34,14 +38,19 @@ public class DevolucionesService {
         }
     }
 
-    public boolean reenviarAlCliente(Long idDevolucion, boolean reenviar){
-        Devoluciones devolucion = devolucionesRepository.findById(idDevolucion).orElse(null);
-        if(devolucion != null){
-            devolucion.setDevolverProductosACliente(reenviar);
-            return true;
+    public Devolucion changeDevolucionToSend(Long idDevolucion){
+        Devoluciones devolucion = getDevolucion(idDevolucion);
+        Devolucion devolucionEnviar = new Devolucion(devolucion.getId_devolucion(), devolucion.getPedido().getId_pedido(), devolucion.getFechaDevolucion(), devolucion.getMotivoDevolucion(), devolucion.isAceptada());
+        ArrayList<ProductoDevolucion> productosDevolucion = new ArrayList<>();
+        for (int i = 0; i < devolucion.getProductosDevueltos().size(); i++) {
+            ProductoDevolucion productoDevolucion = new ProductoDevolucion();
+            productoDevolucion.setId(devolucion.getProductosDevueltos().get(i).getId());
+            productoDevolucion.setProducto(new Producto(devolucion.getProductosDevueltos().get(i).getProducto().getId_producto(), devolucion.getProductosDevueltos().get(i).getProducto().getName(), devolucion.getProductosDevueltos().get(i).getProducto().getPrice(), devolucion.getProductosDevueltos().get(i).getProducto().getS(), devolucion.getProductosDevueltos().get(i).getProducto().getM(), devolucion.getProductosDevueltos().get(i).getProducto().getL(), devolucion.getProductosDevueltos().get(i).getProducto().getXL(), devolucion.getProductosDevueltos().get(i).getProducto().getImage()));
+            productoDevolucion.setTalla(devolucion.getProductosDevueltos().get(i).getTalla());
+            productoDevolucion.setCantidadDevuelta(devolucion.getProductosDevueltos().get(i).getCantidadDevuelta());
+            productosDevolucion.add(productoDevolucion);
         }
-        else{
-            return false;
-        }
+        devolucionEnviar.setProductosDevueltos(productosDevolucion);
+        return devolucionEnviar;
     }
 }

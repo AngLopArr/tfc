@@ -31,9 +31,6 @@ public class Clientes {
 
     private String password;
 
-    @Column(length = 2048)
-    private String image;
-
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductosCarrito> carrito = new ArrayList<>();
 
@@ -105,13 +102,5 @@ public class Clientes {
 
     public void setDevoluciones(List<Devoluciones> devoluciones) {
         this.devoluciones = devoluciones;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 }

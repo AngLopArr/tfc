@@ -1,7 +1,7 @@
 package com.example.microservicio.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.ArrayList;
 
 public class Pedido {
     private Long id_pedido;
@@ -10,7 +10,13 @@ public class Pedido {
 
     private double totalPedido;
 
-    private List<ProductoPedido> productos;
+    private ArrayList<ProductoPedido> productos;
+
+    public Pedido(Long id_pedido, LocalDateTime fechaPedido, double totalPedido) {
+        this.id_pedido = id_pedido;
+        this.fechaPedido = fechaPedido;
+        this.totalPedido = totalPedido;
+    }
 
     public Long getId_pedido() {
         return id_pedido;
@@ -36,11 +42,11 @@ public class Pedido {
         this.totalPedido = totalPedido;
     }
 
-    public List<ProductoPedido> getProductos() {
+    public ArrayList<ProductoPedido> getProductos() {
         return productos;
     }
 
-    public void setProductos(List<ProductoPedido> productos) {
+    public void setProductos(ArrayList<ProductoPedido> productos) {
         this.productos = productos;
     }
 }

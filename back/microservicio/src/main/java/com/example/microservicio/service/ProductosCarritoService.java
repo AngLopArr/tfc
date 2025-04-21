@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.microservicio.model.Producto;
+import com.example.microservicio.model.ProductoCarrito;
 import com.example.microservicio.model.ProductosCarrito;
 import com.example.microservicio.repository.ClientesRepository;
 import com.example.microservicio.repository.ProductosCarritoRepository;
@@ -28,11 +30,21 @@ public class ProductosCarritoService {
     @Autowired
     ClientesRepository clientesRepository;
 
-    public ArrayList<ProductosCarrito> getAllProductosCarritoCliente(Long idCliente){
-        return (ArrayList<ProductosCarrito>) productosCarritoRepository.findProductosByClienteId(idCliente).orElse(null);
+    public ArrayList<ProductoCarrito> getAllProductosCarritoCliente(Long idCliente){
+        ArrayList<ProductosCarrito> productos = (ArrayList<ProductosCarrito>) productosCarritoRepository.findProductosByClienteId(idCliente).orElse(null);
+        ArrayList<ProductoCarrito> productosEnviar = new ArrayList<>();
+        if(productos != null){
+            for (int i = 0; i < productos.size(); i++) {
+                productosEnviar.add(new ProductoCarrito(productos.get(i).getId(), new Producto(productos.get(i).getProducto().getId_producto(), productos.get(i).getProducto().getName(), productos.get(i).getProducto().getPrice(), productos.get(i).getProducto().getS(), productos.get(i).getProducto().getM(), productos.get(i).getProducto().getL(), productos.get(i).getProducto().getXL(), productos.get(i).getProducto().getImage()), productos.get(i).getTalla(), productos.get(i).getCantidad(), productos.get(i).getFechaAgregado()));
+            }
+            return productosEnviar;
+        }
+        else {
+            return null;
+        }
     }
 
-    public String añadirAlCarrito(ProductosCarrito nuevoProductoCarrito){
+    public ProductoCarrito añadirAlCarrito(ProductosCarrito nuevoProductoCarrito){
         if(productosRepository.findById(nuevoProductoCarrito.getProducto().getId_producto()).orElse(null) != null){
             if(clientesRepository.findById(nuevoProductoCarrito.getCliente().getId_cliente()).orElse(null) != null){
                 nuevoProductoCarrito.setFechaAgregado(LocalDateTime.now());
@@ -40,28 +52,29 @@ public class ProductosCarritoService {
                     if(nuevoProductoCarrito.getCantidad() > 0){
                         ProductosCarrito productoCarritoExiste = productosCarritoRepository.findByClienteIdProductoIdAndTalla(nuevoProductoCarrito.getCliente().getId_cliente(), nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getTalla()).orElse(null);
                         if(productoCarritoExiste != null){
-                            return updateCantidad(productoCarritoExiste.getId(), nuevoProductoCarrito.getCantidad());
+                            updateCantidad(productoCarritoExiste.getId(), nuevoProductoCarrito.getCantidad());
+                            return null;
                         }
                         else{
                             productosService.updateStockProduct(nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getTalla(), -nuevoProductoCarrito.getCantidad());
                             productosCarritoRepository.save(nuevoProductoCarrito);
-                            return "Producto añadido correctamente al carrito.";
+                            return new ProductoCarrito(nuevoProductoCarrito.getId(), new Producto(nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getProducto().getName(), nuevoProductoCarrito.getProducto().getPrice(), nuevoProductoCarrito.getProducto().getS(), nuevoProductoCarrito.getProducto().getM(), nuevoProductoCarrito.getProducto().getL(), nuevoProductoCarrito.getProducto().getXL(), nuevoProductoCarrito.getProducto().getImage()), nuevoProductoCarrito.getTalla(), nuevoProductoCarrito.getCantidad(), nuevoProductoCarrito.getFechaAgregado());
                         }
                     }
                     else{ 
-                        return "La cantidad no es válida.";
+                        return null;
                     }
                 }
                 else{
-                    return "La talla no es válida.";
+                    return null;
                 }
             }
             else{
-                return "El cliente indicado no existe.";
+                return null;
             }
         }
         else{ 
-            return "El producto indicado no existe";
+            return null;
         }
     }
 
@@ -120,7 +133,7 @@ public class ProductosCarritoService {
     }
 
     public boolean vaciarCarrito(Long clienteId){
-        ArrayList<ProductosCarrito> productosCarrito = getAllProductosCarritoCliente(clienteId);
+        ArrayList<ProductosCarrito> productosCarrito = (ArrayList<ProductosCarrito>) productosCarritoRepository.findProductosByClienteId(clienteId).orElse(null);
         if(productosCarrito != null){
             for (int i = 0; i < productosCarrito.size(); i++) {
                 productosService.updateStockProduct(productosCarrito.get(i).getProducto().getId_producto(), productosCarrito.get(i).getTalla(), productosCarrito.get(i).getCantidad());
