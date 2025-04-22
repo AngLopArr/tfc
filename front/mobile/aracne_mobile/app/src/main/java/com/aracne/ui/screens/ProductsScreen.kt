@@ -37,17 +37,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
+import com.aracne.model.MainViewModel
 
 @Composable
-fun ProductsScreen(navController: NavHostController){
+fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewModel = hiltViewModel()){
+    mainViewModel.getInitialProducts()
     var busqueda by remember { mutableStateOf("") }
-    val precio = 14.55
-    val urls = arrayOf("https://www.marie-claire.es/wp-content/uploads/sites/2/2023/04/04/642bf68e97173.jpeg",
-        "https://www.marie-claire.es/wp-content/uploads/sites/2/2023/04/04/642bf68e97173.jpeg")
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,7 +78,7 @@ fun ProductsScreen(navController: NavHostController){
         LazyColumn(modifier = Modifier.fillMaxSize().padding(PaddingValues(0.dp, 0.dp, 0.dp, 10.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
-            items(urls) {
+            items(mainViewModel.productos) {
                     item ->
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -91,7 +91,7 @@ fun ProductsScreen(navController: NavHostController){
                     ){
                         AsyncImage(
                             model = ImageRequest.Builder(context = LocalContext.current)
-                                .data(item)
+                                .data(item[0].image)
                                 .build(),
                             contentDescription = "",
                             modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth().clickable {
@@ -104,7 +104,7 @@ fun ProductsScreen(navController: NavHostController){
                                 fontSize = 16.sp,
                                 lineHeight = 21.sp
                             ))
-                        Text("$precio €",
+                        Text("${item[0].price} €",
                             modifier = Modifier.padding(PaddingValues(3.dp, 0.dp, 5.dp, 3.dp)),
                             style = TextStyle(
                                 fontSize = 16.sp,
@@ -112,31 +112,33 @@ fun ProductsScreen(navController: NavHostController){
                                 fontWeight = FontWeight.Bold
                             ))
                     }
-                    Column(
-                        modifier = Modifier.fillMaxWidth(0.925f)
-                    ){
-                        AsyncImage(
-                            model = ImageRequest.Builder(context = LocalContext.current)
-                                .data(item)
-                                .build(),
-                            contentDescription = "",
-                            modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth().clickable {
-                                // realizar busqueda api
-                            }
-                        )
-                        Text("Falda de cuero color",
-                            modifier = Modifier.padding(PaddingValues(3.dp, 8.dp, 5.dp, 5.dp)),
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                lineHeight = 21.sp
-                            ))
-                        Text("$precio €",
-                            modifier = Modifier.padding(PaddingValues(3.dp, 0.dp, 5.dp, 3.dp)),
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                lineHeight = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            ))
+                    if(item.getOrNull(1) != null){
+                        Column(
+                            modifier = Modifier.fillMaxWidth(0.925f)
+                        ){
+                            AsyncImage(
+                                model = ImageRequest.Builder(context = LocalContext.current)
+                                    .data(item[1].image)
+                                    .build(),
+                                contentDescription = "",
+                                modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth().clickable {
+                                    // realizar busqueda api
+                                }
+                            )
+                            Text("Falda de cuero color",
+                                modifier = Modifier.padding(PaddingValues(3.dp, 8.dp, 5.dp, 5.dp)),
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    lineHeight = 21.sp
+                                ))
+                            Text("${item[1].price} €",
+                                modifier = Modifier.padding(PaddingValues(3.dp, 0.dp, 5.dp, 3.dp)),
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    lineHeight = 20.sp,
+                                    fontWeight = FontWeight.Bold
+                                ))
+                        }
                     }
                 }
             }

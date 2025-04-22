@@ -1,5 +1,6 @@
 package com.aracne.data.remote
 
+import com.aracne.data.model.Cantidad
 import com.aracne.data.model.Client
 import com.aracne.data.model.GeneralResponseExists
 import com.aracne.data.model.GeneralResponseSuccess
@@ -9,6 +10,8 @@ import com.aracne.data.model.ProductInCart
 import com.aracne.data.model.Purchase
 import com.aracne.data.model.PurchasedProduct
 import com.aracne.data.model.Return
+import com.aracne.data.model.Talla
+import com.aracne.data.model.Total
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -43,17 +46,23 @@ interface ShopService {
     @GET("inventory/search/{group}/{name}")
     fun get4ProductsByName(@Path("group") group: Int, @Path("name") name: String): Call<List<Product>>
 
+    @GET("/inventory")
+    fun getTotal(): Call<Total>
+
+    @GET("/inventory/total/{name}")
+    fun getTotalByName(@Path("name") name: String): Call<Total>
+
     @GET("carrito/{id}")
     fun getProductsInCart(@Path("id") id: Long): Call<List<ProductInCart>>
 
     @POST("carrito/add/{id_cliente}/{id_producto}")
-    fun addProductToCart(@Path("id_cliente") idCliente: Long, @Path("id_producto") idProducto: Long): Call<ProductInCart>
+    fun addProductToCart(@Path("id_cliente") idCliente: Long, @Path("id_producto") idProducto: Long, @Body productoCarrito: ProductInCart): Call<ProductInCart>
 
     @PUT("carrito/update/talla/{id}")
-    fun updateTallaProductInCart(@Path("id") id: Long): Call<GeneralResponseSuccess>
+    fun updateTallaProductInCart(@Path("id") id: Long, @Body talla: Talla): Call<GeneralResponseSuccess>
 
     @PUT("carrito/update/cantidad/{id}")
-    fun updateCantidadProductInCart(@Path("id") id: Long): Call<GeneralResponseSuccess>
+    fun updateCantidadProductInCart(@Path("id") id: Long, @Body cantidad: Cantidad): Call<GeneralResponseSuccess>
 
     @DELETE("carrito/delete/{id}")
     fun deleteProductFromCart(@Path("id") id: Long): Call<GeneralResponseSuccess>
@@ -65,5 +74,5 @@ interface ShopService {
     fun makePurchase(@Path("id") id: Long): Call<Purchase>
 
     @POST("devoluciones/create/{id_cliente}/{id_pedido}")
-    fun logout(@Path("id_cliente") idCliente: Long, @Path("id_pedido") idPedido: Long, @Body productos: List<PurchasedProduct>): Call<Return>
+    fun makeReturn(@Path("id_cliente") idCliente: Long, @Path("id_pedido") idPedido: Long, @Body productos: List<PurchasedProduct>): Call<Return>
 }
