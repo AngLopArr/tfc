@@ -23,8 +23,7 @@ public class DevolucionesService {
 
     public Devoluciones createDevolucion(Devoluciones devolucion){
         devolucion.setFechaDevolucion(LocalDateTime.now());
-        devolucionesRepository.save(devolucion);
-        return devolucion;
+        return devolucionesRepository.save(devolucion);
     }
 
     public boolean cambiarEstadoDevolucion(Long idDevolucion, boolean estado){

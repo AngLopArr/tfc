@@ -132,9 +132,9 @@ fun ModifyProductInCartScreen(productoId: Int, navController: NavHostController)
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ){
-                    BotonProductoCantidad(R.drawable.decrease)
+                    /*BotonProductoCantidad(R.drawable.decrease)
                     ProductoCantidad("1")
-                    BotonProductoCantidad(R.drawable.increase)
+                    BotonProductoCantidad(R.drawable.increase)*/
                 }
                 Row {
                     BotonModifyProduct ("Añadir al carrito") {

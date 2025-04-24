@@ -52,12 +52,12 @@ public class ProductosCarritoService {
                     if(nuevoProductoCarrito.getCantidad() > 0){
                         ProductosCarrito productoCarritoExiste = productosCarritoRepository.findByClienteIdProductoIdAndTalla(nuevoProductoCarrito.getCliente().getId_cliente(), nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getTalla()).orElse(null);
                         if(productoCarritoExiste != null){
-                            updateCantidad(productoCarritoExiste.getId(), nuevoProductoCarrito.getCantidad());
-                            return null;
+                            nuevoProductoCarrito = updateCantidad(productoCarritoExiste.getId(), productoCarritoExiste.getCantidad() + nuevoProductoCarrito.getCantidad());
+                            return new ProductoCarrito(nuevoProductoCarrito.getId(), new Producto(nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getProducto().getName(), nuevoProductoCarrito.getProducto().getPrice(), nuevoProductoCarrito.getProducto().getS(), nuevoProductoCarrito.getProducto().getM(), nuevoProductoCarrito.getProducto().getL(), nuevoProductoCarrito.getProducto().getXL(), nuevoProductoCarrito.getProducto().getImage()), nuevoProductoCarrito.getTalla(), nuevoProductoCarrito.getCantidad(), nuevoProductoCarrito.getFechaAgregado());
                         }
                         else{
                             productosService.updateStockProduct(nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getTalla(), -nuevoProductoCarrito.getCantidad());
-                            productosCarritoRepository.save(nuevoProductoCarrito);
+                            nuevoProductoCarrito = productosCarritoRepository.save(nuevoProductoCarrito);
                             return new ProductoCarrito(nuevoProductoCarrito.getId(), new Producto(nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getProducto().getName(), nuevoProductoCarrito.getProducto().getPrice(), nuevoProductoCarrito.getProducto().getS(), nuevoProductoCarrito.getProducto().getM(), nuevoProductoCarrito.getProducto().getL(), nuevoProductoCarrito.getProducto().getXL(), nuevoProductoCarrito.getProducto().getImage()), nuevoProductoCarrito.getTalla(), nuevoProductoCarrito.getCantidad(), nuevoProductoCarrito.getFechaAgregado());
                         }
                     }
@@ -78,24 +78,23 @@ public class ProductosCarritoService {
         }
     }
 
-    public String updateCantidad(Long idProductoCarrito, int cantidad){
+    public ProductosCarrito updateCantidad(Long idProductoCarrito, int cantidad){
         if(cantidad > 0){
             ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
             if(productoCarrito != null){
                 productoCarrito.setCantidad(cantidad);
-                productosCarritoRepository.save(productoCarrito);
-                return "El producto se ha actualizado correctamente.";
+                return productosCarritoRepository.save(productoCarrito);
             }
             else{
-                return "El producto indicado no existe.";
+                return null;
             }
         }
         else{ 
-            return "Cantidad no válida.";
+            return null;
         }
     }
 
-    public String updateTalla(Long idProductoCarrito, String tallaUpdate){
+    public ProductosCarrito updateTalla(Long idProductoCarrito, String tallaUpdate){
         ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
         if(productoCarrito != null){
             if(List.of("S", "M", "L", "XL").contains(tallaUpdate)){
@@ -103,20 +102,19 @@ public class ProductosCarritoService {
                 if(productoTallaUpdate != null){
                     productoTallaUpdate.setCantidad(productoTallaUpdate.getCantidad() + productoCarrito.getCantidad());
                     productosCarritoRepository.delete(productoCarrito);
-                    productosCarritoRepository.save(productoTallaUpdate);
+                    return productosCarritoRepository.save(productoTallaUpdate);
                 }
                 else{
                     productoCarrito.setTalla(tallaUpdate);
-                    productosCarritoRepository.save(productoCarrito);
+                    return productosCarritoRepository.save(productoCarrito);
                 }
-                return "El producto se ha actualizado correctamente.";
             }
             else{ 
-                return "Talla no válida.";
+                return null;
             }
         }
         else{
-            return "El producto indicado no existe.";
+            return null;
         }
     }
 

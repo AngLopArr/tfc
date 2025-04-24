@@ -27,8 +27,7 @@ public class PedidosService {
 
     public Pedidos createPedidoSinTotal(Pedidos pedido){
         pedido.setFechaPedido(LocalDateTime.now());
-        pedidosRepository.save(pedido);
-        return pedido;
+        return pedidosRepository.save(pedido);
     }
 
     public void calcularTotalPedido(Pedidos pedido){

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.aracne.R
 
 @Composable
-fun ProductoCantidad(contenido: String){
+fun ProductoCantidad(contenido: Int){
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier.size(40.dp).background(
             color = colorResource(R.color.light_gray),
@@ -24,7 +24,7 @@ fun ProductoCantidad(contenido: String){
     )
     {
         Text(
-            contenido,
+            contenido.toString(),
             style = TextStyle(
                 fontSize = 16.sp
             )

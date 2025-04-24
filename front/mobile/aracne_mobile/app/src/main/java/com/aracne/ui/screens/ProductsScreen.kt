@@ -45,7 +45,7 @@ import com.aracne.R
 import com.aracne.model.MainViewModel
 
 @Composable
-fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewModel = hiltViewModel()){
+fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewModel){
     mainViewModel.getInitialProducts()
     var busqueda by remember { mutableStateOf("") }
 
@@ -78,7 +78,7 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
         LazyColumn(modifier = Modifier.fillMaxSize().padding(PaddingValues(0.dp, 0.dp, 0.dp, 10.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
-            items(mainViewModel.productos) {
+            items(mainViewModel.productos.chunked(2)) {
                     item ->
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -93,12 +93,12 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
                             model = ImageRequest.Builder(context = LocalContext.current)
                                 .data(item[0].image)
                                 .build(),
-                            contentDescription = "",
+                            contentDescription = item[0].name,
                             modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth().clickable {
-                                navController.navigate("producto/" + 1)
+                                navController.navigate("producto/" + item[0].id_producto)
                             }
                         )
-                        Text("Falda de cuero color café",
+                        Text(item[0].name,
                             modifier = Modifier.padding(PaddingValues(3.dp, 8.dp, 5.dp, 5.dp)),
                             style = TextStyle(
                                 fontSize = 16.sp,
@@ -120,12 +120,12 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
                                 model = ImageRequest.Builder(context = LocalContext.current)
                                     .data(item[1].image)
                                     .build(),
-                                contentDescription = "",
+                                contentDescription = item[1].name,
                                 modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth().clickable {
-                                    // realizar busqueda api
+                                    navController.navigate("producto/" + item[1].id_producto)
                                 }
                             )
-                            Text("Falda de cuero color",
+                            Text(item[1].name,
                                 modifier = Modifier.padding(PaddingValues(3.dp, 8.dp, 5.dp, 5.dp)),
                                 style = TextStyle(
                                     fontSize = 16.sp,

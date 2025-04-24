@@ -41,22 +41,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
+import com.aracne.data.model.ProductInCart
+import com.aracne.model.MainViewModel
 import com.aracne.ui.components.BotonProductoCantidad
 import com.aracne.ui.components.BotonProductoTalla
 import com.aracne.ui.components.ProductoCantidad
 import com.aracne.ui.navigation.Destinations
 
 @Composable
-fun ProductScreen(productoId: Int, navController: NavHostController){
-    val precio = 14.55
-    val stock = 18
-    var selectedIndex by remember { mutableIntStateOf(0) } // Ninguno seleccionado al principio
+fun ProductScreen(productoId: Long, navController: NavHostController, mainViewModel: MainViewModel){
+    mainViewModel.getProduct(productoId)
+    var selectedIndex by remember { mutableIntStateOf(0) }
+    var selectedStock by remember { mutableIntStateOf(mainViewModel.product.s) }
     val tallas = listOf("S", "M", "L", "XL")
+    var cantidad by remember { mutableIntStateOf(1) }
 
     Column(
         horizontalAlignment = Alignment.Start,
@@ -74,9 +78,9 @@ fun ProductScreen(productoId: Int, navController: NavHostController){
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current)
-                        .data("https://www.marie-claire.es/wp-content/uploads/sites/2/2023/04/04/642bf68e97173.jpeg")
+                        .data(mainViewModel.product.image)
                         .build(),
-                    contentDescription = "",
+                    contentDescription = mainViewModel.product.name,
                     modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth(),
                     contentScale = ContentScale.Crop
                 )
@@ -87,7 +91,7 @@ fun ProductScreen(productoId: Int, navController: NavHostController){
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    "Falda de cuero color café",
+                    mainViewModel.product.name,
                     modifier = Modifier.padding(PaddingValues(5.dp, 12.dp, 5.dp, 5.dp)),
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -95,7 +99,7 @@ fun ProductScreen(productoId: Int, navController: NavHostController){
                     )
                 )
                 Text(
-                    "$precio €",
+                    "${mainViewModel.product.price} €",
                     modifier = Modifier.padding(PaddingValues(0.dp, 12.dp, 5.dp, 5.dp)),
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -106,7 +110,7 @@ fun ProductScreen(productoId: Int, navController: NavHostController){
             }
             Row() {
                 Text(
-                    "${stock} unidades",
+                    "$selectedStock unidades",
                     modifier = Modifier.padding(PaddingValues(5.dp, 0.dp, 5.dp, 5.dp)),
                     style = TextStyle(
                         fontSize = 16.sp,
@@ -129,7 +133,15 @@ fun ProductScreen(productoId: Int, navController: NavHostController){
                     BotonProductoTalla(
                         contenido = talla,
                         isPressed = selectedIndex == index,
-                        selectTalla = { selectedIndex = index }
+                        selectTalla = {
+                            selectedIndex = index
+                            selectedStock = when (selectedIndex) {
+                                    0 -> mainViewModel.product.s
+                                    1 -> mainViewModel.product.m
+                                    2 -> mainViewModel.product.l
+                                    else -> mainViewModel.product.xl
+                                }
+                        }
                     )
                 }
             }
@@ -141,13 +153,21 @@ fun ProductScreen(productoId: Int, navController: NavHostController){
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ){
-                    BotonProductoCantidad(R.drawable.decrease)
-                    ProductoCantidad("1")
-                    BotonProductoCantidad(R.drawable.increase)
+                    BotonProductoCantidad(R.drawable.decrease) {
+                        if (cantidad > 1) {
+                            cantidad--
+                        }
+                    }
+                    ProductoCantidad(cantidad)
+                    BotonProductoCantidad(R.drawable.increase) {
+                        if (cantidad < selectedStock) {
+                            cantidad++
+                        }
+                    }
                 }
                 Row {
                     BotonAnadirCarrito("Añadir al carrito") {
-                        navController.navigate(Destinations.CART)
+                        mainViewModel.addToCart(mainViewModel.product.id_producto, ProductInCart(null, null, null, tallas[selectedIndex], cantidad, null))
                     }
                 }
             }

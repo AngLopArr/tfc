@@ -8,5 +8,5 @@ data class ProductInCart(
     val producto: Product?,
     val talla: String,
     val cantidad: Int,
-    val fechaAgregado: Date?
+    val fechaAgregado: String?
 )

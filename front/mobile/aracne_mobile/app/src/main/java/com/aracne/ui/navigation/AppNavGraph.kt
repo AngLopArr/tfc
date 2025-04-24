@@ -63,18 +63,18 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, m
     }*/
     NavHost(navController = navController, startDestination = Destinations.PRODUCTOS, modifier = Modifier.padding(innerPadding)){
         composable(Destinations.PRODUCTOS) {
-            ProductsScreen(navController)
+            ProductsScreen(navController, mainViewModel)
         }
         composable(Destinations.CART) {
-            ShoppingCartScreen()
+            ShoppingCartScreen(mainViewModel)
         }
         composable(Destinations.PROFILE) {
             ProfileScreen()
         }
-        composable(route = "${Destinations.PRODUCTO}/{id_producto}", arguments = listOf(navArgument("id_producto") { type = NavType.IntType })) {
+        composable(route = "${Destinations.PRODUCTO}/{id_producto}", arguments = listOf(navArgument("id_producto") { type = NavType.LongType })) {
             parametros ->
-            val producto = parametros.arguments?.getInt("id_producto") ?: 0
-            ProductScreen(productoId = producto, navController = navController)
+            val producto = parametros.arguments?.getLong("id_producto") ?: 0
+            ProductScreen(productoId = producto, navController = navController, mainViewModel)
         }
         /*
         composable(route = "${Destinatns.MATERIAL}/{id_material}", arguments = listOf(navArgument("id_material") { type = NavType.IntType })) {

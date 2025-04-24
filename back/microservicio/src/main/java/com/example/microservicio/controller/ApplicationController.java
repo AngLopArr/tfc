@@ -457,6 +457,7 @@ public class ApplicationController {
                 productoCarrito.setProducto(producto);
                 ProductoCarrito nuevoProducto = productosCarritoService.añadirAlCarrito(productoCarrito);
                 
+                System.out.println(nuevoProducto);
                 if(nuevoProducto != null){
                     return ResponseEntity.ok(nuevoProducto);
                 }
@@ -469,9 +470,9 @@ public class ApplicationController {
     @PutMapping("/carrito/update/talla/{id}")
     public ResponseEntity<Map<String, Object>> updateTallaProductCarritoCliente(@PathVariable Long id, @RequestBody Map<String, String> talla) {
         
-        String update = productosCarritoService.updateTalla(id, talla.get("talla"));
+        ProductosCarrito update = productosCarritoService.updateTalla(id, talla.get("talla"));
 
-        boolean successfulUpdate = update.equals("El producto se ha actualizado correctamente.");
+        boolean successfulUpdate = update != null;
 
         Map<String, Object> response = new HashMap<>();
 
@@ -483,9 +484,9 @@ public class ApplicationController {
     @PutMapping("/carrito/update/cantidad/{id}")
     public ResponseEntity<Map<String, Object>> updateCantidadProductCarritoCliente(@PathVariable Long id, @RequestBody Map<String, Integer> cantidad) {
         
-        String update = productosCarritoService.updateCantidad(id, cantidad.get("cantidad"));
+        ProductosCarrito update = productosCarritoService.updateCantidad(id, cantidad.get("cantidad"));
 
-        boolean successfulUpdate = update.equals("El producto se ha actualizado correctamente.");
+        boolean successfulUpdate = update != null;
 
         Map<String, Object> response = new HashMap<>();
 
