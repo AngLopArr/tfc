@@ -83,6 +83,10 @@ async function creation(event) {
         
         if(exito){
             document.getElementById("form-create-products").reset();
+            toggleNumberInput(document.getElementById("tallaS"));
+            toggleNumberInput(document.getElementById("tallaM"));
+            toggleNumberInput(document.getElementById("tallaL"));
+            toggleNumberInput(document.getElementById("tallaXL"));
             alert("El producto se ha creado correctamente.");
         }
     }

@@ -328,10 +328,10 @@ public class ApplicationController {
         }
     }
 
-    @GetMapping("/inventory/group/{group}")
-    public ResponseEntity<ArrayList<Producto>> get4Products(@PathVariable int group) {
+    @GetMapping("/inventory/products/{number}/{group}")
+    public ResponseEntity<ArrayList<Producto>> getProducts(@PathVariable int number, @PathVariable int group) {
         
-        ArrayList<Productos> productos = productosService.get4Products(group);
+        ArrayList<Productos> productos = productosService.getProducts(number, group);
 
         if(productos.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -342,10 +342,10 @@ public class ApplicationController {
         }
     }
 
-    @GetMapping("/inventory/search/{group}/{name}")
-    public ResponseEntity<ArrayList<Producto>> get4ProductsByName(@PathVariable int group, @PathVariable String name) {
+    @GetMapping("/inventory/search/{number}/{group}/{name}")
+    public ResponseEntity<ArrayList<Producto>> getProductsByName(@PathVariable int number, @PathVariable int group, @PathVariable String name) {
         
-        ArrayList<Productos> productos = productosService.get4ProductsByName(name, group);
+        ArrayList<Productos> productos = productosService.getProductsByName(name, number, group);
 
         if(productos.isEmpty()){
             return ResponseEntity.notFound().build();

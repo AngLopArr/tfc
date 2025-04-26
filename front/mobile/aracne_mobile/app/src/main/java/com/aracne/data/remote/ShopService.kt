@@ -40,11 +40,11 @@ interface ShopService {
     @DELETE("clientes/delete/{id}")
     fun deleteCliente(@Path("id") id: Long): Call<GeneralResponseSuccess>
 
-    @GET("inventory/group/{group}")
-    fun get4Products(@Path("group") group: Int): Call<List<Product>>
+    @GET("inventory/products/8/{group}")
+    fun getProducts(@Path("group") group: Int): Call<List<Product>>
 
-    @GET("inventory/search/{group}/{name}")
-    fun get4ProductsByName(@Path("group") group: Int, @Path("name") name: String): Call<List<Product>>
+    @GET("inventory/search/8/{group}/{name}")
+    fun getProductsByName(@Path("group") group: Int, @Path("name") name: String): Call<List<Product>>
 
     @GET("/inventory")
     fun getTotal(): Call<Total>

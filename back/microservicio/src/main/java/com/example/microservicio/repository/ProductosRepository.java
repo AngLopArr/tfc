@@ -13,11 +13,11 @@ import com.example.microservicio.model.Productos;
 public interface ProductosRepository extends JpaRepository<Productos, Long> {
     Optional<Productos> findByName(String name);
 
-    @Query("SELECT p FROM Productos p ORDER BY p.id_producto LIMIT 4 OFFSET :offset")
-    Optional<ArrayList<Productos>> get4Productos(int offset);
+    @Query("SELECT p FROM Productos p ORDER BY p.id_producto LIMIT :limit OFFSET :offset")
+    Optional<ArrayList<Productos>> getProductos(int limit, int offset);
 
-    @Query("SELECT p FROM Productos p WHERE p.name LIKE CONCAT('%', CONCAT(:name, '%')) ORDER BY p.id_producto LIMIT 5 OFFSET :offset")
-    Optional<ArrayList<Productos>> get4ProductosByName(String name, int offset);
+    @Query("SELECT p FROM Productos p WHERE p.name LIKE CONCAT('%', CONCAT(:name, '%')) ORDER BY p.id_producto LIMIT :limit OFFSET :offset")
+    Optional<ArrayList<Productos>> getProductosByName(String name, int limit, int offset);
 
     @Query("SELECT COUNT(p.id_producto) FROM Productos p WHERE p.name LIKE CONCAT('%', CONCAT(:name, '%'))")
     int getTotalProductosByName(String name);

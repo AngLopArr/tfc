@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
@@ -22,10 +23,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +51,20 @@ import com.aracne.model.MainViewModel
 fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewModel){
     mainViewModel.getInitialProducts()
     var busqueda by remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
+                val totalItems = layoutInfo.totalItemsCount
+                val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+                val threshold = 4
+
+                if (lastVisibleItem >= totalItems - threshold) {
+                    mainViewModel.addProducts()
+                }
+            }
+    }
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,7 +92,7 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
             }
         )
         Spacer(modifier = Modifier.size(5.dp))
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(PaddingValues(0.dp, 0.dp, 0.dp, 10.dp)),
+        LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(PaddingValues(0.dp, 0.dp, 0.dp, 10.dp)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
             items(mainViewModel.productos.chunked(2)) {

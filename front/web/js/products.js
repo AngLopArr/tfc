@@ -5,6 +5,7 @@ const botonRetroceder = document.getElementById("boton-retroceder");
 const paginaActualSpan = document.getElementById("pagina-actual");
 const barraBusqueda = document.getElementById("barra-busqueda");
 const lupa = document.getElementById("lupa");
+const role = localStorage.getItem('role');
 
 let pagina_actual = 1;
 let total_products = 0;
@@ -28,7 +29,7 @@ async function fillTable(){
     `;
 
     if(barraBusqueda.value == ""){
-        const response = await fetch("http://localhost:8080/aracne/inventory/group/" + pagina_actual);
+        const response = await fetch("http://localhost:8080/aracne/inventory/products/" + 4 + "/" + pagina_actual);
 
         if(response.status === 404){
             pagina_actual = 0;
@@ -39,7 +40,7 @@ async function fillTable(){
         data = await response.json();
     }
     else{
-        const response = await fetch("http://localhost:8080/aracne/inventory/search/" + pagina_actual + "/" + barraBusqueda.value);
+        const response = await fetch("http://localhost:8080/aracne/inventory/search/" + 4 + "/" + pagina_actual + "/" + barraBusqueda.value);
 
         if(response.status === 404){
             pagina_actual = 0;
@@ -209,7 +210,12 @@ async function eliminarProducto(botonEliminar){
 
 function irFormularioEditar(botonEditar){
     let id = botonEditar.getAttribute("id_producto");
-    window.location.href = 'edit-products.html?id=' + id;
+    if (role == "admin") {
+        window.location.href = 'edit-products.html?id=' + id;
+    } 
+    else if (role == "employee") {
+        window.location.href = 'edit-products-employee.html?id=' + id;
+    }
 }
 
 

@@ -22,14 +22,14 @@ public class ProductosService {
         return productosRepository.findById(id).orElse(null);
     }
 
-    public ArrayList<Productos> get4Products(int group){
-        int offset = (group * 4) - 4;
-        return productosRepository.get4Productos(offset).orElse(null);
+    public ArrayList<Productos> getProducts(int number, int group){
+        int offset = (group * number) - number;
+        return productosRepository.getProductos(number, offset).orElse(null);
     }
 
-    public ArrayList<Productos> get4ProductsByName(String name, int group){
-        int offset = (group * 4) - 4;
-        return productosRepository.get4ProductosByName(name, offset).orElse(null);
+    public ArrayList<Productos> getProductsByName(String name, int number, int group){
+        int offset = (group * number) - number;
+        return productosRepository.getProductosByName(name, number, offset).orElse(null);
     }
 
     public ArrayList<Producto> getProductosEnviar(ArrayList<Productos> productos){

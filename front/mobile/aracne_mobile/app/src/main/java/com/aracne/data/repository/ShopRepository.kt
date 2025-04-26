@@ -85,9 +85,9 @@ class ShopRepository {
         }
     }
 
-    suspend fun get4Products(group: Int): List<Product>? {
+    suspend fun getProducts(group: Int): List<Product>? {
         return withContext(Dispatchers.IO) {
-            val response = RetrofitInstance.api_shop.get4Products(group).execute()
+            val response = RetrofitInstance.api_shop.getProducts(group).execute()
             if(response.isSuccessful){
                 response.body()
             }else{
@@ -96,9 +96,9 @@ class ShopRepository {
         }
     }
 
-    suspend fun get4ProductsByName(group: Int, name: String): List<Product>? {
+    suspend fun getProductsByName(group: Int, name: String): List<Product>? {
         return withContext(Dispatchers.IO) {
-            val response = RetrofitInstance.api_shop.get4ProductsByName(group, name).execute()
+            val response = RetrofitInstance.api_shop.getProductsByName(group, name).execute()
             if(response.isSuccessful){
                 response.body()
             }else{

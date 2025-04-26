@@ -2,6 +2,7 @@ package com.aracne.model
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -22,25 +23,14 @@ class MainViewModel @Inject constructor(
     var productos by mutableStateOf(listOf<Product>())
     var product by mutableStateOf(Product(0, "",  0.0, 0, 0, 0, 0, ""))
     var carrito by mutableStateOf(listOf<ProductInCart>())
+    var grupoProductosActuales by mutableIntStateOf(1)
 
     fun getInitialProducts(){
         viewModelScope.launch {
             try {
-                var respuesta = shopRepository.get4Products(1)
+                val respuesta = shopRepository.getProducts(1)
                 if (respuesta != null) {
                     productos = respuesta
-                    respuesta = shopRepository.get4Products(2)
-                    if (respuesta != null) {
-                        productos += respuesta
-                        /*respuesta = shopRepository.get4Products(3)
-                        if (respuesta != null) {
-                            productos += respuesta.chunked(2)
-                        } else {
-                            println("Error.")
-                        }*/
-                    } else {
-                        println("Error.")
-                    }
                 } else {
                     println("Error.")
                 }
@@ -50,10 +40,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun addProducts(group: Int) {
+    private fun increaseGroup(){
+        grupoProductosActuales++
+    }
+
+    fun addProducts() {
         viewModelScope.launch {
             try {
-                val respuesta = shopRepository.get4Products(group)
+                increaseGroup()
+                val respuesta = shopRepository.getProducts(grupoProductosActuales)
                 if (respuesta != null) {
                     productos += respuesta
                 } else {
