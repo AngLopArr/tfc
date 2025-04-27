@@ -1,23 +1,21 @@
 package com.aracne.ui.screens
 
+import android.util.Log
 import android.view.MotionEvent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,15 +32,10 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -62,116 +55,140 @@ fun ProductScreen(productoId: Long, navController: NavHostController, mainViewMo
     val tallas = listOf("S", "M", "L", "XL")
     var cantidad by remember { mutableIntStateOf(1) }
 
-    Column(
+    LazyColumn(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxHeight()
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(PaddingValues(15.dp))
-        ) {
-            Box(
+        items(listOf(mainViewModel.product)){
+            item ->
+            Column(
                 modifier = Modifier
-                    .height(500.dp)
                     .fillMaxWidth()
-                    .clipToBounds()
+                    .padding(PaddingValues(15.dp))
             ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current)
-                        .data(mainViewModel.product.image)
-                        .build(),
-                    contentDescription = mainViewModel.product.name,
-                    modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth(),
-                    contentScale = ContentScale.Crop
-                )
-            }
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    mainViewModel.product.name,
-                    modifier = Modifier.padding(PaddingValues(5.dp, 12.dp, 5.dp, 5.dp)),
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        lineHeight = 21.sp
+                Box(
+                    modifier = Modifier
+                        .height(500.dp)
+                        .fillMaxWidth()
+                        .clipToBounds()
+                ) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(context = LocalContext.current)
+                            .data(item.image)
+                            .build(),
+                        contentDescription = item.name,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .fillMaxWidth(),
+                        contentScale = ContentScale.Crop
                     )
-                )
-                Text(
-                    "${mainViewModel.product.price} €",
-                    modifier = Modifier.padding(PaddingValues(0.dp, 12.dp, 5.dp, 5.dp)),
-                    style = TextStyle(
-                        fontSize = 18.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight.Bold
+                }
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        item.name,
+                        modifier = Modifier
+                            .width(300.dp)
+                            .padding(PaddingValues(5.dp, 12.dp, 0.dp, 5.dp)),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            lineHeight = 21.sp
+                        )
                     )
-                )
-            }
-            Row() {
-                Text(
-                    "$selectedStock unidades",
-                    modifier = Modifier.padding(PaddingValues(5.dp, 0.dp, 5.dp, 5.dp)),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        lineHeight = 21.sp
+                    Text(
+                        "${
+                            if(item.price.toString().split('.')[1].length == 1){
+                                item.price.toString().padEnd(item.price.toString().length + 1, '0')
+                            }
+                            else{
+                                item.price.toString()
+                            }
+                        } €",
+                        modifier = Modifier.padding(PaddingValues(0.dp, 12.dp, 5.dp, 5.dp)),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            lineHeight = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     )
-                )
-            }
-        }
-        Column(
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Bottom,
-            modifier = Modifier.height(150.dp)
-        ){
-            Row(
-                modifier = Modifier.height(50.dp).fillMaxWidth().padding(PaddingValues(15.dp, 0.dp)),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ){
-                tallas.forEachIndexed { index, talla ->
-                    BotonProductoTalla(
-                        contenido = talla,
-                        isPressed = selectedIndex == index,
-                        selectTalla = {
-                            selectedIndex = index
-                            selectedStock = when (selectedIndex) {
-                                    0 -> mainViewModel.product.s
-                                    1 -> mainViewModel.product.m
-                                    2 -> mainViewModel.product.l
-                                    else -> mainViewModel.product.xl
-                                }
-                        }
+                }
+                Row() {
+                    Text(
+                        "$selectedStock unidades",
+                        modifier = Modifier.padding(PaddingValues(5.dp, 0.dp, 5.dp, 5.dp)),
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 21.sp
+                        )
                     )
                 }
             }
-            Row(
-                modifier = Modifier.height(60.dp).fillMaxWidth().padding(PaddingValues(15.dp, 0.dp, 15.dp, 10.dp)),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-                ){
+            Column(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier.height(130.dp)
+            ){
                 Row(
+                    modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth()
+                        .padding(PaddingValues(15.dp, 0.dp)),
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ){
-                    BotonProductoCantidad(R.drawable.decrease) {
-                        if (cantidad > 1) {
-                            cantidad--
-                        }
-                    }
-                    ProductoCantidad(cantidad)
-                    BotonProductoCantidad(R.drawable.increase) {
-                        if (cantidad < selectedStock) {
-                            cantidad++
-                        }
+                    tallas.forEachIndexed { index, talla ->
+                        BotonProductoTalla(
+                            contenido = talla,
+                            isPressed = selectedIndex == index,
+                            selectTalla = {
+                                selectedIndex = index
+                                selectedStock = when (selectedIndex) {
+                                    0 -> item.s
+                                    1 -> item.m
+                                    2 -> item.l
+                                    else -> item.xl
+                                }
+                            }
+                        )
                     }
                 }
-                Row {
-                    BotonAnadirCarrito("Añadir al carrito") {
-                        mainViewModel.addToCart(mainViewModel.product.id_producto, ProductInCart(null, null, null, tallas[selectedIndex], cantidad, null))
+                Row(
+                    modifier = Modifier
+                        .height(60.dp)
+                        .fillMaxWidth()
+                        .padding(PaddingValues(15.dp, 0.dp, 15.dp, 10.dp)),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ){
+                        BotonProductoCantidad(R.drawable.decrease) {
+                            if (cantidad > 1) {
+                                cantidad--
+                            }
+                        }
+                        ProductoCantidad(cantidad)
+                        BotonProductoCantidad(R.drawable.increase) {
+                            if (cantidad < selectedStock) {
+                                cantidad++
+                            }
+                        }
+                    }
+                    Row {
+                        BotonAnadirCarrito("Añadir al carrito") {
+                            mainViewModel.addToCart(item.id_producto, ProductInCart(null, null, null, tallas[selectedIndex], cantidad, null))
+                            navController.navigate(Destinations.CART)
+                        }
                     }
                 }
             }
         }
+
+
     }
 }
 
@@ -181,23 +198,30 @@ fun BotonAnadirCarrito(contenido: String, onClick: () -> Unit){
     var isPressed by remember { mutableStateOf(false) }
     val backgroundColor = if (isPressed) R.color.purple_001 else R.color.purple_002
     Box(contentAlignment = Alignment.Center,
-        modifier = Modifier.width(140.dp).height(40.dp).background(
-            color = colorResource(backgroundColor),
-            shape = RoundedCornerShape(12.dp)).pointerInteropFilter {
-            when (it.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    isPressed = true
-                    true
+        modifier = Modifier
+            .width(140.dp)
+            .height(40.dp)
+            .background(
+                color = colorResource(backgroundColor),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        isPressed = true
+                        true
+                    }
+
+                    MotionEvent.ACTION_UP,
+                    MotionEvent.ACTION_CANCEL -> {
+                        isPressed = false
+                        onClick()
+                        true
+                    }
+
+                    else -> false
                 }
-                MotionEvent.ACTION_UP,
-                MotionEvent.ACTION_CANCEL -> {
-                    isPressed = false
-                    onClick()
-                    true
-                }
-                else -> false
             }
-        }
     )
     {
         Text(

@@ -66,7 +66,7 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, m
             ProductsScreen(navController, mainViewModel)
         }
         composable(Destinations.CART) {
-            ShoppingCartScreen(mainViewModel)
+            ShoppingCartScreen(mainViewModel, navController)
         }
         composable(Destinations.PROFILE) {
             ProfileScreen()

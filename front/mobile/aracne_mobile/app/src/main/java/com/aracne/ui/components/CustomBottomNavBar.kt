@@ -30,7 +30,7 @@ import com.aracne.ui.navigation.Destinations
 fun CustomBottomNavBar(onClickNavMain: () -> Unit, onClickNavSecond: () -> Unit, onClickNavThird: () -> Unit, currentScreen: String){
     NavigationBar(containerColor = colorResource(id = R.color.purple_002)) {
         NavigationBarItem(
-            selected = currentScreen == Destinations.PRODUCTOS,
+            selected = currentScreen == Destinations.PRODUCTOS || currentScreen.startsWith(Destinations.PRODUCTO),
             onClick = { onClickNavMain() },
             icon = {
                 Image(
@@ -45,7 +45,7 @@ fun CustomBottomNavBar(onClickNavMain: () -> Unit, onClickNavSecond: () -> Unit,
             colors = coloresNavigationBar()
         )
         NavigationBarItem(
-            selected = currentScreen == Destinations.CART,
+            selected = currentScreen == Destinations.CART || currentScreen.startsWith(Destinations.MODIFYPROD),
             onClick = { onClickNavSecond() },
             icon = {
                 Image(

@@ -1,5 +1,6 @@
 package com.aracne.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -49,21 +50,42 @@ import com.aracne.model.MainViewModel
 
 @Composable
 fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewModel){
-    mainViewModel.getInitialProducts()
     var busqueda by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
 
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo }
-            .collect { layoutInfo ->
-                val totalItems = layoutInfo.totalItemsCount
-                val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-                val threshold = 4
+    if(busqueda == "") {
+        mainViewModel.grupoProductosActuales = 1
+        mainViewModel.getInitialProducts()
+        mainViewModel.getTotal()
+        LaunchedEffect(listState) {
+            snapshotFlow { listState.layoutInfo }
+                .collect { layoutInfo ->
+                    val totalItems = layoutInfo.totalItemsCount
+                    val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+                    val threshold = 4
 
-                if (lastVisibleItem >= totalItems - threshold) {
-                    mainViewModel.addProducts()
+                    if (lastVisibleItem >= totalItems - threshold && mainViewModel.productos.size != mainViewModel.total) {
+                        mainViewModel.addProducts()
+                    }
                 }
-            }
+        }
+    }
+    else {
+        mainViewModel.grupoProductosActuales = 1
+        mainViewModel.searchProducts(busqueda)
+        mainViewModel.getSearchedTotal(busqueda)
+        LaunchedEffect(listState) {
+            snapshotFlow { listState.layoutInfo }
+                .collect { layoutInfo ->
+                    val totalItems = layoutInfo.totalItemsCount
+                    val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+                    val threshold = 4
+
+                    if (lastVisibleItem >= totalItems - threshold && mainViewModel.productos.size != mainViewModel.total) {
+                        mainViewModel.addSearchedProducts(busqueda)
+                    }
+                }
+        }
     }
 
     Column (
@@ -77,29 +99,42 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
                 style = TextStyle(
                     fontSize = 14.sp
                 )) },
-            modifier = Modifier.fillMaxWidth().padding(PaddingValues(15.dp, 15.dp, 15.dp, 0.dp)).border(width = 3.dp,
-                color = colorResource(id = R.color.purple_001), shape = RoundedCornerShape(3.5.dp)).height(50.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(PaddingValues(15.dp, 15.dp, 15.dp, 0.dp))
+                .border(
+                    width = 3.dp,
+                    color = colorResource(id = R.color.purple_001),
+                    shape = RoundedCornerShape(3.5.dp)
+                )
+                .height(50.dp),
             textStyle = TextStyle(fontSize = 14.sp),
             colors = coloresTextFieldBusqueda(),
             trailingIcon = {
                 Image(
                     painter = painterResource(id = R.drawable.lupa),
                     contentDescription = stringResource(id = R.string.products),
-                    modifier = Modifier.size(28.dp).padding(0.dp, 0.dp,4.dp, 0.dp).clickable {
-                        // realizar busqueda api
-                    }
+                    modifier = Modifier
+                        .size(28.dp)
+                        .padding(0.dp, 0.dp, 4.dp, 0.dp)
+                        .clickable {
+                            // realizar busqueda api
+                        }
                 )
             }
         )
         Spacer(modifier = Modifier.size(5.dp))
-        LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(PaddingValues(0.dp, 0.dp, 0.dp, 10.dp)),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
+        LazyColumn(state = listState, modifier = Modifier
+            .fillMaxSize()
+            .padding(PaddingValues(0.dp, 0.dp, 0.dp, 10.dp)),
+            horizontalAlignment = Alignment.CenterHorizontally) {
             items(mainViewModel.productos.chunked(2)) {
                     item ->
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth().padding(PaddingValues(15.dp, 10.dp, 15.dp, 5.dp))
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(PaddingValues(15.dp, 10.dp, 15.dp, 5.dp))
                 ){
                     Column(
                         modifier = Modifier.fillMaxWidth(0.48f),
@@ -111,9 +146,12 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
                                 .data(item[0].image)
                                 .build(),
                             contentDescription = item[0].name,
-                            modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth().clickable {
-                                navController.navigate("producto/" + item[0].id_producto)
-                            }
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate("producto/" + item[0].id_producto)
+                                }
                         )
                         Text(item[0].name,
                             modifier = Modifier.padding(PaddingValues(3.dp, 8.dp, 5.dp, 5.dp)),
@@ -121,7 +159,14 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
                                 fontSize = 16.sp,
                                 lineHeight = 21.sp
                             ))
-                        Text("${item[0].price} €",
+                        Text("${
+                            if(item[0].price.toString().split('.')[1].length == 1){
+                                item[0].price.toString().padEnd(item[0].price.toString().length + 1, '0')
+                            }
+                            else{
+                                item[0].price.toString()
+                            }
+                        } €",
                             modifier = Modifier.padding(PaddingValues(3.dp, 0.dp, 5.dp, 3.dp)),
                             style = TextStyle(
                                 fontSize = 16.sp,
@@ -138,9 +183,12 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
                                     .data(item[1].image)
                                     .build(),
                                 contentDescription = item[1].name,
-                                modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth().clickable {
-                                    navController.navigate("producto/" + item[1].id_producto)
-                                }
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        navController.navigate("producto/" + item[1].id_producto)
+                                    }
                             )
                             Text(item[1].name,
                                 modifier = Modifier.padding(PaddingValues(3.dp, 8.dp, 5.dp, 5.dp)),
@@ -148,7 +196,14 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
                                     fontSize = 16.sp,
                                     lineHeight = 21.sp
                                 ))
-                            Text("${item[1].price} €",
+                            Text("${
+                                if(item[1].price.toString().split('.')[1].length == 1){
+                                    item[1].price.toString().padEnd(item[1].price.toString().length + 1, '0')
+                                }
+                                else{
+                                    item[1].price.toString()
+                                }
+                            } €",
                                 modifier = Modifier.padding(PaddingValues(3.dp, 0.dp, 5.dp, 3.dp)),
                                 style = TextStyle(
                                     fontSize = 16.sp,

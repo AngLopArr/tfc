@@ -95,7 +95,7 @@ import com.aracne.ui.navigation.Destinations
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomTopAppBar(mainViewModel: MainViewModel = hiltViewModel(), navController: NavController, currentScreen: String) {
+fun CustomTopAppBar(navController: NavController, currentScreen: String) {
     /*mainViewModel.getNotificaciones()*/
     CenterAlignedTopAppBar(
         title = {
@@ -106,7 +106,7 @@ fun CustomTopAppBar(mainViewModel: MainViewModel = hiltViewModel(), navControlle
         navigationIcon = {
             if(currentScreen != Destinations.PRODUCTOS && currentScreen != Destinations.CART && currentScreen != Destinations.PROFILE){
                 Box(modifier = Modifier.padding(PaddingValues(7.dp, 0.dp, 0.dp, 0.dp)).clickable {
-                        /*navController.popBackStack()*/
+                        navController.popBackStack()
                     }
                 ){
                     Icon(
