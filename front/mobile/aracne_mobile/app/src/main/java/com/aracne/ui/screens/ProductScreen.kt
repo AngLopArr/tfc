@@ -180,8 +180,10 @@ fun ProductScreen(productoId: Long, navController: NavHostController, mainViewMo
                     }
                     Row {
                         BotonAnadirCarrito("Añadir al carrito") {
-                            mainViewModel.addToCart(item.id_producto, ProductInCart(null, null, null, tallas[selectedIndex], cantidad, null))
-                            navController.navigate(Destinations.CART)
+                            if (selectedStock != 0) {
+                                mainViewModel.addToCart(item.id_producto, ProductInCart(null, null, null, tallas[selectedIndex], cantidad, null))
+                                navController.navigate(Destinations.CART)
+                            }
                         }
                     }
                 }

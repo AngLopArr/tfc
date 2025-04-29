@@ -52,7 +52,7 @@ public class ProductosCarritoService {
                     if(nuevoProductoCarrito.getCantidad() > 0){
                         ProductosCarrito productoCarritoExiste = productosCarritoRepository.findByClienteIdProductoIdAndTalla(nuevoProductoCarrito.getCliente().getId_cliente(), nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getTalla()).orElse(null);
                         if(productoCarritoExiste != null){
-                            nuevoProductoCarrito = updateCantidad(productoCarritoExiste.getId(), productoCarritoExiste.getCantidad() + nuevoProductoCarrito.getCantidad());
+                            nuevoProductoCarrito = updateCantidad(productoCarritoExiste.getId(), productoCarritoExiste.getCantidad(), productoCarritoExiste.getCantidad() + nuevoProductoCarrito.getCantidad());
                             return new ProductoCarrito(nuevoProductoCarrito.getId(), new Producto(nuevoProductoCarrito.getProducto().getId_producto(), nuevoProductoCarrito.getProducto().getName(), nuevoProductoCarrito.getProducto().getPrice(), nuevoProductoCarrito.getProducto().getS(), nuevoProductoCarrito.getProducto().getM(), nuevoProductoCarrito.getProducto().getL(), nuevoProductoCarrito.getProducto().getXL(), nuevoProductoCarrito.getProducto().getImage()), nuevoProductoCarrito.getTalla(), nuevoProductoCarrito.getCantidad(), nuevoProductoCarrito.getFechaAgregado());
                         }
                         else{
@@ -78,10 +78,12 @@ public class ProductosCarritoService {
         }
     }
 
-    public ProductosCarrito updateCantidad(Long idProductoCarrito, int cantidad){
+    public ProductosCarrito updateCantidad(Long idProductoCarrito, int anteriorCantidad, int cantidad){
         if(cantidad > 0){
             ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
             if(productoCarrito != null){
+                productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), productoCarrito.getTalla(), anteriorCantidad);
+                productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), productoCarrito.getTalla(), -cantidad);
                 productoCarrito.setCantidad(cantidad);
                 return productosCarritoRepository.save(productoCarrito);
             }
@@ -94,18 +96,20 @@ public class ProductosCarritoService {
         }
     }
 
-    public ProductosCarrito updateTalla(Long idProductoCarrito, String tallaUpdate){
+    public ProductosCarrito updateTalla(Long idProductoCarrito, String anteriorTalla, String talla){
         ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
         if(productoCarrito != null){
-            if(List.of("S", "M", "L", "XL").contains(tallaUpdate)){
-                ProductosCarrito productoTallaUpdate = productosCarritoRepository.findByClienteIdProductoIdAndTalla(productoCarrito.getCliente().getId_cliente(), productoCarrito.getProducto().getId_producto(), tallaUpdate).orElse(null);
+            if(List.of("S", "M", "L", "XL").contains(talla) && List.of("S", "M", "L", "XL").contains(anteriorTalla)){
+                ProductosCarrito productoTallaUpdate = productosCarritoRepository.findByClienteIdProductoIdAndTalla(productoCarrito.getCliente().getId_cliente(), productoCarrito.getProducto().getId_producto(), talla).orElse(null);
                 if(productoTallaUpdate != null){
+                    productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), anteriorTalla, productoCarrito.getCantidad());
+                    productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), talla, -productoCarrito.getCantidad());
                     productoTallaUpdate.setCantidad(productoTallaUpdate.getCantidad() + productoCarrito.getCantidad());
                     productosCarritoRepository.delete(productoCarrito);
                     return productosCarritoRepository.save(productoTallaUpdate);
                 }
                 else{
-                    productoCarrito.setTalla(tallaUpdate);
+                    productoCarrito.setTalla(talla);
                     return productosCarritoRepository.save(productoCarrito);
                 }
             }
@@ -121,7 +125,8 @@ public class ProductosCarritoService {
     @Transactional
     public boolean eliminarProducto(Long idProductoCarrito){
         ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
-        if(productoCarrito != null){
+        if(productoCarrito != null){                
+            productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), productoCarrito.getTalla(), productoCarrito.getCantidad());
             productosCarritoRepository.delete(productoCarrito);
             return true;
         }
@@ -129,7 +134,8 @@ public class ProductosCarritoService {
             return false;
         }
     }
-
+    
+    @Transactional
     public boolean vaciarCarrito(Long clienteId){
         ArrayList<ProductosCarrito> productosCarrito = (ArrayList<ProductosCarrito>) productosCarritoRepository.findProductosByClienteId(clienteId).orElse(null);
         if(productosCarrito != null){
@@ -142,5 +148,10 @@ public class ProductosCarritoService {
         else{
             return false;
         }
+    }
+
+    @Transactional
+    public void vaciarCarritoTrasCompra(Long clienteId){
+        productosCarritoRepository.eliminarProductosDelCarrito(clienteId);
     }
 }

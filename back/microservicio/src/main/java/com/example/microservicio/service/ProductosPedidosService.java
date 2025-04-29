@@ -21,7 +21,7 @@ public class ProductosPedidosService {
 
     public void añadirProductosPedido(Pedidos pedido, ArrayList<ProductosCarrito> productosCarrito){
         ArrayList<ProductosPedidos> productosPedido = new ArrayList<>();
-        for (int i = 0; i < productosPedido.size(); i++) {
+        for (int i = 0; i < productosCarrito.size(); i++) {
             ProductosPedidos producto = new ProductosPedidos();
             producto.setPedido(pedido);
             producto.setProducto(productosCarrito.get(i).getProducto());

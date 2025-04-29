@@ -10,9 +10,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracne.data.model.Product
 import com.aracne.data.model.ProductInCart
+import com.aracne.data.model.Purchase
 import com.aracne.data.repository.ShopRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +27,7 @@ class MainViewModel @Inject constructor(
     var productos by mutableStateOf(listOf<Product>())
     var product by mutableStateOf(Product(0, "",  0.0, 0, 0, 0, 0, ""))
     var carrito by mutableStateOf(listOf<ProductInCart>())
+    var pedidos by mutableStateOf(listOf<Purchase>())
     var grupoProductosActuales by mutableIntStateOf(1)
     var total by mutableIntStateOf(0)
 
@@ -143,8 +147,10 @@ class MainViewModel @Inject constructor(
 
     fun getTotalCarrito(): Double {
         var totalCarrito = 0.0
+        val df = DecimalFormat("#.##")
+
         for (item in carrito){
-            totalCarrito += item.producto?.price ?: 0.0
+            totalCarrito += (df.format((item.producto?.price ?: 0.0) * item.cantidad)).toDouble()
         }
         return totalCarrito
     }
@@ -153,6 +159,40 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 shopRepository.addProductToCart(idCliente, idProducto, producto)
+            } catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun makePurchase(){
+        viewModelScope.launch {
+            try {
+                val respuesta = shopRepository.makePurchase(idCliente)
+                if (respuesta != null) {
+                    pedidos += respuesta
+                    carrito = carrito.drop(carrito.size)
+                } else {
+                    println("Error.")
+                }
+            } catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun emptyCart(){
+        viewModelScope.launch {
+            try {
+                val respuesta = shopRepository.emptyCart(idCliente)
+                if (respuesta != null) {
+                    if(respuesta.success){
+                        println("El carrito se ha vaciado con éxito.")
+                        carrito = carrito.drop(carrito.size)
+                    }
+                } else {
+                    println("Error.")
+                }
             } catch (e: Exception) {
                 println("Error: ${e.message}")
             }

@@ -470,7 +470,7 @@ public class ApplicationController {
     @PutMapping("/carrito/update/talla/{id}")
     public ResponseEntity<Map<String, Object>> updateTallaProductCarritoCliente(@PathVariable Long id, @RequestBody Map<String, String> talla) {
         
-        ProductosCarrito update = productosCarritoService.updateTalla(id, talla.get("talla"));
+        ProductosCarrito update = productosCarritoService.updateTalla(id, talla.get("tallaAnterior"), talla.get("talla"));
 
         boolean successfulUpdate = update != null;
 
@@ -484,7 +484,7 @@ public class ApplicationController {
     @PutMapping("/carrito/update/cantidad/{id}")
     public ResponseEntity<Map<String, Object>> updateCantidadProductCarritoCliente(@PathVariable Long id, @RequestBody Map<String, Integer> cantidad) {
         
-        ProductosCarrito update = productosCarritoService.updateCantidad(id, cantidad.get("cantidad"));
+        ProductosCarrito update = productosCarritoService.updateCantidad(id, cantidad.get("cantidadAnterior"), cantidad.get("cantidad"));
 
         boolean successfulUpdate = update != null;
 
@@ -533,6 +533,7 @@ public class ApplicationController {
             productosPedidosService.añadirProductosPedido(pedido, productos);
             pedidosService.calcularTotalPedido(pedido);
             Pedido pedidoEnviar = pedidosService.changePedidoToSend(pedido.getId_pedido());
+            productosCarritoService.vaciarCarritoTrasCompra(id);
             return ResponseEntity.ok(pedidoEnviar);
         }
         else{

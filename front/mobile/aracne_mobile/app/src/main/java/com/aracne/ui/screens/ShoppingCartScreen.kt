@@ -1,5 +1,6 @@
 package com.aracne.ui.screens
 
+import android.view.MotionEvent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,17 +22,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -41,13 +49,15 @@ import com.aracne.R
 import com.aracne.data.model.ProductInCart
 import com.aracne.model.MainViewModel
 import com.aracne.ui.navigation.Destinations
+import java.util.Locale
 
 @Composable
 fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostController){
     mainViewModel.getCarrito()
 
     if(mainViewModel.carrito.isNotEmpty()){
-        Column () {
+        Column (
+        ) {
             Row(){
                 Text(
                     "Total actual: ",
@@ -67,6 +77,27 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                     )
                 )
             }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier.padding(15.dp, 5.dp, 0.dp, 5.dp).fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp)
+                ) {
+                    BotonRealizarCompra ("Vaciar carrito") {
+                        mainViewModel.emptyCart()
+                    }
+                }
+                Row(
+                    modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
+                ) {
+                    BotonRealizarCompra ("Realizar pedido") {
+                        mainViewModel.makePurchase()
+                    }
+                }
+
+            }
             LazyColumn(
                 modifier = Modifier.padding(15.dp, 0.dp, 15.dp, 15.dp)
             ) {
@@ -83,8 +114,8 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                         Row() {
                             Box(
                                 modifier = Modifier
-                                    .height(100.dp)
-                                    .width(100.dp)
+                                    .height(120.dp)
+                                    .width(120.dp)
                                     .fillMaxWidth()
                                     .clipToBounds()
                             ) {
@@ -102,29 +133,38 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                             Column() {
                                 Column() {
                                     Text(
-                                        "${item.producto?.name ?: ""} x${item.cantidad}",
-                                        modifier = Modifier.padding(PaddingValues(10.dp, 5.dp, 10.dp, 10.dp)),
+                                        AnnotatedString.fromHtml(
+                                            "<span>${item.producto?.name ?: ""} <b>x${item.cantidad}</b></span>"),
+                                        modifier = Modifier.padding(PaddingValues(12.dp, 0.dp, 10.dp, 0.dp)),
                                         style = TextStyle(
                                             fontSize = 16.sp,
-                                            lineHeight = 21.sp
+                                            lineHeight = 19.sp
+                                        )
+                                    )
+                                    Text(
+                                        "${item.producto?.price} €",
+                                        modifier = Modifier.padding(PaddingValues(12.dp, 2.dp, 10.dp, 0.dp)),
+                                        style = TextStyle(
+                                            fontSize = 16.sp,
+                                            lineHeight = 19.sp,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    )
+                                    Text(
+                                        "Talla ${item.talla.toUpperCase(Locale.ROOT)}",
+                                        modifier = Modifier.padding(PaddingValues(12.dp, 2.dp, 10.dp, 0.dp)),
+                                        style = TextStyle(
+                                            fontSize = 16.sp,
+                                            lineHeight = 19.sp
                                         )
                                     )
                                 }
-                                Row() {
+                                Row(){
 
                                 }
                             }
                         }
                     }
-                }
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.padding(15.dp).fillMaxWidth()
-            ) {
-                BotonAnadirCarrito("Añadir al carrito") {
-
                 }
             }
         }
@@ -144,5 +184,88 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                 )
             )
         }
+    }
+}
+
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun BotonRealizarCompra(contenido: String, onClick: () -> Unit){
+    var isPressed by remember { mutableStateOf(false) }
+    val backgroundColor = if (isPressed) R.color.purple_001 else R.color.purple_002
+    Box(contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .width(140.dp)
+            .height(30.dp)
+            .background(
+                color = colorResource(backgroundColor),
+                shape = RoundedCornerShape(10.dp)
+            )
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        isPressed = true
+                        true
+                    }
+
+                    MotionEvent.ACTION_UP,
+                    MotionEvent.ACTION_CANCEL -> {
+                        isPressed = false
+                        onClick()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+    )
+    {
+        Text(
+            contenido,
+            style = TextStyle(
+                fontSize = 15.sp
+            )
+        )
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun BotonEditarProducto(contenido: String, onClick: () -> Unit){
+    var isPressed by remember { mutableStateOf(false) }
+    val backgroundColor = if (isPressed) R.color.purple_001 else R.color.purple_002
+    Box(contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .width(140.dp)
+            .height(20.dp)
+            .background(
+                color = colorResource(backgroundColor),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        isPressed = true
+                        true
+                    }
+
+                    MotionEvent.ACTION_UP,
+                    MotionEvent.ACTION_CANCEL -> {
+                        isPressed = false
+                        onClick()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+    )
+    {
+        Text(
+            contenido,
+            style = TextStyle(
+                fontSize = 15.sp
+            )
+        )
     }
 }
