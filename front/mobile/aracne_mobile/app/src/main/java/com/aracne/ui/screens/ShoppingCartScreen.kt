@@ -1,16 +1,20 @@
 package com.aracne.ui.screens
 
 import android.view.MotionEvent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,6 +39,7 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -56,9 +61,8 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
     mainViewModel.getCarrito()
 
     if(mainViewModel.carrito.isNotEmpty()){
-        Column (
-        ) {
-            Row(){
+        Column {
+            Row {
                 Text(
                     "Total actual: ",
                     modifier = Modifier.padding(PaddingValues(15.dp, 15.dp, 0.dp, 5.dp)),
@@ -111,7 +115,9 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                             disabledContentColor = Color.Black
                         )
                     ) {
-                        Row() {
+                        Row (
+                            modifier = Modifier.fillMaxSize()
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .height(120.dp)
@@ -130,8 +136,13 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                                     contentScale = ContentScale.Crop
                                 )
                             }
-                            Column() {
-                                Column() {
+                            Column(
+                                modifier = Modifier.fillMaxHeight(),
+                                verticalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth().height(100.dp)
+                                ) {
                                     Text(
                                         AnnotatedString.fromHtml(
                                             "<span>${item.producto?.name ?: ""} <b>x${item.cantidad}</b></span>"),
@@ -159,8 +170,24 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                                         )
                                     )
                                 }
-                                Row(){
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalAlignment = Alignment.Bottom
+                                ){
+                                    Row(
+                                        modifier = Modifier.padding(12.dp, 0.dp, 0.dp, 0.dp)
+                                    ) {
+                                        BotonEditarProducto("Modificar producto"){
+                                            navController.navigate(Destinations.MODIFYPROD + "/" + item.id)
+                                        }
+                                    }
+                                    Row(
+                                        modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
+                                    ) {
+                                        BotonEliminarProducto(R.drawable.bin) {
 
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -236,7 +263,7 @@ fun BotonEditarProducto(contenido: String, onClick: () -> Unit){
     val backgroundColor = if (isPressed) R.color.purple_001 else R.color.purple_002
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier
-            .width(140.dp)
+            .width(160.dp)
             .height(20.dp)
             .background(
                 color = colorResource(backgroundColor),
@@ -266,6 +293,38 @@ fun BotonEditarProducto(contenido: String, onClick: () -> Unit){
             style = TextStyle(
                 fontSize = 15.sp
             )
+        )
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun BotonEliminarProducto(imagen: Int, onClick: () -> Unit){
+    var isPressed by remember { mutableStateOf(false) }
+    val backgroundColorCantidad = if (isPressed) R.color.purple_001 else R.color.purple_002
+    Box(contentAlignment = Alignment.Center,
+        modifier = Modifier.size(20.dp)
+            .background(color = colorResource(backgroundColorCantidad), shape = RoundedCornerShape(12.dp))
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        isPressed = true
+                        onClick()
+                        true
+                    }
+                    MotionEvent.ACTION_UP,
+                    MotionEvent.ACTION_CANCEL -> {
+                        isPressed = false
+                        true
+                    }
+                    else -> false
+                }
+            }
+    ) {
+        Image(
+            painter = painterResource(imagen),
+            contentDescription = "",
+            modifier = Modifier.size(20.dp)
         )
     }
 }

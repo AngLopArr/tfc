@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.aracne.model.MainViewModel
+import com.aracne.ui.screens.ModifyProductInCartScreen
 import com.aracne.ui.screens.ProductScreen
 import com.aracne.ui.screens.ProductsScreen
 import com.aracne.ui.screens.ProfileScreen
@@ -72,9 +73,14 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, m
             ProfileScreen()
         }
         composable(route = "${Destinations.PRODUCTO}/{id_producto}", arguments = listOf(navArgument("id_producto") { type = NavType.LongType })) {
-            parametros ->
+                parametros ->
             val producto = parametros.arguments?.getLong("id_producto") ?: 0
             ProductScreen(productoId = producto, navController = navController, mainViewModel)
+        }
+        composable(route = "${Destinations.MODIFYPROD}/{id_producto_carrito}", arguments = listOf(navArgument("id_producto_carrito") { type = NavType.LongType })) {
+                parametros ->
+            val producto = parametros.arguments?.getLong("id_producto_carrito") ?: 0
+            ModifyProductInCartScreen(productoId = producto, navController = navController)
         }
         /*
         composable(route = "${Destinatns.MATERIAL}/{id_material}", arguments = listOf(navArgument("id_material") { type = NavType.IntType })) {

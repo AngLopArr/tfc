@@ -43,7 +43,7 @@ import com.aracne.ui.components.ProductoCantidad
 import com.aracne.ui.navigation.Destinations
 
 @Composable
-fun ModifyProductInCartScreen(productoId: Int, navController: NavHostController){
+fun ModifyProductInCartScreen(productoId: Long, navController: NavHostController){
     val precio = 14.55
     val stock = 18
     var selectedIndex by remember { mutableIntStateOf(0) } // Ninguno seleccionado al principio

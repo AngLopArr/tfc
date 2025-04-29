@@ -37,7 +37,7 @@ public class Devoluciones {
     @Column(nullable = true)
     private boolean aceptada;
 
-    @OneToMany(mappedBy = "devolucion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "devolucion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductosDevoluciones> productosDevueltos;
 
     public Long getId_devolucion() {
