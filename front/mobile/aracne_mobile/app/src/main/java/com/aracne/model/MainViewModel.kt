@@ -8,9 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aracne.data.model.Cantidad
 import com.aracne.data.model.Product
 import com.aracne.data.model.ProductInCart
 import com.aracne.data.model.Purchase
+import com.aracne.data.model.Talla
 import com.aracne.data.repository.ShopRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -159,6 +161,41 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 shopRepository.addProductToCart(idCliente, idProducto, producto)
+            } catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun getProductInCart(id: Long): ProductInCart{
+        return carrito.filter { item -> item.id == id }[0]
+    }
+
+    fun updateTallaProductInCart(id: Long, tallaAnterior: String, talla: String){
+        viewModelScope.launch {
+            try {
+                shopRepository.updateTallaProductInCart(id, Talla(tallaAnterior, talla))
+            } catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun updateCantidadProductInCart(id: Long, cantidadAnterior: Int, cantidad: Int){
+        viewModelScope.launch {
+            try {
+                shopRepository.updateCantidadProductInCart(id, Cantidad(cantidadAnterior, cantidad))
+            } catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun deleteProductFromCart(id: Long){
+        viewModelScope.launch {
+            try {
+                shopRepository.deleteProductFromCart(id)
+                carrito = carrito.filterNot { item -> item.id == id }
             } catch (e: Exception) {
                 println("Error: ${e.message}")
             }

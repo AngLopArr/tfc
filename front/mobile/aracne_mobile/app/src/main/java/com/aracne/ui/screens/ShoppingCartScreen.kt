@@ -185,7 +185,9 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                                         modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
                                     ) {
                                         BotonEliminarProducto(R.drawable.bin) {
-
+                                            if(item.id != null){
+                                                mainViewModel.deleteProductFromCart(item.id)
+                                            }
                                         }
                                     }
                                 }

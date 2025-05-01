@@ -48,8 +48,7 @@ import com.aracne.ui.components.ProductoCantidad
 import com.aracne.ui.navigation.Destinations
 
 @Composable
-fun ProductScreen(productoId: Long, navController: NavHostController, mainViewModel: MainViewModel){
-    mainViewModel.getProduct(productoId)
+fun ProductScreen(navController: NavHostController, mainViewModel: MainViewModel){
     var selectedIndex by remember { mutableIntStateOf(0) }
     var selectedStock by remember { mutableIntStateOf(mainViewModel.product.s) }
     val tallas = listOf("S", "M", "L", "XL")
@@ -182,15 +181,13 @@ fun ProductScreen(productoId: Long, navController: NavHostController, mainViewMo
                         BotonAnadirCarrito("Añadir al carrito") {
                             if (selectedStock != 0) {
                                 mainViewModel.addToCart(item.id_producto, ProductInCart(null, null, null, tallas[selectedIndex], cantidad, null))
-                                navController.navigate(Destinations.CART)
+                                navController.navigate(Destinations.PRODUCTOS)
                             }
                         }
                     }
                 }
             }
         }
-
-
     }
 }
 

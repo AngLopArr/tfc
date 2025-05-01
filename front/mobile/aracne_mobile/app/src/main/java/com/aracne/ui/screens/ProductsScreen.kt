@@ -150,7 +150,8 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
                                 .clip(RoundedCornerShape(12.dp))
                                 .fillMaxWidth()
                                 .clickable {
-                                    navController.navigate("producto/" + item[0].id_producto)
+                                    navController.navigate("producto")
+                                    mainViewModel.getProduct(item[0].id_producto)
                                 }
                         )
                         Text(item[0].name,
@@ -187,7 +188,8 @@ fun ProductsScreen(navController: NavHostController, mainViewModel: MainViewMode
                                     .clip(RoundedCornerShape(12.dp))
                                     .fillMaxWidth()
                                     .clickable {
-                                        navController.navigate("producto/" + item[1].id_producto)
+                                        navController.navigate("producto")
+                                        mainViewModel.getProduct(item[1].id_producto)
                                     }
                             )
                             Text(item[1].name,

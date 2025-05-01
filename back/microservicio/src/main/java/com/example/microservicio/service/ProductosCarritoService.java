@@ -109,6 +109,8 @@ public class ProductosCarritoService {
                     return productosCarritoRepository.save(productoTallaUpdate);
                 }
                 else{
+                    productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), anteriorTalla, productoCarrito.getCantidad());
+                    productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), talla, -productoCarrito.getCantidad());
                     productoCarrito.setTalla(talla);
                     return productosCarritoRepository.save(productoCarrito);
                 }
