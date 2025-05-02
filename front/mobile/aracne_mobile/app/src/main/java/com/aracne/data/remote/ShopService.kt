@@ -2,6 +2,7 @@ package com.aracne.data.remote
 
 import com.aracne.data.model.Cantidad
 import com.aracne.data.model.Client
+import com.aracne.data.model.Detalle
 import com.aracne.data.model.GeneralResponseExists
 import com.aracne.data.model.GeneralResponseSuccess
 import com.aracne.data.model.Password
@@ -58,11 +59,14 @@ interface ShopService {
     @POST("carrito/add/{id_cliente}/{id_producto}")
     fun addProductToCart(@Path("id_cliente") idCliente: Long, @Path("id_producto") idProducto: Long, @Body productoCarrito: ProductInCart): Call<ProductInCart>
 
-    @PUT("carrito/update/talla/{id}")
-    fun updateTallaProductInCart(@Path("id") id: Long, @Body talla: Talla): Call<GeneralResponseSuccess>
+    @PUT("carrito/update/{id}")
+    fun updateProductInCart(@Path("id") id: Long, @Body detalle: Detalle): Call<GeneralResponseSuccess>
 
     @PUT("carrito/update/cantidad/{id}")
     fun updateCantidadProductInCart(@Path("id") id: Long, @Body cantidad: Cantidad): Call<GeneralResponseSuccess>
+
+    @PUT("carrito/update/talla/{id}")
+    fun updateTallaProductInCart(@Path("id") id: Long, @Body talla: Talla): Call<GeneralResponseSuccess>
 
     @DELETE("carrito/delete/{id}")
     fun deleteProductFromCart(@Path("id") id: Long): Call<GeneralResponseSuccess>

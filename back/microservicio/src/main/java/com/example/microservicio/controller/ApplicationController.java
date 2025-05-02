@@ -495,6 +495,20 @@ public class ApplicationController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/carrito/update/{id}")
+    public ResponseEntity<Map<String, Object>> updateProductCarritoCliente(@PathVariable Long id, @RequestBody Map<String, Object> detalle) {
+        
+        ProductosCarrito update = productosCarritoService.updateProduct(id, (Integer) detalle.get("cantidadAnterior"), (Integer) detalle.get("cantidad"), (String) detalle.get("tallaAnterior"), (String) detalle.get("talla"));
+
+        boolean successfulUpdate = update != null;
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("success", successfulUpdate);
+
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/carrito/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteProductCarritoCliente(@PathVariable Long id) {
         

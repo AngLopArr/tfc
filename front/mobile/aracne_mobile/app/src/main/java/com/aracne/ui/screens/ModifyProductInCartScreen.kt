@@ -187,12 +187,15 @@ fun ModifyProductInCartScreen(productoId: Long, navController: NavHostController
                         BotonAnadirCarrito("Modificar producto") {
                             if(product.id != null) {
                                 if (selectedStock != 0) {
-                                    if (tallaInicial != tallas[selectedIndex]) {
+                                    if (tallaInicial != tallas[selectedIndex] && cantidadInicial == cantidad) {
                                         mainViewModel.updateTallaProductInCart(product.id, tallaInicial, tallas[selectedIndex])
-                                    }/*
-                                    if (cantidadInicial != cantidad) {
+                                    }
+                                    if (cantidadInicial != cantidad && tallaInicial == tallas[selectedIndex]) {
                                         mainViewModel.updateCantidadProductInCart(product.id, cantidadInicial, cantidad)
-                                    }*/
+                                    }
+                                    if(cantidadInicial != cantidad && tallaInicial != tallas[selectedIndex]){
+                                        mainViewModel.updateProductInCart(product.id, cantidadInicial, cantidad, tallaInicial, tallas[selectedIndex])
+                                    }
                                     navController.navigate(Destinations.CART)
                                 }
                             }

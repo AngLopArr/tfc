@@ -72,7 +72,15 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                     )
                 )
                 Text(
-                    "${mainViewModel.getTotalCarrito()} €",
+                    "${
+                        if(mainViewModel.getTotalCarrito().toString().split('.')[1].length == 1){
+                            mainViewModel.getTotalCarrito().toString().padEnd(mainViewModel.getTotalCarrito().toString().length + 1, '0')
+                        }
+                        else{
+                            mainViewModel.getTotalCarrito().toString()
+                        }
+                        
+                    } €",
                     modifier = Modifier.padding(PaddingValues(0.dp, 15.dp, 15.dp, 5.dp)),
                     style = TextStyle(
                         fontSize = 17.sp,

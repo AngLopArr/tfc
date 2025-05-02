@@ -124,6 +124,35 @@ public class ProductosCarritoService {
         }
     }
 
+    public ProductosCarrito updateProduct(Long idProductoCarrito, int anteriorCantidad, int cantidad, String anteriorTalla, String talla){
+        ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);
+        if(productoCarrito != null){
+            if(List.of("S", "M", "L", "XL").contains(talla) && List.of("S", "M", "L", "XL").contains(anteriorTalla)){
+                ProductosCarrito productoTallaUpdate = productosCarritoRepository.findByClienteIdProductoIdAndTalla(productoCarrito.getCliente().getId_cliente(), productoCarrito.getProducto().getId_producto(), talla).orElse(null);
+                if(productoTallaUpdate != null){
+                    productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), anteriorTalla, anteriorCantidad);
+                    productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), talla, -cantidad);
+                    productoTallaUpdate.setCantidad(productoTallaUpdate.getCantidad() + cantidad);
+                    productosCarritoRepository.delete(productoCarrito);
+                    return productosCarritoRepository.save(productoTallaUpdate);
+                }
+                else{
+                    productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), anteriorTalla, anteriorCantidad);
+                    productosService.updateStockProduct(productoCarrito.getProducto().getId_producto(), talla, -cantidad);
+                    productoCarrito.setTalla(talla);
+                    productoCarrito.setCantidad(cantidad);
+                    return productosCarritoRepository.save(productoCarrito);
+                }
+            }
+            else{ 
+                return null;
+            }
+        }
+        else{
+            return null;
+        }
+    }
+
     @Transactional
     public boolean eliminarProducto(Long idProductoCarrito){
         ProductosCarrito productoCarrito = productosCarritoRepository.findById(idProductoCarrito).orElse(null);

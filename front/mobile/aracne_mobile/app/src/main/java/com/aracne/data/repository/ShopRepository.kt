@@ -2,6 +2,7 @@ package com.aracne.data.repository
 
 import com.aracne.data.model.Cantidad
 import com.aracne.data.model.Client
+import com.aracne.data.model.Detalle
 import com.aracne.data.model.GeneralResponseExists
 import com.aracne.data.model.GeneralResponseSuccess
 import com.aracne.data.model.Password
@@ -165,6 +166,17 @@ class ShopRepository {
     suspend fun updateCantidadProductInCart(id: Long, cantidad: Cantidad): GeneralResponseSuccess? {
         return withContext(Dispatchers.IO) {
             val response = RetrofitInstance.api_shop.updateCantidadProductInCart(id, cantidad).execute()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        }
+    }
+
+    suspend fun updateProductInCart(id: Long, detalle: Detalle): GeneralResponseSuccess? {
+        return withContext(Dispatchers.IO) {
+            val response = RetrofitInstance.api_shop.updateProductInCart(id, detalle).execute()
             if (response.isSuccessful) {
                 response.body()
             } else {

@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracne.data.model.Cantidad
+import com.aracne.data.model.Detalle
 import com.aracne.data.model.Product
 import com.aracne.data.model.ProductInCart
 import com.aracne.data.model.Purchase
@@ -152,9 +153,9 @@ class MainViewModel @Inject constructor(
         val df = DecimalFormat("#.##")
 
         for (item in carrito){
-            totalCarrito += (df.format((item.producto?.price ?: 0.0) * item.cantidad)).toDouble()
+            totalCarrito += (item.producto?.price ?: 0.0) * item.cantidad
         }
-        return totalCarrito
+        return (df.format(totalCarrito)).toDouble()
     }
 
     fun addToCart(idProducto: Long, producto: ProductInCart) {
@@ -185,6 +186,16 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 shopRepository.updateCantidadProductInCart(id, Cantidad(cantidadAnterior, cantidad))
+            } catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun updateProductInCart(id: Long, cantidadAnterior: Int, cantidad: Int, tallaAnterior: String, talla: String){
+        viewModelScope.launch {
+            try {
+                shopRepository.updateProductInCart(id, Detalle(cantidadAnterior, cantidad, tallaAnterior, talla))
             } catch (e: Exception) {
                 println("Error: ${e.message}")
             }
