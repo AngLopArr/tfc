@@ -139,7 +139,7 @@ fun LoginScreen(){
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ){
-                        BotonLogin("Login", {})
+                        BotonLogin("Login") {}
                     }
                     Spacer(modifier = Modifier.height(20.dp))
                     Row(

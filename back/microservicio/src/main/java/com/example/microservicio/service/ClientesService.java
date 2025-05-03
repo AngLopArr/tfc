@@ -65,14 +65,19 @@ public class ClientesService {
         }
     }
 
-    public boolean changePassword(Long id, String password){ 
+    public boolean changePassword(Long id, String passwordAnterior, String password){ 
         Clientes clienteUpdate = clientesRepository.findById(id).orElse(null);
 
         if(clienteUpdate != null){ 
-            String passwordHasheada = passwordCheck.hashString(password);
-            clienteUpdate.setPassword(passwordHasheada);
-            clientesRepository.save(clienteUpdate);
-            return true;
+            if(passwordCheck.checkPassword(clienteUpdate.getPassword(), passwordAnterior)){
+                String passwordHasheada = passwordCheck.hashString(password);
+                clienteUpdate.setPassword(passwordHasheada);
+                clientesRepository.save(clienteUpdate);
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         else {
             return false;

@@ -27,6 +27,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val idCliente: Long = 1
+    val nameCliente: String = "Carla"
     var productos by mutableStateOf(listOf<Product>())
     var product by mutableStateOf(Product(0, "",  0.0, 0, 0, 0, 0, ""))
     var carrito by mutableStateOf(listOf<ProductInCart>())

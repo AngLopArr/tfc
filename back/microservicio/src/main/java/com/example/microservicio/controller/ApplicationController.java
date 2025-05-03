@@ -133,8 +133,9 @@ public class ApplicationController {
     public ResponseEntity<Map<String, Object>> changePasswordClient(@PathVariable Long id, @RequestBody Map<String, String> password) {
         
         String newPassword = password.get("password");
+        String passwordAnterior = password.get("passwordAnterior");
 
-        boolean successfulChange = clientesService.changePassword(id, newPassword);
+        boolean successfulChange = clientesService.changePassword(id, passwordAnterior, newPassword);
 
         Map<String, Object> response = new HashMap<>();
 
