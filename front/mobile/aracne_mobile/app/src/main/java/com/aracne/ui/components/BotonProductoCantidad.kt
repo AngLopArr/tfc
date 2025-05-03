@@ -48,7 +48,7 @@ fun BotonProductoCantidad(imagen: Int, onClick: () -> Unit){
         Image(
             painter = painterResource(imagen),
             contentDescription = "",
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier.size(11.dp)
         )
     }
 }
