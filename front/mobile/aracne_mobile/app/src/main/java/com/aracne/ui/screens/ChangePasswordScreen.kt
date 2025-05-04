@@ -1,5 +1,6 @@
 package com.aracne.ui.screens
 
+import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,13 +36,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.aracne.R
+import com.aracne.data.model.GeneralResponseSuccess
+import com.aracne.data.model.Password
 import com.aracne.model.MainViewModel
 
 @Composable
-fun ChangePasswordScreen(navController: NavHostController, mainViewModel: MainViewModel){
+fun ChangePasswordScreen(mainViewModel: MainViewModel){
     var passwordAnterior by remember { mutableStateOf("") }
     var passwordNueva by remember { mutableStateOf("") }
     var passwordNuevaRepeticion by remember { mutableStateOf("") }
+    var botonClicked by remember { mutableStateOf(false) }
+    var respuesta: GeneralResponseSuccess?
+
+    LaunchedEffect(botonClicked) {
+        if(botonClicked){
+            respuesta = mainViewModel.changePassword(Password(passwordNueva, passwordAnterior))
+            if(respuesta != null){
+                Log.d("TAG", "" + (respuesta?.success ?: false))
+                passwordAnterior = ""
+                passwordNueva = ""
+                passwordNuevaRepeticion = ""
+            }
+        }
+        botonClicked = false
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -91,7 +110,9 @@ fun ChangePasswordScreen(navController: NavHostController, mainViewModel: MainVi
         )
         Spacer(modifier = Modifier.height(25.dp))
         BotonCambioPassword("Cambiar contraseña") {
-
+            if(passwordNueva == passwordNuevaRepeticion){
+                botonClicked = true
+            }
         }
     }
 }

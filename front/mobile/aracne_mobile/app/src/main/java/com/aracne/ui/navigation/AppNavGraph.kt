@@ -82,7 +82,7 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, m
             ModifyProductInCartScreen(productoId = producto, navController = navController, mainViewModel = mainViewModel)
         }
         composable(route = Destinations.CHANGEPASSWORD) {
-            ChangePasswordScreen(navController, mainViewModel)
+            ChangePasswordScreen(mainViewModel)
         }
         /*
         composable(route = "${Destinatns.MATERIAL}/{id_material}", arguments = listOf(navArgument("id_material") { type = NavType.IntType })) {

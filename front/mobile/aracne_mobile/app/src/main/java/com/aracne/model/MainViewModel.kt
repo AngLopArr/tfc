@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracne.data.model.Cantidad
 import com.aracne.data.model.Detalle
+import com.aracne.data.model.GeneralResponseSuccess
+import com.aracne.data.model.Password
 import com.aracne.data.model.Product
 import com.aracne.data.model.ProductInCart
 import com.aracne.data.model.Purchase
@@ -34,6 +36,15 @@ class MainViewModel @Inject constructor(
     var pedidos by mutableStateOf(listOf<Purchase>())
     var grupoProductosActuales by mutableIntStateOf(1)
     var total by mutableIntStateOf(0)
+
+    suspend fun changePassword(password: Password): GeneralResponseSuccess? {
+        try {
+            return shopRepository.changePassword(idCliente, password)
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        }
+        return null
+    }
 
     fun getInitialProducts(){
         viewModelScope.launch {
@@ -162,7 +173,10 @@ class MainViewModel @Inject constructor(
     fun addToCart(idProducto: Long, producto: ProductInCart) {
         viewModelScope.launch {
             try {
-                shopRepository.addProductToCart(idCliente, idProducto, producto)
+                val respuesta = shopRepository.addProductToCart(idCliente, idProducto, producto)
+                if(respuesta != null){
+                    carrito += respuesta
+                }
             } catch (e: Exception) {
                 println("Error: ${e.message}")
             }
@@ -176,6 +190,7 @@ class MainViewModel @Inject constructor(
     fun updateTallaProductInCart(id: Long, tallaAnterior: String, talla: String){
         viewModelScope.launch {
             try {
+                carrito[carrito.indexOf(carrito.find { item -> item.id == id })].talla = talla
                 shopRepository.updateTallaProductInCart(id, Talla(tallaAnterior, talla))
             } catch (e: Exception) {
                 println("Error: ${e.message}")
@@ -186,6 +201,7 @@ class MainViewModel @Inject constructor(
     fun updateCantidadProductInCart(id: Long, cantidadAnterior: Int, cantidad: Int){
         viewModelScope.launch {
             try {
+                carrito[carrito.indexOf(carrito.find { item -> item.id == id })].cantidad = cantidad
                 shopRepository.updateCantidadProductInCart(id, Cantidad(cantidadAnterior, cantidad))
             } catch (e: Exception) {
                 println("Error: ${e.message}")
@@ -196,6 +212,8 @@ class MainViewModel @Inject constructor(
     fun updateProductInCart(id: Long, cantidadAnterior: Int, cantidad: Int, tallaAnterior: String, talla: String){
         viewModelScope.launch {
             try {
+                carrito[carrito.indexOf(carrito.find { item -> item.id == id })].talla = talla
+                carrito[carrito.indexOf(carrito.find { item -> item.id == id })].cantidad = cantidad
                 shopRepository.updateProductInCart(id, Detalle(cantidadAnterior, cantidad, tallaAnterior, talla))
             } catch (e: Exception) {
                 println("Error: ${e.message}")
