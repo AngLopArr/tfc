@@ -156,6 +156,7 @@ fun ModifyProductInCartScreen(productoId: Long, navController: NavHostController
                                     2 -> item.producto?.l ?: 0
                                     else -> item.producto?.xl ?: 0
                                 }
+                                cantidad = 1
                             }
                         )
                     }

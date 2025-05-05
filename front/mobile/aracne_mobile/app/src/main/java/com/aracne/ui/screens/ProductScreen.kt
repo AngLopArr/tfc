@@ -150,6 +150,7 @@ fun ProductScreen(navController: NavHostController, mainViewModel: MainViewModel
                                     2 -> item.l
                                     else -> item.xl
                                 }
+                                cantidad = 1
                             }
                         )
                     }

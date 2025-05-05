@@ -4,7 +4,7 @@ import java.util.Date
 
 data class Purchase (
     val id_pedido: Long,
-    val fechaPedido: Date,
+    val fechaPedido: String,
     val totalPedido: Double,
     val productos: List<PurchasedProduct>
 )

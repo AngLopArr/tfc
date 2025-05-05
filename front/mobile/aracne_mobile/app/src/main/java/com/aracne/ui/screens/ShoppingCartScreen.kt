@@ -59,7 +59,6 @@ import java.util.Locale
 @Composable
 fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostController){
     mainViewModel.getCarrito()
-
     if(mainViewModel.carrito.isNotEmpty()){
         Column {
             Row {

@@ -1,5 +1,6 @@
 package com.aracne.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,11 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,12 +43,27 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
+import com.aracne.data.model.GeneralResponseSuccess
+import com.aracne.data.model.Password
 import com.aracne.model.MainViewModel
 import com.aracne.ui.navigation.Destinations
 import java.util.Locale
 
 @Composable
 fun ProfileScreen(navController: NavHostController, mainViewModel: MainViewModel){
+    var botonDeleteClicked by remember { mutableStateOf(false) }
+    var respuestaDelete: GeneralResponseSuccess?
+
+    LaunchedEffect(botonDeleteClicked) {
+        if(botonDeleteClicked){
+            respuestaDelete = mainViewModel.deleteClient()
+            if(respuestaDelete != null){
+                Log.d("TAG", "" + (respuestaDelete?.success ?: false))
+            }
+        }
+        botonDeleteClicked = false
+    }
+
     Column (
         modifier = Modifier.fillMaxSize()
     ) {
@@ -154,7 +175,7 @@ fun ProfileScreen(navController: NavHostController, mainViewModel: MainViewModel
             }
             Card(
                 modifier = Modifier.padding(15.dp, 0.dp, 15.dp, 15.dp).fillMaxWidth().height(50.dp).clickable {
-
+                    botonDeleteClicked = true
                 },
                 colors = CardColors(
                     containerColor = MaterialTheme.colorScheme.background,

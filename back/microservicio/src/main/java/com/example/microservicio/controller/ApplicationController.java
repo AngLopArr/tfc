@@ -147,6 +147,7 @@ public class ApplicationController {
     @DeleteMapping("/clientes/delete/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteCliente(@PathVariable Long id) {
         
+        productosCarritoService.vaciarCarrito(id);
         boolean clientExists = clientesService.deleteCliente(id);
 
         Map<String, Boolean> response = new HashMap<>();

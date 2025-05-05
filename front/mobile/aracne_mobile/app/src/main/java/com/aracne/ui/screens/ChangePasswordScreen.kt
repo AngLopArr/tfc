@@ -34,11 +34,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.aracne.R
 import com.aracne.data.model.GeneralResponseSuccess
 import com.aracne.data.model.Password
 import com.aracne.model.MainViewModel
+import com.aracne.ui.components.ShopDialog
 
 @Composable
 fun ChangePasswordScreen(mainViewModel: MainViewModel){
@@ -47,18 +47,32 @@ fun ChangePasswordScreen(mainViewModel: MainViewModel){
     var passwordNuevaRepeticion by remember { mutableStateOf("") }
     var botonClicked by remember { mutableStateOf(false) }
     var respuesta: GeneralResponseSuccess?
+    var mostrarDialog by remember { mutableStateOf(false) }
+    var dialogText by remember { mutableStateOf("") }
 
     LaunchedEffect(botonClicked) {
         if(botonClicked){
             respuesta = mainViewModel.changePassword(Password(passwordNueva, passwordAnterior))
             if(respuesta != null){
-                Log.d("TAG", "" + (respuesta?.success ?: false))
-                passwordAnterior = ""
-                passwordNueva = ""
-                passwordNuevaRepeticion = ""
+                Log.d("", "" + respuesta?.success)
+                if(respuesta?.success == true){
+                    dialogText = "La contraseña ha sido modificada con éxito"
+                    mostrarDialog = true
+                    passwordAnterior = ""
+                    passwordNueva = ""
+                    passwordNuevaRepeticion = ""
+                }
+                else{
+                    dialogText = "La contraseña actual es incorrecta"
+                    mostrarDialog = true
+                }
             }
         }
         botonClicked = false
+    }
+
+    if(mostrarDialog){
+        ShopDialog({ mostrarDialog = false }, { mostrarDialog = false }, "Cambio de contraseña", dialogText)
     }
 
     Column(
@@ -111,7 +125,17 @@ fun ChangePasswordScreen(mainViewModel: MainViewModel){
         Spacer(modifier = Modifier.height(25.dp))
         BotonCambioPassword("Cambiar contraseña") {
             if(passwordNueva == passwordNuevaRepeticion){
-                botonClicked = true
+                if(passwordNueva != passwordAnterior){
+                    botonClicked = true
+                }
+                else {
+                    dialogText = "La nueva contraseña es igual a la actual"
+                    mostrarDialog = true
+                }
+            }
+            else{
+                dialogText = "Las contraseñas no coinciden"
+                mostrarDialog = true
             }
         }
     }

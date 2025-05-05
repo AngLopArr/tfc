@@ -46,6 +46,15 @@ class MainViewModel @Inject constructor(
         return null
     }
 
+    suspend fun deleteClient(): GeneralResponseSuccess? {
+        try {
+            return shopRepository.deleteCliente(idCliente)
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        }
+        return null
+    }
+
     fun getInitialProducts(){
         viewModelScope.launch {
             try {
