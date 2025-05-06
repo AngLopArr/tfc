@@ -1,8 +1,6 @@
 package com.aracne.model
 
-import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +17,6 @@ import com.aracne.data.model.Talla
 import com.aracne.data.repository.ShopRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -46,13 +43,14 @@ class MainViewModel @Inject constructor(
         return null
     }
 
-    suspend fun deleteClient(): GeneralResponseSuccess? {
-        try {
-            return shopRepository.deleteCliente(idCliente)
-        } catch (e: Exception) {
-            println("Error: ${e.message}")
+    fun deleteClient() {
+        viewModelScope.launch {
+            try {
+                shopRepository.deleteCliente(idCliente)
+            } catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
         }
-        return null
     }
 
     fun getInitialProducts(){
@@ -179,55 +177,64 @@ class MainViewModel @Inject constructor(
         return (df.format(totalCarrito)).toDouble()
     }
 
-    fun addToCart(idProducto: Long, producto: ProductInCart) {
-        viewModelScope.launch {
-            try {
-                val respuesta = shopRepository.addProductToCart(idCliente, idProducto, producto)
-                if(respuesta != null){
-                    carrito += respuesta
-                }
-            } catch (e: Exception) {
-                println("Error: ${e.message}")
+    suspend fun addToCart(idProducto: Long, producto: ProductInCart): ProductInCart? {
+        try {
+            val respuesta = shopRepository.addProductToCart(idCliente, idProducto, producto)
+            if(respuesta != null){
+                carrito += respuesta
+                return respuesta
             }
+            else {
+                return null
+            }
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
         }
+        return null
     }
 
     fun getProductInCart(id: Long): ProductInCart{
         return carrito.filter { item -> item.id == id }[0]
     }
 
-    fun updateTallaProductInCart(id: Long, tallaAnterior: String, talla: String){
-        viewModelScope.launch {
-            try {
+    suspend fun updateTallaProductInCart(id: Long, tallaAnterior: String, talla: String): GeneralResponseSuccess? {
+        try {
+            val respuesta = shopRepository.updateTallaProductInCart(id, Talla(tallaAnterior, talla))
+            if(respuesta != null && respuesta.success){
                 carrito[carrito.indexOf(carrito.find { item -> item.id == id })].talla = talla
-                shopRepository.updateTallaProductInCart(id, Talla(tallaAnterior, talla))
-            } catch (e: Exception) {
-                println("Error: ${e.message}")
             }
+            return respuesta
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
         }
+        return null
     }
 
-    fun updateCantidadProductInCart(id: Long, cantidadAnterior: Int, cantidad: Int){
-        viewModelScope.launch {
-            try {
+    suspend fun updateCantidadProductInCart(id: Long, cantidadAnterior: Int, cantidad: Int): GeneralResponseSuccess? {
+        try {
+            val respuesta = shopRepository.updateCantidadProductInCart(id, Cantidad(cantidadAnterior, cantidad))
+            if(respuesta != null && respuesta.success){
                 carrito[carrito.indexOf(carrito.find { item -> item.id == id })].cantidad = cantidad
-                shopRepository.updateCantidadProductInCart(id, Cantidad(cantidadAnterior, cantidad))
-            } catch (e: Exception) {
-                println("Error: ${e.message}")
             }
+            return respuesta
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
         }
+        return null
     }
 
-    fun updateProductInCart(id: Long, cantidadAnterior: Int, cantidad: Int, tallaAnterior: String, talla: String){
-        viewModelScope.launch {
-            try {
+    suspend fun updateProductInCart(id: Long, cantidadAnterior: Int, cantidad: Int, tallaAnterior: String, talla: String): GeneralResponseSuccess? {
+        try {
+            val respuesta = shopRepository.updateProductInCart(id, Detalle(cantidadAnterior, cantidad, tallaAnterior, talla))
+            if(respuesta != null && respuesta.success){
                 carrito[carrito.indexOf(carrito.find { item -> item.id == id })].talla = talla
                 carrito[carrito.indexOf(carrito.find { item -> item.id == id })].cantidad = cantidad
-                shopRepository.updateProductInCart(id, Detalle(cantidadAnterior, cantidad, tallaAnterior, talla))
-            } catch (e: Exception) {
-                println("Error: ${e.message}")
             }
+            return respuesta
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
         }
+        return null
     }
 
     fun deleteProductFromCart(id: Long){

@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,11 +41,13 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
+import com.aracne.data.model.Password
 import com.aracne.data.model.ProductInCart
 import com.aracne.model.MainViewModel
 import com.aracne.ui.components.BotonProductoCantidad
 import com.aracne.ui.components.BotonProductoTalla
 import com.aracne.ui.components.ProductoCantidad
+import com.aracne.ui.components.ShopDialog
 import com.aracne.ui.navigation.Destinations
 
 @Composable
@@ -53,6 +56,29 @@ fun ProductScreen(navController: NavHostController, mainViewModel: MainViewModel
     var selectedStock by remember { mutableIntStateOf(mainViewModel.product.s) }
     val tallas = listOf("S", "M", "L", "XL")
     var cantidad by remember { mutableIntStateOf(1) }
+    var respuesta: ProductInCart?
+    var botonClicked by remember { mutableStateOf(false) }
+    var mostrarDialog by remember { mutableStateOf(false) }
+    var dialogText by remember { mutableStateOf("") }
+
+    LaunchedEffect(botonClicked) {
+        if(botonClicked){
+            respuesta = mainViewModel.addToCart(mainViewModel.product.id_producto, ProductInCart(null, null, null, tallas[selectedIndex], cantidad, null))
+            if(respuesta != null){
+                dialogText = "El producto se ha añadido al carrito con éxito"
+                mostrarDialog = true
+            }
+            else {
+                dialogText = "El producto no se ha podido añadir al carrito, inténtalo de nuevo más tarde"
+                mostrarDialog = true
+            }
+        }
+        botonClicked = false
+    }
+
+    if(mostrarDialog){
+        ShopDialog({ mostrarDialog = false; navController.navigate(Destinations.PRODUCTOS) }, { mostrarDialog = false; navController.navigate(Destinations.PRODUCTOS) }, "Añadir producto", dialogText)
+    }
 
     LazyColumn(
         horizontalAlignment = Alignment.Start,
@@ -181,8 +207,7 @@ fun ProductScreen(navController: NavHostController, mainViewModel: MainViewModel
                     Row {
                         BotonAnadirCarrito("Añadir al carrito") {
                             if (selectedStock != 0) {
-                                mainViewModel.addToCart(item.id_producto, ProductInCart(null, null, null, tallas[selectedIndex], cantidad, null))
-                                navController.navigate(Destinations.PRODUCTOS)
+                                botonClicked = true
                             }
                         }
                     }

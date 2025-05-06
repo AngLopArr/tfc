@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,11 +40,13 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
+import com.aracne.data.model.GeneralResponseSuccess
 import com.aracne.data.model.ProductInCart
 import com.aracne.model.MainViewModel
 import com.aracne.ui.components.BotonProductoCantidad
 import com.aracne.ui.components.BotonProductoTalla
 import com.aracne.ui.components.ProductoCantidad
+import com.aracne.ui.components.ShopDialog
 import com.aracne.ui.navigation.Destinations
 
 @Composable
@@ -59,6 +62,57 @@ fun ModifyProductInCartScreen(productoId: Long, navController: NavHostController
     var cantidad by remember { mutableIntStateOf(product.cantidad) }
     val tallaInicial = product.talla
     val cantidadInicial = product.cantidad
+    var respuesta: GeneralResponseSuccess?
+    var botonClicked by remember { mutableStateOf(false) }
+    var mostrarDialog by remember { mutableStateOf(false) }
+    var dialogText by remember { mutableStateOf("") }
+
+    LaunchedEffect(botonClicked) {
+        if(botonClicked){
+            if (tallaInicial != tallas[selectedIndex] && cantidadInicial == cantidad) {
+                respuesta = mainViewModel.updateTallaProductInCart(product.id ?: 0, tallaInicial, tallas[selectedIndex])
+                if(respuesta != null && respuesta?.success == true){
+                    dialogText = "El producto se ha modificado con éxito"
+                    mostrarDialog = true
+                }
+                else {
+                    dialogText = "El producto no se ha podido modificar, inténtalo de nuevo más tarde"
+                    mostrarDialog = true
+                }
+            }
+            else if (cantidadInicial != cantidad && tallaInicial == tallas[selectedIndex]) {
+                respuesta = mainViewModel.updateCantidadProductInCart(product.id ?: 0, cantidadInicial, cantidad)
+                if(respuesta != null && respuesta?.success == true){
+                    dialogText = "El producto se ha modificado con éxito"
+                    mostrarDialog = true
+                }
+                else {
+                    dialogText = "El producto no se ha podido modificar, inténtalo de nuevo más tarde"
+                    mostrarDialog = true
+                }
+            }
+            else if(cantidadInicial != cantidad && tallaInicial != tallas[selectedIndex]){
+                respuesta = mainViewModel.updateProductInCart(product.id ?: 0, cantidadInicial, cantidad, tallaInicial, tallas[selectedIndex])
+                if(respuesta != null && respuesta?.success == true) {
+                    dialogText = "El producto se ha modificado con éxito"
+                    mostrarDialog = true
+                }
+                else {
+                    dialogText = "El producto no se ha podido modificar, inténtalo de nuevo más tarde"
+                    mostrarDialog = true
+                }
+            }
+            else if(cantidadInicial == cantidad && tallaInicial == tallas[selectedIndex]) {
+                dialogText = "No se ha modificado ningún aspecto del producto"
+                mostrarDialog = true
+            }
+        }
+        botonClicked = false
+    }
+
+    if(mostrarDialog){
+        ShopDialog({ mostrarDialog = false; navController.navigate(Destinations.CART) }, { mostrarDialog = false; navController.navigate(Destinations.CART) }, "Modificar producto", dialogText)
+    }
 
     LazyColumn(
         horizontalAlignment = Alignment.Start,
@@ -185,19 +239,10 @@ fun ModifyProductInCartScreen(productoId: Long, navController: NavHostController
                         }
                     }
                     Row {
-                        BotonAnadirCarrito("Modificar producto") {
+                        BotonModifyProduct("Modificar producto") {
                             if(product.id != null) {
                                 if (selectedStock != 0) {
-                                    if (tallaInicial != tallas[selectedIndex] && cantidadInicial == cantidad) {
-                                        mainViewModel.updateTallaProductInCart(product.id, tallaInicial, tallas[selectedIndex])
-                                    }
-                                    if (cantidadInicial != cantidad && tallaInicial == tallas[selectedIndex]) {
-                                        mainViewModel.updateCantidadProductInCart(product.id, cantidadInicial, cantidad)
-                                    }
-                                    if(cantidadInicial != cantidad && tallaInicial != tallas[selectedIndex]){
-                                        mainViewModel.updateProductInCart(product.id, cantidadInicial, cantidad, tallaInicial, tallas[selectedIndex])
-                                    }
-                                    navController.navigate(Destinations.CART)
+                                   botonClicked = true
                                 }
                             }
                         }
@@ -234,7 +279,7 @@ fun BotonModifyProduct(contenido: String, onClick: () -> Unit){
     )
     {
         Text(
-            "Modificar producto",
+            contenido,
             style = TextStyle(
                 fontSize = 15.sp
             )

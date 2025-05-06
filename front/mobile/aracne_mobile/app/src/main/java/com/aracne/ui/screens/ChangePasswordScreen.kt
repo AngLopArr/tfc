@@ -1,6 +1,5 @@
 package com.aracne.ui.screens
 
-import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -54,7 +53,6 @@ fun ChangePasswordScreen(mainViewModel: MainViewModel){
         if(botonClicked){
             respuesta = mainViewModel.changePassword(Password(passwordNueva, passwordAnterior))
             if(respuesta != null){
-                Log.d("", "" + respuesta?.success)
                 if(respuesta?.success == true){
                     dialogText = "La contraseña ha sido modificada con éxito"
                     mostrarDialog = true
@@ -72,7 +70,7 @@ fun ChangePasswordScreen(mainViewModel: MainViewModel){
     }
 
     if(mostrarDialog){
-        ShopDialog({ mostrarDialog = false }, { mostrarDialog = false }, "Cambio de contraseña", dialogText)
+        ShopDialog({ mostrarDialog = false }, { mostrarDialog = false }, "Cambiar contraseña", dialogText)
     }
 
     Column(

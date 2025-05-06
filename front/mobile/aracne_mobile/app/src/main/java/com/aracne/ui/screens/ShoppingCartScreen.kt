@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,8 +23,9 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,21 +44,63 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
-import com.aracne.data.model.ProductInCart
 import com.aracne.model.MainViewModel
+import com.aracne.ui.components.ShopDialog
 import com.aracne.ui.navigation.Destinations
 import java.util.Locale
 
 @Composable
 fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostController){
     mainViewModel.getCarrito()
+    var itemDelete by remember { mutableLongStateOf(0) }
+    var deleteBotonClicked by remember { mutableStateOf(false) }
+    var vaciarCarritoBotonClicked by remember { mutableStateOf(false) }
+    var realizarPedidoBotonClicked by remember { mutableStateOf(false) }
+    var mostrarDialog by remember { mutableStateOf(false) }
+    var dialogText by remember { mutableStateOf("") }
+    var dialogFunction by remember { mutableStateOf({}) }
+    var dialogTitle by remember { mutableStateOf("") }
+
+    LaunchedEffect(deleteBotonClicked) {
+        if(deleteBotonClicked){
+            dialogText = "¿Está seguro de que desea eliminar este producto de su carrito?"
+            mostrarDialog = true
+            dialogFunction = { mainViewModel.deleteProductFromCart(itemDelete); mostrarDialog = false }
+            dialogTitle = "Eliminar producto"
+        }
+        deleteBotonClicked = false
+    }
+
+    LaunchedEffect(vaciarCarritoBotonClicked) {
+        if(vaciarCarritoBotonClicked){
+            dialogText = "¿Está seguro de que desea vaciar su carrito?"
+            mostrarDialog = true
+            dialogFunction = { mainViewModel.emptyCart(); mostrarDialog = false }
+            dialogTitle = "Vaciar carrito"
+        }
+        vaciarCarritoBotonClicked = false
+    }
+
+    LaunchedEffect(realizarPedidoBotonClicked) {
+        if(realizarPedidoBotonClicked){
+            dialogText = "¿Está seguro de que desea finalizar su pedido?"
+            mostrarDialog = true
+            dialogFunction = { mainViewModel.makePurchase(); mostrarDialog = false }
+            dialogTitle = "Finalizar pedido"
+        }
+        realizarPedidoBotonClicked = false
+    }
+
+    if(mostrarDialog){
+        ShopDialog({ mostrarDialog = false }, dialogFunction, dialogTitle, dialogText)
+    }
+
     if(mainViewModel.carrito.isNotEmpty()){
         Column {
             Row {
@@ -97,14 +139,14 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                     modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp)
                 ) {
                     BotonRealizarCompra ("Vaciar carrito") {
-                        mainViewModel.emptyCart()
+                        vaciarCarritoBotonClicked = true
                     }
                 }
                 Row(
                     modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
                 ) {
                     BotonRealizarCompra ("Realizar pedido") {
-                        mainViewModel.makePurchase()
+                        realizarPedidoBotonClicked = true
                     }
                 }
 
@@ -193,7 +235,8 @@ fun ShoppingCartScreen(mainViewModel: MainViewModel, navController: NavHostContr
                                     ) {
                                         BotonEliminarProducto(R.drawable.bin) {
                                             if(item.id != null){
-                                                mainViewModel.deleteProductFromCart(item.id)
+                                                itemDelete = item.id
+                                                deleteBotonClicked = true
                                             }
                                         }
                                     }
@@ -241,13 +284,12 @@ fun BotonRealizarCompra(contenido: String, onClick: () -> Unit){
                 when (it.action) {
                     MotionEvent.ACTION_DOWN -> {
                         isPressed = true
+                        onClick()
                         true
                     }
-
                     MotionEvent.ACTION_UP,
                     MotionEvent.ACTION_CANCEL -> {
                         isPressed = false
-                        onClick()
                         true
                     }
 
