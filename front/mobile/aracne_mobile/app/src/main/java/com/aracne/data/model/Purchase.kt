@@ -6,5 +6,7 @@ data class Purchase (
     val id_pedido: Long,
     val fechaPedido: String,
     val totalPedido: Double,
-    val productos: List<PurchasedProduct>
+    val estado: String,
+    val productos: List<PurchasedProduct>,
+    var mostrar: Boolean = false
 )

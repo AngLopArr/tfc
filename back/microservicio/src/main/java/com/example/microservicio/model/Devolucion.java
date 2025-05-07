@@ -12,18 +12,18 @@ public class Devolucion {
 
     private String motivoDevolucion;
 
-    private boolean aceptada;
+    private String estado;
 
     private ArrayList<ProductoDevolucion> productosDevueltos;
 
     public Devolucion() {}
 
-    public Devolucion(Long id_devolucion, Long id_pedido, LocalDateTime fechaDevolucion, String motivoDevolucion, boolean aceptada) {
+    public Devolucion(Long id_devolucion, Long id_pedido, LocalDateTime fechaDevolucion, String motivoDevolucion, String estado) {
         this.id_devolucion = id_devolucion;
         this.id_pedido = id_pedido;
         this.fechaDevolucion = fechaDevolucion;
         this.motivoDevolucion = motivoDevolucion;
-        this.aceptada = aceptada;
+        this.estado = estado;
     }
 
     public Long getId_devolucion() {
@@ -58,12 +58,12 @@ public class Devolucion {
         this.motivoDevolucion = motivoDevolucion;
     }
 
-    public boolean isAceptada() {
-        return aceptada;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setAceptada(boolean aceptada) {
-        this.aceptada = aceptada;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public ArrayList<ProductoDevolucion> getProductosDevueltos() {

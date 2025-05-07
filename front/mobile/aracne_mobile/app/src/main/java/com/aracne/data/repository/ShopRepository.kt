@@ -207,9 +207,31 @@ class ShopRepository {
         }
     }
 
+    suspend fun getPurchases(id: Long): List<Purchase>? {
+        return withContext(Dispatchers.IO) {
+            val response = RetrofitInstance.api_shop.getPurchases(id).execute()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        }
+    }
+
     suspend fun makePurchase(id: Long): Purchase? {
         return withContext(Dispatchers.IO) {
             val response = RetrofitInstance.api_shop.makePurchase(id).execute()
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                null
+            }
+        }
+    }
+
+    suspend fun getReturns(id: Long): List<Return>? {
+        return withContext(Dispatchers.IO) {
+            val response = RetrofitInstance.api_shop.getReturns(id).execute()
             if (response.isSuccessful) {
                 response.body()
             } else {

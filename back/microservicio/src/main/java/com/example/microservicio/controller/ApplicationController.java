@@ -537,6 +537,19 @@ public class ApplicationController {
 
     // PEDIDOS
 
+    @GetMapping("/pedidos/{id}")
+    public ResponseEntity<ArrayList<Pedido>> getAllPedidosClient(@PathVariable Long id) {
+        
+        ArrayList<Pedido> pedidos = pedidosService.getPedidosById(id);
+
+        if(pedidos.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        else{
+            return ResponseEntity.ok(pedidos);
+        }
+    }
+
     @PostMapping("/pedidos/create/{id}")
     public ResponseEntity<Pedido> createPedido(@PathVariable Long id) {
         Clientes cliente = clientesService.getClientById(id);
@@ -559,6 +572,19 @@ public class ApplicationController {
 
     // DEVOLUCIONES
 
+    @GetMapping("/devoluciones/{id}")
+    public ResponseEntity<ArrayList<Devolucion>> getAllDevolucionesClient(@PathVariable Long id) {
+        
+        ArrayList<Devolucion> devoluciones = devolucionesService.getDevolucionesById(id);
+
+        if(devoluciones.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        else{
+            return ResponseEntity.ok(devoluciones);
+        }
+    }
+
     @PostMapping("/devoluciones/create/{id_cliente}/{id_pedido}")
     public ResponseEntity<Devolucion> createDevolucion(@PathVariable Long id_cliente, @PathVariable Long id_pedido, @RequestBody ArrayList<ProductosPedidos> productos) {
         Clientes cliente = clientesService.getClientById(id_cliente);
@@ -579,7 +605,7 @@ public class ApplicationController {
     }
 
     @PutMapping("/devoluciones/update/{id}")
-    public ResponseEntity<Map<String, Object>> updateEstadoDevolucion(@PathVariable Long id, @RequestBody Map<String, Boolean> estado) {
+    public ResponseEntity<Map<String, Object>> updateEstadoDevolucion(@PathVariable Long id, @RequestBody Map<String, String> estado) {
 
         boolean successfulUpdate = devolucionesService.cambiarEstadoDevolucion(id, estado.get("estado"));
 

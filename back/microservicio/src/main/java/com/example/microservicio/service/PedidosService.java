@@ -28,6 +28,7 @@ public class PedidosService {
 
     public Pedidos createPedidoSinTotal(Pedidos pedido){
         pedido.setFechaPedido(LocalDateTime.now());
+        pedido.setEstado("procesando");
         return pedidosRepository.save(pedido);
     }
 
@@ -35,11 +36,22 @@ public class PedidosService {
         double total = productosPedidosRepository.calcularTotalPedido(pedido.getId_pedido());
         pedido.setTotalPedido(total);
     }
+
+    public ArrayList<Pedido> getPedidosById(Long id){
+        ArrayList<Pedidos> pedidosSinFormato = (ArrayList<Pedidos>) pedidosRepository.findPedidosByClienteId(id).orElse(null);
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+        if(pedidosSinFormato != null){
+            for (int i = 0; i < pedidosSinFormato.size(); i++) {
+                pedidos.add(changePedidoToSend(pedidosSinFormato.get(i).getId_pedido()));
+            }
+        }
+        return pedidos;
+    }
     
     public Pedido changePedidoToSend(Long idPedido){
         Pedidos pedido = getPedidoById(idPedido);
         ArrayList<ProductosPedidos> productosPedidos = productosPedidosRepository.getProductosPedidos(idPedido).orElse(null);
-        Pedido pedidoEnviar = new Pedido(pedido.getId_pedido(), pedido.getFechaPedido(), pedido.getTotalPedido());
+        Pedido pedidoEnviar = new Pedido(pedido.getId_pedido(), pedido.getFechaPedido(), pedido.getTotalPedido(), pedido.getEstado());
         ArrayList<ProductoPedido> productosPedido = new ArrayList<>();
         for (int i = 0; i < productosPedidos.size(); i++) {
             ProductoPedido productoPedido = new ProductoPedido();

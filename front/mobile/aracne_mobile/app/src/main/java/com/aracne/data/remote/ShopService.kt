@@ -74,8 +74,14 @@ interface ShopService {
     @DELETE("carrito/empty/{id}")
     fun emptyCart(@Path("id") id: Long): Call<GeneralResponseSuccess>
 
+    @GET("pedidos/{id}")
+    fun getPurchases(@Path("id") id: Long): Call<List<Purchase>>
+
     @POST("pedidos/create/{id}")
     fun makePurchase(@Path("id") id: Long): Call<Purchase>
+
+    @GET("devoluciones/{id}")
+    fun getReturns(@Path("id") id: Long): Call<List<Return>>
 
     @POST("devoluciones/create/{id_cliente}/{id_pedido}")
     fun makeReturn(@Path("id_cliente") idCliente: Long, @Path("id_pedido") idPedido: Long, @Body productos: List<PurchasedProduct>): Call<Return>

@@ -26,6 +26,8 @@ public class Pedidos {
 
     private double totalPedido;
 
+    private String estado;
+
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductosPedidos> productos;
 
@@ -57,6 +59,22 @@ public class Pedidos {
         this.fechaPedido = fechaPedido;
     }
 
+    public double getTotalPedido() {
+        return totalPedido;
+    }
+
+    public void setTotalPedido(double totalPedido) {
+        this.totalPedido = totalPedido;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public List<ProductosPedidos> getProductos() {
         return productos;
     }
@@ -71,13 +89,5 @@ public class Pedidos {
 
     public void setDevoluciones(List<Devoluciones> devoluciones) {
         this.devoluciones = devoluciones;
-    }
-
-    public double getTotalPedido() {
-        return totalPedido;
-    }
-
-    public void setTotalPedido(double totalPedido) {
-        this.totalPedido = totalPedido;
     }
 }

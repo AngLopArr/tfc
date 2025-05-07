@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,8 +32,7 @@ public class Devoluciones {
 
     private String motivoDevolucion;
 
-    @Column(nullable = true)
-    private boolean aceptada;
+    private String estado;
 
     @OneToMany(mappedBy = "devolucion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductosDevoluciones> productosDevueltos;
@@ -87,12 +85,12 @@ public class Devoluciones {
         this.motivoDevolucion = motivoDevolucion;
     }
 
-    public boolean isAceptada() {
-        return aceptada;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setAceptada(boolean aceptada) {
-        this.aceptada = aceptada;
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }
 

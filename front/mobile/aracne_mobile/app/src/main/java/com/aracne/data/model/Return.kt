@@ -7,6 +7,7 @@ data class Return (
     val id_pedido: Long,
     val fechaDevolucion: String,
     val motivoDevolucion: String,
-    val aceptada: Boolean?,
-    val productosDevueltos: List<ReturnedProduct>
+    val estado: String,
+    val productosDevueltos: List<ReturnedProduct>,
+    var mostrar: Boolean = false
 )

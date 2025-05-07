@@ -10,14 +10,17 @@ public class Pedido {
 
     private double totalPedido;
 
+    private String estado;
+
     private ArrayList<ProductoPedido> productos;
 
     public Pedido() {}
 
-    public Pedido(Long id_pedido, LocalDateTime fechaPedido, double totalPedido) {
+    public Pedido(Long id_pedido, LocalDateTime fechaPedido, double totalPedido, String estado) {
         this.id_pedido = id_pedido;
         this.fechaPedido = fechaPedido;
         this.totalPedido = totalPedido;
+        this.estado = estado;
     }
 
     public Long getId_pedido() {
@@ -42,6 +45,14 @@ public class Pedido {
 
     public void setTotalPedido(double totalPedido) {
         this.totalPedido = totalPedido;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public ArrayList<ProductoPedido> getProductos() {

@@ -18,6 +18,8 @@ import com.aracne.ui.screens.ModifyProductInCartScreen
 import com.aracne.ui.screens.ProductScreen
 import com.aracne.ui.screens.ProductsScreen
 import com.aracne.ui.screens.ProfileScreen
+import com.aracne.ui.screens.PurchasesScreen
+import com.aracne.ui.screens.ReturnsScreen
 import com.aracne.ui.screens.ShoppingCartScreen
 
 /**
@@ -84,18 +86,11 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, m
         composable(route = Destinations.CHANGEPASSWORD) {
             ChangePasswordScreen(mainViewModel)
         }
-        /*
-        composable(route = "${Destinatns.MATERIAL}/{id_material}", arguments = listOf(navArgument("id_material") { type = NavType.IntType })) {
-                parametros ->
-            val material = parametros.arguments?.getInt("id_material") ?: 1
+        composable(route = Destinations.PURCHASES) {
+            PurchasesScreen(mainViewModel, navController)
         }
-        composable(route = "${Destinations.PRESTAMO}/{id_material}", arguments = listOf(navArgument("id_material") { type = NavType.IntType })) {
-                parametros ->
-            val material = parametros.arguments?.getInt("id_material") ?: 1
+        composable(route = Destinations.RETURNS) {
+            ReturnsScreen(mainViewModel)
         }
-        composable(route = "${Destinations.FORMULARIO_INCIDENCIAS}/{id_prestamo}", arguments = listOf(navArgument("id_prestamo") { type = NavType.IntType })){
-            parametros ->
-            val idPrestamo = parametros.arguments?.getInt("id_prestamo") ?: 0
-        }*/
     }
 }

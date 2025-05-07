@@ -63,7 +63,7 @@ fun ProfileScreen(navController: NavHostController, mainViewModel: MainViewModel
         Column {
             Card(
                 modifier = Modifier.padding(15.dp, 20.dp, 15.dp, 15.dp).fillMaxWidth().height(50.dp).clickable {
-
+                    navController.navigate(Destinations.PURCHASES)
                 },
                 colors = CardColors(
                     containerColor = MaterialTheme.colorScheme.background,
@@ -87,7 +87,7 @@ fun ProfileScreen(navController: NavHostController, mainViewModel: MainViewModel
             }
             Card(
                 modifier = Modifier.padding(15.dp, 0.dp, 15.dp, 15.dp).fillMaxWidth().height(50.dp).clickable {
-
+                    navController.navigate(Destinations.RETURNS)
                 },
                 colors = CardColors(
                     containerColor = MaterialTheme.colorScheme.background,

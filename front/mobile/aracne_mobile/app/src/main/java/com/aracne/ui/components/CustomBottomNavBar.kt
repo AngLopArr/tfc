@@ -60,7 +60,7 @@ fun CustomBottomNavBar(onClickNavMain: () -> Unit, onClickNavSecond: () -> Unit,
             colors = coloresNavigationBar()
         )
         NavigationBarItem(
-            selected = currentScreen == Destinations.PROFILE,
+            selected = currentScreen == Destinations.PROFILE || currentScreen == Destinations.PURCHASES || currentScreen == Destinations.CHANGEPASSWORD || currentScreen == Destinations.RETURNS,
             onClick = { onClickNavThird() },
             icon = {
                 Image(
