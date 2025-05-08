@@ -47,7 +47,6 @@ import java.util.Locale
 
 @Composable
 fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostController){
-    mainViewModel.getPurchases()
     if(mainViewModel.pedidos.isNotEmpty()){
         Column {
             Row {
@@ -66,7 +65,9 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
             ) {
                 items(mainViewModel.pedidos) { item ->
                     Card(
-                        modifier = Modifier.padding(0.dp, 10.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(0.dp, 10.dp)
+                            .fillMaxWidth(),
                         colors = CardColors(
                             containerColor = MaterialTheme.colorScheme.background,
                             contentColor = Color.Black,
@@ -75,10 +76,15 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                         )
                     ) {
                         Row (
-                            modifier = Modifier.fillMaxSize().background(color = colorResource(R.color.purple_002)).padding(10.dp, 8.dp, 10.dp, 15.dp)
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = colorResource(R.color.purple_002))
+                                .padding(10.dp, 8.dp, 10.dp, 15.dp)
                         ) {
                             Column(
-                                modifier = Modifier.fillMaxHeight().padding(10.dp, 10.dp, 10.dp, 0.dp),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .padding(10.dp, 10.dp, 10.dp, 0.dp),
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Text("Pedido realizado " + item.fechaPedido.replace("T"," ").dropLast(3),
@@ -102,17 +108,139 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                     }
                                 )
                                 Row(
+                                    modifier = Modifier.fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(200.dp)
+                                    horizontalArrangement = Arrangement.SpaceBetween
                                 ){
                                     Text("${item.productos.size} artículos")
-                                    Text("Ver más", style = TextStyle(
+                                    if(item.mostrar != true){
+                                        Text("Ver más", style = TextStyle(
                                             color = colorResource(R.color.purple_000),
                                             fontSize = (16.5).sp
                                         ), modifier = Modifier.clickable {
-                                            item.mostrar = true
+                                            mainViewModel.pedidos = mainViewModel.pedidos.map { pedido ->
+                                                if (pedido.id_pedido == item.id_pedido) {
+                                                    val pedidoCopia = pedido.copy()
+                                                    pedidoCopia.mostrar = true
+                                                    pedidoCopia
+                                                } else {
+                                                    pedido
+                                                }
+                                            }
                                         }
-                                    )
+                                        )
+                                    }
+                                }
+                                if(item.mostrar == true){
+                                    Column(
+                                        modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)
+                                    ){
+                                        for (product in item.productos){
+                                            Row(
+                                                modifier = Modifier.padding(5.dp, 9.dp)
+                                            ){
+                                                Box(
+                                                    modifier = Modifier
+                                                        .height(100.dp)
+                                                        .width(100.dp)
+                                                        .fillMaxWidth()
+                                                        .clipToBounds()
+                                                ) {
+                                                    AsyncImage(
+                                                        model = ImageRequest.Builder(context = LocalContext.current)
+                                                            .data(product.producto.image)
+                                                            .build(),
+                                                        contentDescription = product.producto.name,
+                                                        modifier = Modifier
+                                                            .clip(RoundedCornerShape(12.dp))
+                                                            .fillMaxWidth(),
+                                                        contentScale = ContentScale.Crop
+                                                    )
+                                                }
+                                                Column(
+                                                    modifier = Modifier.fillMaxHeight(),
+                                                    verticalArrangement = Arrangement.SpaceBetween
+                                                ) {
+                                                    Column(
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .height(100.dp)
+                                                    ) {
+                                                        Text(
+                                                            AnnotatedString.fromHtml(
+                                                                "<span>${product.producto.name} <b>x${product.cantidad}</b></span>"),
+                                                            modifier = Modifier.padding(PaddingValues(12.dp, 0.dp, 10.dp, 0.dp)),
+                                                            style = TextStyle(
+                                                                fontSize = 16.sp,
+                                                                lineHeight = 19.sp
+                                                            )
+                                                        )
+                                                        Text(
+                                                            "${product.producto.price} €",
+                                                            modifier = Modifier.padding(PaddingValues(12.dp, 2.dp, 10.dp, 0.dp)),
+                                                            style = TextStyle(
+                                                                fontSize = 16.sp,
+                                                                lineHeight = 19.sp,
+                                                                fontWeight = FontWeight.SemiBold
+                                                            )
+                                                        )
+                                                        Text(
+                                                            "Talla ${product.talla.toUpperCase(Locale.ROOT)}",
+                                                            modifier = Modifier.padding(PaddingValues(12.dp, 2.dp, 10.dp, 0.dp)),
+                                                            style = TextStyle(
+                                                                fontSize = 16.sp,
+                                                                lineHeight = 19.sp
+                                                            )
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth().padding(0.dp, 5.dp),
+                                            horizontalArrangement = Arrangement.End
+                                        ){
+                                            Text("${item.totalPedido} €", style = TextStyle(
+                                                fontSize = 17.sp,
+                                                fontWeight = FontWeight.SemiBold
+                                            ))
+                                        }
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ){
+                                            Text("Procesar devolución", style = TextStyle(
+                                                color = colorResource(R.color.purple_000),
+                                                fontSize = (16.5).sp
+                                            ), modifier = Modifier.clickable {
+                                                mainViewModel.pedidos = mainViewModel.pedidos.map { pedido ->
+                                                    if (pedido.id_pedido == item.id_pedido) {
+                                                        val pedidoCopia = pedido.copy()
+                                                        pedidoCopia.mostrar = true
+                                                        pedidoCopia
+                                                    } else {
+                                                        pedido
+                                                    }
+                                                }
+                                            }
+                                            )
+                                            Text("Ocultar", style = TextStyle(
+                                                color = colorResource(R.color.purple_000),
+                                                fontSize = (16.5).sp
+                                            ), modifier = Modifier.clickable {
+                                                mainViewModel.pedidos = mainViewModel.pedidos.map { pedido ->
+                                                    if (pedido.id_pedido == item.id_pedido) {
+                                                        val pedidoCopia = pedido.copy()
+                                                        pedidoCopia.mostrar = false
+                                                        pedidoCopia
+                                                    } else {
+                                                        pedido
+                                                    }
+                                                }
+                                            }
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -128,12 +256,9 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Text("No has realizado ningún pedido todavía.",
-                modifier = Modifier.padding(PaddingValues(37.dp, 0.dp, 15.dp, 0.dp)),
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    lineHeight = 25.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                fontSize = 24.sp,
+                lineHeight = 25.sp,
+                fontWeight = FontWeight.SemiBold
             )
         }
     }

@@ -22,49 +22,9 @@ import com.aracne.ui.screens.PurchasesScreen
 import com.aracne.ui.screens.ReturnsScreen
 import com.aracne.ui.screens.ShoppingCartScreen
 
-/**
- * Composable que define el contenido y la navegación de la aplicación, es decir, cada pantalla correspondiente a cada una de las rutas establecidas
- * para esta.
- *
- * Composables:
- * - NavHostComposable: este composable recibirá siete parámetros. Su contenido dependerá del usuario activo de la aplicación.
- *   · Si el usuario es student,
- *     - navController: objeto de la clase NavController encargado de coordinar la navegación de la aplicación.
- *     - innerPadding: objeto PaddingValues que define el padding del contenido principal teniendo en cuenta el tamaño de las barras
- *       superior e inferior para evitar el solapamiento de contenido.
- *     - mainViewModel: instancia de la clase MainViewModel. Contiene el estado y los datos propios de la aplicación.
- *     - mainScreen: ruta correspondiente a la pantalla pricipal del usuario student, es decir, la pantalla correspondiente a los préstamos
- *       activos del mismo.
- *     - secondaryScreen: ruta correspondiente a la pantalla secundaria del usuario student, es decir, la pantalla que presenta las diferentes
- *       categorías de materiales en el inventario.
- *     - mainScreenComposable: composable correspondiente a la pantalla principal del usuario student, es decir, el composable que ha de mostrarse
- *       cuando se navegue a la ruta pertinente.
- *     - secondaryScreenComposable: composable correspondiente a la pantalla secundaria del usuario student, es decir, el composable que ha de
- *       mostrarse cuando se navegue a la ruta pertinente.
- *   · Si el usuario es profesor,
- *     - navController: objeto de la clase NavController encargado de coordinar la navegación de la aplicación.
- *     - innerPadding: objeto PaddingValues que define el padding del contenido principal teniendo en cuenta el tamaño de las barras
- *       superior e inferior para evitar el solapamiento de contenido.
- *     - mainViewModel: instancia de la clase MainViewModel. Contiene el estado y los datos propios de la aplicación.
- *     - mainScreen: ruta correspondiente a la pantalla pricipal del usuario profesor, es decir, la pantalla correspondiente a los préstamos
- *       activos del mismo.
- *     - secondaryScreen: ruta correspondiente a la pantalla secundaria del usuario profesor, es decir, la pantalla que presenta las diferentes
- *       categorías de materiales en el inventario.
- *     - mainScreenComposable: composable correspondiente a la pantalla principal del usuario profesor, es decir, el composable que ha de mostrarse
- *       cuando se navegue a la ruta pertinente.
- *     - secondaryScreenComposable: composable correspondiente a la pantalla secundaria del usuario profesor, es decir, el composable que ha de
- *       mostrarse cuando se navegue a la ruta pertinente.
- *
- * @param navController: objeto de la clase NavController encargado de coordinar la navegación de la aplicación.
- * @param innerPadding: objeto PaddingValues que define el padding del contenido principal teniendo en cuenta el tamaño de las barras superior
- * e inferior para evitar el solapamiento de contenido.
- * @param mainViewModel: instancia de la clase MainViewModel. Contiene el estado y los datos propios de la aplicación.
- */
 @Composable
 fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, mainViewModel: MainViewModel = hiltViewModel()){
-    /*LaunchedEffect(Unit) {
-        mainViewModel.getCategories()
-    }*/
+    mainViewModel.getPurchases()
     NavHost(navController = navController, startDestination = Destinations.PRODUCTOS, modifier = Modifier.padding(innerPadding)){
         composable(Destinations.PRODUCTOS) {
             ProductsScreen(navController, mainViewModel)

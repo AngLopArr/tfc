@@ -33,7 +33,8 @@ class MainViewModel @Inject constructor(
     var product by mutableStateOf(Product(0, "",  0.0, 0, 0, 0, 0, ""))
     var carrito by mutableStateOf(listOf<ProductInCart>())
     var pedidos by mutableStateOf(listOf<Purchase>())
-    var devoluciones by mutableStateOf(listOf<Return>(Return(1, 2, "2025-04-29 20:30:00", "procesando", "procesando", listOf<ReturnedProduct>())))
+    var devoluciones by mutableStateOf(listOf<Return>(Return(1, 2, "2025-04-29 20:30:00", "procesando", "procesando", listOf<ReturnedProduct>(
+        ReturnedProduct(1, Product(1, "Producto", 14.99, 2, 4, 5, 7, "https://static.kiabi.es/images/pantalon-de-lino-purpura-ded73_1_hd1.jpg?width=800"), 2, "M")), null)))
     var grupoProductosActuales by mutableIntStateOf(1)
     var total by mutableIntStateOf(0)
 

@@ -20,44 +20,6 @@ import com.aracne.ui.navigation.Destinations
 import com.aracne.ui.theme.AracneTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * Clase que maneja el ciclo de vida y configura el contenido visual de la sección principal de la aplicación.
- *
- * Variables:
- *   · navController: instancia de la clase NavController encargada de coordinar la navegación de la aplicación.
- * - Si el usuario activo es USER, tenemos otras dos variables:
- *   · drawerState: variable encargada de almacenar el estado del menú de notificaciones del usuario (desplegado o no)
- *   · scope: instancia de CoroutineScope que nos permite crear una corrutina aislada de la actividad principal encargada, en este caso,
- *     de desplegar el menú de las notificaciones del usuario.
- *
- * Composables:
- * - Si el usuario activo es alumno,
- *   · ModalNavigationDrawer: este composable se encarga de crear un menú de navegación desplegable que, en nuestro caso, hemos usado como
- *     un menú para mostrarle al usuario sus notificaciones. El contenido de este composable ha de ser el contenido general que queremos que
- *     se muestre en la aplicación, en este caso, el composable App.
- *   · App: composable contenido por el anterior, define el contenido que va a visualizar el usuario alumno. Hemos de pasarle seis parámetros:
- *     - navController: instancia de la clase NavController encargada de coordinar la navegación de la aplicación.
- *     - mainViewModel: instancia de la clase MainViewModel. Esta contiene el estado y todos los datos propios de la aplicación.
- *     - mainScreen: ruta de la pantalla principal del usuario alumno, siendo esta pantalla aquella que muestra los préstamos activos del usuario.
- *     - secondaryScreen: ruta de la pantalla secundaria del usuario alumno, siendo esta pantalla aquella que muestra las diferentes categorias
- *       de materiales presentes en el inventario.
- *     - onNotificationsButtonClick: función que modifica el estado de la variable drawerState de tal manera que, cuando se clique en el elemento
- *       que tome esta función, el menú de notificaciones se desplegará. Para volver a cerrarlo el usuario simplemente deberá clicar fuera del menú
- *       (este comportamiento se encuentra definido por defecto en el composable ModalNavigationDrawer).
- *     - onClickLogOut: función que toma un intent (en este caso siempre va a ser un intent definido para iniciar la actividad LoginActivity) e
- *       inicia aquella actividad definido en el mismo.
- * - Si el usuario activo es profesor, dado que este no puede tener notificaciones, solo cuenta con el composable App.
- *   · App: composable que define el contenido que va a visualizar el usuario profesor. Hemos de pasarle cinco parámetros:
- *     - navController: instancia de la clase NavController encargada de coordinar la navegación de la aplicación.
- *     - mainViewModel: instancia de la clase MainViewModel. Esta contiene el estado y todos los datos propios de la aplicación.
- *     - mainScreen: ruta de la pantalla principal del usuario profesor, siendo esta pantalla aquella que muestra las diferentes categorias
- *       de materiales presentes en el inventario.
- *     - secondaryScreen: ruta de la pantalla secundaria del usuario alumno, siendo esta pantalla aquella que muestra las incidencias activas a
- *       revisar por los administradores (coordinadores o profesores con permisos).
- *     - onClickLogOut: función que toma un intent (en este caso siempre va a ser un intent definido para iniciar la actividad LoginActivity) e
- *       inicia aquella actividad definido en el mismo.
- *
- */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

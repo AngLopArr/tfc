@@ -9,5 +9,5 @@ data class Return (
     val motivoDevolucion: String,
     val estado: String,
     val productosDevueltos: List<ReturnedProduct>,
-    var mostrar: Boolean = false
+    var mostrar: Boolean?
 )

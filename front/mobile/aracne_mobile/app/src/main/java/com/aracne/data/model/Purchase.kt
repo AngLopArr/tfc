@@ -8,5 +8,5 @@ data class Purchase (
     val totalPedido: Double,
     val estado: String,
     val productos: List<PurchasedProduct>,
-    var mostrar: Boolean = false
+    var mostrar: Boolean?
 )
