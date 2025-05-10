@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.microservicio.model.Pedidos;
+import com.example.microservicio.model.ProductoPedido;
 import com.example.microservicio.model.ProductosCarrito;
 import com.example.microservicio.model.ProductosPedidos;
 import com.example.microservicio.repository.PedidosRepository;
@@ -32,7 +33,7 @@ public class ProductosPedidosService {
         productosPedidosRepository.saveAll(productosPedido);
     }
 
-    public boolean comprobarProductosEnUnPedido(Long idPedido, ArrayList<ProductosPedidos> productosPedido){
+    public boolean comprobarProductosEnUnPedido(Long idPedido, ArrayList<ProductoPedido> productosPedido){
         Pedidos pedido = pedidosRepository.findById(idPedido).orElse(null);
         if(pedido != null){
             int productosAComprobar = productosPedido.size();

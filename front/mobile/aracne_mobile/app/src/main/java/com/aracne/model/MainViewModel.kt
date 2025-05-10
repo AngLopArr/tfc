@@ -13,6 +13,7 @@ import com.aracne.data.model.Password
 import com.aracne.data.model.Product
 import com.aracne.data.model.ProductInCart
 import com.aracne.data.model.Purchase
+import com.aracne.data.model.PurchasedProduct
 import com.aracne.data.model.Return
 import com.aracne.data.model.ReturnedProduct
 import com.aracne.data.model.Talla
@@ -299,6 +300,23 @@ class MainViewModel @Inject constructor(
                 println("Error: ${e.message}")
             }
         }
+    }
+
+    suspend fun makeReturn(idPedido: Long, productosPedido: List<PurchasedProduct>){
+        try {
+            val respuesta = shopRepository.makeReturn(idCliente, idPedido, productosPedido)
+            if (respuesta != null) {
+                devoluciones += respuesta
+            } else {
+                println("Error.")
+            }
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        }
+    }
+
+    fun prepareReturn(productosPedido: List<PurchasedProduct>): Boolean{
+        return productosPedido.isNotEmpty()
     }
 
     fun getReturns(){

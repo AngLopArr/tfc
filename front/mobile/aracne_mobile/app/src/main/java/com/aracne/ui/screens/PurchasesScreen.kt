@@ -19,9 +19,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -41,12 +47,29 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
+import com.aracne.data.model.PurchasedProduct
 import com.aracne.model.MainViewModel
-import com.aracne.ui.navigation.Destinations
+import com.aracne.ui.components.ShopDialog
 import java.util.Locale
 
 @Composable
 fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostController){
+    val productsToReturn: MutableList<PurchasedProduct> = mutableListOf<PurchasedProduct>()
+    var pedidoReturn: Long = 0
+    var returnButtonClicked by remember { mutableStateOf(false) }
+    var mostrarDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(returnButtonClicked) {
+        if(returnButtonClicked){
+            mostrarDialog = true
+        }
+        returnButtonClicked = false
+    }
+
+    if(mostrarDialog){
+        ShopDialog({ mostrarDialog = false }, { mostrarDialog = false }, "Motivo de la devolución", "¿Está seguro de que desea eliminar su perfil? Esta acción es irreversible")
+    }
+
     if(mainViewModel.pedidos.isNotEmpty()){
         Column {
             Row {
@@ -133,11 +156,11 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                 }
                                 if(item.mostrar == true){
                                     Column(
-                                        modifier = Modifier.padding(0.dp, 5.dp, 0.dp, 0.dp)
+                                        modifier = Modifier.fillMaxWidth().padding(0.dp, 5.dp, 0.dp, 0.dp)
                                     ){
                                         for (product in item.productos){
                                             Row(
-                                                modifier = Modifier.padding(5.dp, 9.dp)
+                                                modifier = Modifier.padding(4.dp, 9.dp)
                                             ){
                                                 Box(
                                                     modifier = Modifier
@@ -158,13 +181,14 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                                     )
                                                 }
                                                 Column(
-                                                    modifier = Modifier.fillMaxHeight(),
+                                                    modifier = Modifier.fillMaxHeight().width(220.dp),
                                                     verticalArrangement = Arrangement.SpaceBetween
                                                 ) {
                                                     Column(
                                                         modifier = Modifier
                                                             .fillMaxWidth()
                                                             .height(100.dp)
+                                                            .padding(0.dp, 0.dp, 5.dp, 0.dp)
                                                     ) {
                                                         Text(
                                                             AnnotatedString.fromHtml(
@@ -194,6 +218,43 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                                         )
                                                     }
                                                 }
+                                                Column(
+                                                    verticalArrangement = Arrangement.Center,
+                                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                                    modifier = Modifier.height(100.dp).padding(5.dp, 0.dp, 17.dp, 0.dp)
+                                                ){
+                                                    Checkbox(
+                                                        checked = product.devolver == true,
+                                                        onCheckedChange = {
+                                                            mainViewModel.pedidos = mainViewModel.pedidos.map { pedido ->
+                                                                if (pedido.id_pedido == item.id_pedido) {
+                                                                    val pedidoCopia = pedido.copy(
+                                                                        productos = pedido.productos.map { productoCambiar ->
+                                                                            if (productoCambiar.id == product.id) {
+                                                                                productoCambiar.copy(devolver = !(productoCambiar.devolver ?: false))
+                                                                            } else productoCambiar
+                                                                        }
+                                                                    )
+                                                                    pedidoCopia
+                                                                } else pedido
+                                                            }
+                                                        },
+                                                        colors = CheckboxColors(
+                                                            checkedCheckmarkColor = colorResource(R.color.white),
+                                                            uncheckedCheckmarkColor = colorResource(R.color.white),
+                                                            checkedBoxColor = colorResource(R.color.purple_001),
+                                                            uncheckedBoxColor = colorResource(R.color.purple_002),
+                                                            disabledCheckedBoxColor = colorResource(R.color.purple_001),
+                                                            disabledUncheckedBoxColor = colorResource(R.color.purple_002),
+                                                            disabledIndeterminateBoxColor = colorResource(R.color.purple_001),
+                                                            checkedBorderColor = colorResource(R.color.purple_001),
+                                                            uncheckedBorderColor = colorResource(R.color.purple_001),
+                                                            disabledBorderColor = colorResource(R.color.purple_001),
+                                                            disabledUncheckedBorderColor = colorResource(R.color.purple_001),
+                                                            disabledIndeterminateBorderColor = colorResource(R.color.purple_001)
+                                                        )
+                                                    )
+                                                }
                                             }
                                         }
                                         Row(
@@ -213,14 +274,14 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                                 color = colorResource(R.color.purple_000),
                                                 fontSize = (16.5).sp
                                             ), modifier = Modifier.clickable {
-                                                mainViewModel.pedidos = mainViewModel.pedidos.map { pedido ->
-                                                    if (pedido.id_pedido == item.id_pedido) {
-                                                        val pedidoCopia = pedido.copy()
-                                                        pedidoCopia.mostrar = true
-                                                        pedidoCopia
-                                                    } else {
-                                                        pedido
+                                                for(product in item.productos){
+                                                    if(product.devolver == true){
+                                                        productsToReturn += product
                                                     }
+                                                }
+                                                if(mainViewModel.prepareReturn(productsToReturn)){
+                                                    pedidoReturn = item.id_pedido
+                                                    returnButtonClicked = true
                                                 }
                                             }
                                             )

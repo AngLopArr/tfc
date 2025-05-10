@@ -126,7 +126,7 @@ fun ReturnsScreen(mainViewModel: MainViewModel){
                                     ){
                                         for (product in item.productosDevueltos){
                                             Row(
-                                                modifier = Modifier.padding(5.dp, 9.dp)
+                                                modifier = Modifier.padding(4.dp, 9.dp)
                                             ){
                                                 Box(
                                                     modifier = Modifier

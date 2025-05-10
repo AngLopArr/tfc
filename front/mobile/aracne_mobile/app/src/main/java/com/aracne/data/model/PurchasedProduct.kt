@@ -4,5 +4,6 @@ data class PurchasedProduct(
     val id: Long,
     val producto: Product,
     val cantidad: Int,
-    val talla: String
+    val talla: String,
+    var devolver: Boolean?
 )

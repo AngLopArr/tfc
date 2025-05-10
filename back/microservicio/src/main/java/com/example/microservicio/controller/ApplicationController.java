@@ -24,9 +24,9 @@ import com.example.microservicio.model.Pedido;
 import com.example.microservicio.model.Pedidos;
 import com.example.microservicio.model.Producto;
 import com.example.microservicio.model.ProductoCarrito;
+import com.example.microservicio.model.ProductoPedido;
 import com.example.microservicio.model.Productos;
 import com.example.microservicio.model.ProductosCarrito;
-import com.example.microservicio.model.ProductosPedidos;
 import com.example.microservicio.repository.ProductosCarritoRepository;
 import com.example.microservicio.service.ClientesService;
 import com.example.microservicio.service.DevolucionesService;
@@ -586,7 +586,7 @@ public class ApplicationController {
     }
 
     @PostMapping("/devoluciones/create/{id_cliente}/{id_pedido}")
-    public ResponseEntity<Devolucion> createDevolucion(@PathVariable Long id_cliente, @PathVariable Long id_pedido, @RequestBody ArrayList<ProductosPedidos> productos) {
+    public ResponseEntity<Devolucion> createDevolucion(@PathVariable Long id_cliente, @PathVariable Long id_pedido, @RequestBody ArrayList<ProductoPedido> productos) {
         Clientes cliente = clientesService.getClientById(id_cliente);
         Pedidos pedido = pedidosService.getPedidoById(id_pedido);
 
