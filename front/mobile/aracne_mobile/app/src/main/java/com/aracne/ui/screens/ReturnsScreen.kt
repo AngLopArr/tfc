@@ -32,10 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -79,7 +77,7 @@ fun ReturnsScreen(mainViewModel: MainViewModel){
                                 modifier = Modifier.fillMaxHeight().padding(10.dp, 10.dp, 10.dp, 0.dp),
                                 verticalArrangement = Arrangement.Center
                             ) {
-                                Text("Pedido realizado " + item.fechaDevolucion.replace("T"," ").dropLast(3),
+                                Text("Pedido realizado " + item.fechaDevolucion.replace("T"," ").substring(0, 16),
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 17.sp

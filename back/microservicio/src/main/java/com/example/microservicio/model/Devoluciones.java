@@ -30,8 +30,6 @@ public class Devoluciones {
 
     private LocalDateTime fechaDevolucion;
 
-    private String motivoDevolucion;
-
     private String estado;
 
     @OneToMany(mappedBy = "devolucion", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -75,14 +73,6 @@ public class Devoluciones {
 
     public void setProductosDevueltos(List<ProductosDevoluciones> productosDevueltos) {
         this.productosDevueltos = productosDevueltos;
-    }
-
-    public String getMotivoDevolucion() {
-        return motivoDevolucion;
-    }
-
-    public void setMotivoDevolucion(String motivoDevolucion) {
-        this.motivoDevolucion = motivoDevolucion;
     }
 
     public String getEstado() {

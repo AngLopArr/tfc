@@ -10,19 +10,16 @@ public class Devolucion {
 
     private LocalDateTime fechaDevolucion;
 
-    private String motivoDevolucion;
-
     private String estado;
 
     private ArrayList<ProductoDevolucion> productosDevueltos;
 
     public Devolucion() {}
 
-    public Devolucion(Long id_devolucion, Long id_pedido, LocalDateTime fechaDevolucion, String motivoDevolucion, String estado) {
+    public Devolucion(Long id_devolucion, Long id_pedido, LocalDateTime fechaDevolucion, String estado) {
         this.id_devolucion = id_devolucion;
         this.id_pedido = id_pedido;
         this.fechaDevolucion = fechaDevolucion;
-        this.motivoDevolucion = motivoDevolucion;
         this.estado = estado;
     }
 
@@ -48,14 +45,6 @@ public class Devolucion {
 
     public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
         this.fechaDevolucion = fechaDevolucion;
-    }
-
-    public String getMotivoDevolucion() {
-        return motivoDevolucion;
-    }
-
-    public void setMotivoDevolucion(String motivoDevolucion) {
-        this.motivoDevolucion = motivoDevolucion;
     }
 
     public String getEstado() {

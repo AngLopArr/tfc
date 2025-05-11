@@ -589,7 +589,7 @@ public class ApplicationController {
     public ResponseEntity<Devolucion> createDevolucion(@PathVariable Long id_cliente, @PathVariable Long id_pedido, @RequestBody ArrayList<ProductoPedido> productos) {
         Clientes cliente = clientesService.getClientById(id_cliente);
         Pedidos pedido = pedidosService.getPedidoById(id_pedido);
-
+        
         if(cliente != null && pedido != null && !productos.isEmpty() && productosPedidosService.comprobarProductosEnUnPedido(id_pedido, productos)){
             Devoluciones devolucion = new Devoluciones();
             devolucion.setCliente(cliente);

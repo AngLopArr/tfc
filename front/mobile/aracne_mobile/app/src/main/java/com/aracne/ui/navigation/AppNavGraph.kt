@@ -25,6 +25,7 @@ import com.aracne.ui.screens.ShoppingCartScreen
 @Composable
 fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, mainViewModel: MainViewModel = hiltViewModel()){
     mainViewModel.getPurchases()
+    mainViewModel.getReturns()
     NavHost(navController = navController, startDestination = Destinations.PRODUCTOS, modifier = Modifier.padding(innerPadding)){
         composable(Destinations.PRODUCTOS) {
             ProductsScreen(navController, mainViewModel)

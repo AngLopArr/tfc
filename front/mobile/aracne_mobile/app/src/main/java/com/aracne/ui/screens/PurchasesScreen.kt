@@ -26,6 +26,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,12 +43,14 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.substring
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
+import com.aracne.data.model.Product
 import com.aracne.data.model.PurchasedProduct
 import com.aracne.model.MainViewModel
 import com.aracne.ui.components.ShopDialog
@@ -54,8 +58,8 @@ import java.util.Locale
 
 @Composable
 fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostController){
-    val productsToReturn: MutableList<PurchasedProduct> = mutableListOf<PurchasedProduct>()
-    var pedidoReturn: Long = 0
+    var productsToReturn by remember { mutableStateOf(listOf<PurchasedProduct>()) }
+    var pedidoReturn by remember { mutableLongStateOf(0) }
     var returnButtonClicked by remember { mutableStateOf(false) }
     var mostrarDialog by remember { mutableStateOf(false) }
 
@@ -67,7 +71,7 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
     }
 
     if(mostrarDialog){
-        ShopDialog({ mostrarDialog = false }, { mostrarDialog = false }, "Motivo de la devolución", "¿Está seguro de que desea eliminar su perfil? Esta acción es irreversible")
+        ShopDialog({ mostrarDialog = false }, { mainViewModel.makeReturn(pedidoReturn, productsToReturn); mostrarDialog = false }, "Procesar devolución", "¿Está seguro de que desea procesar esta devolución?")
     }
 
     if(mainViewModel.pedidos.isNotEmpty()){
@@ -110,7 +114,7 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                     .padding(10.dp, 10.dp, 10.dp, 0.dp),
                                 verticalArrangement = Arrangement.Center
                             ) {
-                                Text("Pedido realizado " + item.fechaPedido.replace("T"," ").dropLast(3),
+                                Text("Pedido realizado " + item.fechaPedido.replace("T"," ").substring(0, 16),
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 17.sp

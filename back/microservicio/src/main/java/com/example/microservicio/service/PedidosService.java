@@ -53,13 +53,15 @@ public class PedidosService {
         ArrayList<ProductosPedidos> productosPedidos = productosPedidosRepository.getProductosPedidos(idPedido).orElse(null);
         Pedido pedidoEnviar = new Pedido(pedido.getId_pedido(), pedido.getFechaPedido(), pedido.getTotalPedido(), pedido.getEstado());
         ArrayList<ProductoPedido> productosPedido = new ArrayList<>();
-        for (int i = 0; i < productosPedidos.size(); i++) {
-            ProductoPedido productoPedido = new ProductoPedido();
-            productoPedido.setId(productosPedidos.get(i).getId_pedidos_productos());
-            productoPedido.setProducto(new Producto(productosPedidos.get(i).getProducto().getId_producto(), productosPedidos.get(i).getProducto().getName(), productosPedidos.get(i).getProducto().getPrice(), productosPedidos.get(i).getProducto().getS(), productosPedidos.get(i).getProducto().getM(), productosPedidos.get(i).getProducto().getL(), productosPedidos.get(i).getProducto().getXL(), productosPedidos.get(i).getProducto().getImage()));
-            productoPedido.setCantidad(productosPedidos.get(i).getCantidad());
-            productoPedido.setTalla(productosPedidos.get(i).getTalla());
-            productosPedido.add(productoPedido);
+        if(productosPedidos != null){
+            for (int i = 0; i < productosPedidos.size(); i++) {
+                ProductoPedido productoPedido = new ProductoPedido();
+                productoPedido.setId(productosPedidos.get(i).getId_pedidos_productos());
+                productoPedido.setProducto(new Producto(productosPedidos.get(i).getProducto().getId_producto(), productosPedidos.get(i).getProducto().getName(), productosPedidos.get(i).getProducto().getPrice(), productosPedidos.get(i).getProducto().getS(), productosPedidos.get(i).getProducto().getM(), productosPedidos.get(i).getProducto().getL(), productosPedidos.get(i).getProducto().getXL(), productosPedidos.get(i).getProducto().getImage()));
+                productoPedido.setCantidad(productosPedidos.get(i).getCantidad());
+                productoPedido.setTalla(productosPedidos.get(i).getTalla());
+                productosPedido.add(productoPedido);
+            }
         }
         pedidoEnviar.setProductos(productosPedido);
         return pedidoEnviar;
