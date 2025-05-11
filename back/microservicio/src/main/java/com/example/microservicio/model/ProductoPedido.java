@@ -9,6 +9,8 @@ public class ProductoPedido {
 
     private String talla;
 
+    private boolean devuelto;
+
     public Long getId() {
         return id;
     }
@@ -39,5 +41,13 @@ public class ProductoPedido {
 
     public void setTalla(String talla) {
         this.talla = talla;
+    }
+
+    public boolean isDevuelto() {
+        return devuelto;
+    }
+
+    public void setDevuelto(boolean devuelto) {
+        this.devuelto = devuelto;
     }
 }

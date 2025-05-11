@@ -26,8 +26,9 @@ public class ProductosPedidos {
     private int cantidad;
 
     private String talla;
+
+    private boolean devuelto;
     
-    // Getters y Setters
     public Long getId_pedidos_productos() {
         return id_pedidos_productos;
     }
@@ -66,5 +67,13 @@ public class ProductosPedidos {
 
     public void setTalla(String talla) {
         this.talla = talla;
+    }
+
+    public boolean isDevuelto() {
+        return devuelto;
+    }
+
+    public void setDevuelto(boolean devuelto) {
+        this.devuelto = devuelto;
     }
 }

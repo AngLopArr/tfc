@@ -77,7 +77,7 @@ fun ReturnsScreen(mainViewModel: MainViewModel){
                                 modifier = Modifier.fillMaxHeight().padding(10.dp, 10.dp, 10.dp, 0.dp),
                                 verticalArrangement = Arrangement.Center
                             ) {
-                                Text("Pedido realizado " + item.fechaDevolucion.replace("T"," ").substring(0, 16),
+                                Text("Devolución realizada " + item.fechaDevolucion.replace("T"," ").substring(0, 16),
                                     style = TextStyle(
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 17.sp
@@ -155,7 +155,7 @@ fun ReturnsScreen(mainViewModel: MainViewModel){
                                                     ) {
                                                         Text(
                                                             AnnotatedString.fromHtml(
-                                                                "<span>${product.producto.name} <b>x${product.cantidad}</b></span>"),
+                                                                "<span>${product.producto.name} <b>x${product.cantidadDevuelta}</b></span>"),
                                                             modifier = Modifier.padding(PaddingValues(12.dp, 0.dp, 10.dp, 0.dp)),
                                                             style = TextStyle(
                                                                 fontSize = 16.sp,
@@ -227,7 +227,7 @@ fun ReturnsScreen(mainViewModel: MainViewModel){
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            Text("No has realizado ningún pedido todavía.",
+            Text("No has realizado ninguna devolución todavía.",
                 modifier = Modifier.padding(PaddingValues(37.dp, 0.dp, 15.dp, 0.dp)),
                 style = TextStyle(
                     fontSize = 24.sp,

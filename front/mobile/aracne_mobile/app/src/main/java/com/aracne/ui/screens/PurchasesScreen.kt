@@ -54,6 +54,7 @@ import com.aracne.data.model.Product
 import com.aracne.data.model.PurchasedProduct
 import com.aracne.model.MainViewModel
 import com.aracne.ui.components.ShopDialog
+import com.aracne.ui.navigation.Destinations
 import java.util.Locale
 
 @Composable
@@ -71,7 +72,7 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
     }
 
     if(mostrarDialog){
-        ShopDialog({ mostrarDialog = false }, { mainViewModel.makeReturn(pedidoReturn, productsToReturn); mostrarDialog = false }, "Procesar devolución", "¿Está seguro de que desea procesar esta devolución?")
+        ShopDialog({ mostrarDialog = false }, { mainViewModel.makeReturn(pedidoReturn, productsToReturn); navController.navigate(Destinations.RETURNS); mostrarDialog = false }, "Procesar devolución", "¿Está seguro de que desea procesar esta devolución?")
     }
 
     if(mainViewModel.pedidos.isNotEmpty()){
@@ -163,102 +164,153 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                         modifier = Modifier.fillMaxWidth().padding(0.dp, 5.dp, 0.dp, 0.dp)
                                     ){
                                         for (product in item.productos){
-                                            Row(
-                                                modifier = Modifier.padding(4.dp, 9.dp)
-                                            ){
-                                                Box(
-                                                    modifier = Modifier
-                                                        .height(100.dp)
-                                                        .width(100.dp)
-                                                        .fillMaxWidth()
-                                                        .clipToBounds()
-                                                ) {
-                                                    AsyncImage(
-                                                        model = ImageRequest.Builder(context = LocalContext.current)
-                                                            .data(product.producto.image)
-                                                            .build(),
-                                                        contentDescription = product.producto.name,
+                                            if(product.devuelto){
+                                                Spacer(modifier = Modifier.height(9.dp))
+                                            }
+                                            Box {
+                                                Row(
+                                                    modifier = Modifier.padding(4.dp, 9.dp)
+                                                ){
+                                                    Box(
                                                         modifier = Modifier
-                                                            .clip(RoundedCornerShape(12.dp))
-                                                            .fillMaxWidth(),
-                                                        contentScale = ContentScale.Crop
-                                                    )
-                                                }
-                                                Column(
-                                                    modifier = Modifier.fillMaxHeight().width(220.dp),
-                                                    verticalArrangement = Arrangement.SpaceBetween
-                                                ) {
-                                                    Column(
-                                                        modifier = Modifier
-                                                            .fillMaxWidth()
                                                             .height(100.dp)
-                                                            .padding(0.dp, 0.dp, 5.dp, 0.dp)
+                                                            .width(100.dp)
+                                                            .fillMaxWidth()
+                                                            .clipToBounds()
                                                     ) {
-                                                        Text(
-                                                            AnnotatedString.fromHtml(
-                                                                "<span>${product.producto.name} <b>x${product.cantidad}</b></span>"),
-                                                            modifier = Modifier.padding(PaddingValues(12.dp, 0.dp, 10.dp, 0.dp)),
-                                                            style = TextStyle(
-                                                                fontSize = 16.sp,
-                                                                lineHeight = 19.sp
-                                                            )
+                                                        AsyncImage(
+                                                            model = ImageRequest.Builder(context = LocalContext.current)
+                                                                .data(product.producto.image)
+                                                                .build(),
+                                                            contentDescription = product.producto.name,
+                                                            modifier = Modifier
+                                                                .clip(RoundedCornerShape(12.dp))
+                                                                .fillMaxWidth(),
+                                                            contentScale = ContentScale.Crop
                                                         )
-                                                        Text(
-                                                            "${product.producto.price} €",
-                                                            modifier = Modifier.padding(PaddingValues(12.dp, 2.dp, 10.dp, 0.dp)),
-                                                            style = TextStyle(
-                                                                fontSize = 16.sp,
-                                                                lineHeight = 19.sp,
-                                                                fontWeight = FontWeight.SemiBold
+                                                    }
+                                                    Column(
+                                                        modifier = Modifier.fillMaxHeight().width(220.dp),
+                                                        verticalArrangement = Arrangement.SpaceBetween
+                                                    ) {
+                                                        Column(
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .height(100.dp)
+                                                                .padding(0.dp, 0.dp, 5.dp, 0.dp)
+                                                        ) {
+                                                            Text(
+                                                                AnnotatedString.fromHtml(
+                                                                    "<span>${product.producto.name} <b>x${product.cantidad}</b></span>"),
+                                                                modifier = Modifier.padding(PaddingValues(12.dp, 0.dp, 10.dp, 0.dp)),
+                                                                style = TextStyle(
+                                                                    fontSize = 16.sp,
+                                                                    lineHeight = 19.sp
+                                                                )
                                                             )
-                                                        )
-                                                        Text(
-                                                            "Talla ${product.talla.toUpperCase(Locale.ROOT)}",
-                                                            modifier = Modifier.padding(PaddingValues(12.dp, 2.dp, 10.dp, 0.dp)),
-                                                            style = TextStyle(
-                                                                fontSize = 16.sp,
-                                                                lineHeight = 19.sp
+                                                            Text(
+                                                                "${product.producto.price} €",
+                                                                modifier = Modifier.padding(PaddingValues(12.dp, 2.dp, 10.dp, 0.dp)),
+                                                                style = TextStyle(
+                                                                    fontSize = 16.sp,
+                                                                    lineHeight = 19.sp,
+                                                                    fontWeight = FontWeight.SemiBold
+                                                                )
+                                                            )
+                                                            Text(
+                                                                "Talla ${product.talla.toUpperCase(Locale.ROOT)}",
+                                                                modifier = Modifier.padding(PaddingValues(12.dp, 2.dp, 10.dp, 0.dp)),
+                                                                style = TextStyle(
+                                                                    fontSize = 16.sp,
+                                                                    lineHeight = 19.sp
+                                                                )
+                                                            )
+                                                        }
+                                                    }
+                                                    Column(
+                                                        verticalArrangement = Arrangement.Center,
+                                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                                        modifier = Modifier.height(100.dp)
+                                                            .padding(5.dp, 0.dp, 17.dp, 0.dp)
+                                                    ) {
+                                                        if(!product.devuelto) {
+                                                            Checkbox(
+                                                                checked = product.devolver == true,
+                                                                onCheckedChange = {
+                                                                    mainViewModel.pedidos =
+                                                                        mainViewModel.pedidos.map { pedido ->
+                                                                            if (pedido.id_pedido == item.id_pedido) {
+                                                                                val pedidoCopia =
+                                                                                    pedido.copy(
+                                                                                        productos = pedido.productos.map { productoCambiar ->
+                                                                                            if (productoCambiar.id == product.id) {
+                                                                                                productoCambiar.copy(
+                                                                                                    devolver = !(productoCambiar.devolver
+                                                                                                        ?: false)
+                                                                                                )
+                                                                                            } else productoCambiar
+                                                                                        }
+                                                                                    )
+                                                                                pedidoCopia
+                                                                            } else pedido
+                                                                        }
+                                                                },
+                                                                colors = CheckboxColors(
+                                                                    checkedCheckmarkColor = colorResource(
+                                                                        R.color.white
+                                                                    ),
+                                                                    uncheckedCheckmarkColor = colorResource(
+                                                                        R.color.white
+                                                                    ),
+                                                                    checkedBoxColor = colorResource(
+                                                                        R.color.purple_001
+                                                                    ),
+                                                                    uncheckedBoxColor = colorResource(
+                                                                        R.color.purple_002
+                                                                    ),
+                                                                    disabledCheckedBoxColor = colorResource(
+                                                                        R.color.purple_001
+                                                                    ),
+                                                                    disabledUncheckedBoxColor = colorResource(
+                                                                        R.color.purple_002
+                                                                    ),
+                                                                    disabledIndeterminateBoxColor = colorResource(
+                                                                        R.color.purple_001
+                                                                    ),
+                                                                    checkedBorderColor = colorResource(
+                                                                        R.color.purple_001
+                                                                    ),
+                                                                    uncheckedBorderColor = colorResource(
+                                                                        R.color.purple_001
+                                                                    ),
+                                                                    disabledBorderColor = colorResource(
+                                                                        R.color.purple_001
+                                                                    ),
+                                                                    disabledUncheckedBorderColor = colorResource(
+                                                                        R.color.purple_001
+                                                                    ),
+                                                                    disabledIndeterminateBorderColor = colorResource(
+                                                                        R.color.purple_001
+                                                                    )
+                                                                )
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                if(product.devuelto){
+                                                    Box(contentAlignment = Alignment.Center, modifier = Modifier.matchParentSize().background(colorResource(R.color.light_gray).copy(alpha = 0.8f), RoundedCornerShape(12.dp))){
+                                                        Text("Devuelto", style =
+                                                            TextStyle(
+                                                                fontWeight = FontWeight.W600,
+                                                                fontSize = 18.sp,
+                                                                color = colorResource(R.color.dark_gray)
                                                             )
                                                         )
                                                     }
                                                 }
-                                                Column(
-                                                    verticalArrangement = Arrangement.Center,
-                                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                                    modifier = Modifier.height(100.dp).padding(5.dp, 0.dp, 17.dp, 0.dp)
-                                                ){
-                                                    Checkbox(
-                                                        checked = product.devolver == true,
-                                                        onCheckedChange = {
-                                                            mainViewModel.pedidos = mainViewModel.pedidos.map { pedido ->
-                                                                if (pedido.id_pedido == item.id_pedido) {
-                                                                    val pedidoCopia = pedido.copy(
-                                                                        productos = pedido.productos.map { productoCambiar ->
-                                                                            if (productoCambiar.id == product.id) {
-                                                                                productoCambiar.copy(devolver = !(productoCambiar.devolver ?: false))
-                                                                            } else productoCambiar
-                                                                        }
-                                                                    )
-                                                                    pedidoCopia
-                                                                } else pedido
-                                                            }
-                                                        },
-                                                        colors = CheckboxColors(
-                                                            checkedCheckmarkColor = colorResource(R.color.white),
-                                                            uncheckedCheckmarkColor = colorResource(R.color.white),
-                                                            checkedBoxColor = colorResource(R.color.purple_001),
-                                                            uncheckedBoxColor = colorResource(R.color.purple_002),
-                                                            disabledCheckedBoxColor = colorResource(R.color.purple_001),
-                                                            disabledUncheckedBoxColor = colorResource(R.color.purple_002),
-                                                            disabledIndeterminateBoxColor = colorResource(R.color.purple_001),
-                                                            checkedBorderColor = colorResource(R.color.purple_001),
-                                                            uncheckedBorderColor = colorResource(R.color.purple_001),
-                                                            disabledBorderColor = colorResource(R.color.purple_001),
-                                                            disabledUncheckedBorderColor = colorResource(R.color.purple_001),
-                                                            disabledIndeterminateBorderColor = colorResource(R.color.purple_001)
-                                                        )
-                                                    )
-                                                }
+                                            }
+                                            if(product.devuelto){
+                                                Spacer(modifier = Modifier.height(9.dp))
                                             }
                                         }
                                         Row(

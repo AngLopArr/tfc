@@ -25,6 +25,8 @@ public class ProductosDevolucionesService {
         for (int i = 0; i < productosPedido.size(); i++) {
             ProductosPedidos productoPedido = productosPedidosRepository.findById(productosPedido.get(i).getId()).orElse(null);
             if(productoPedido != null){
+                productoPedido.setDevuelto(true);
+                productosPedidosRepository.save(productoPedido);
                 ProductosDevoluciones producto = new ProductosDevoluciones();
                 producto.setDevolucion(devolucion);
                 producto.setProducto(productoPedido.getProducto());

@@ -60,6 +60,7 @@ public class PedidosService {
                 productoPedido.setProducto(new Producto(productosPedidos.get(i).getProducto().getId_producto(), productosPedidos.get(i).getProducto().getName(), productosPedidos.get(i).getProducto().getPrice(), productosPedidos.get(i).getProducto().getS(), productosPedidos.get(i).getProducto().getM(), productosPedidos.get(i).getProducto().getL(), productosPedidos.get(i).getProducto().getXL(), productosPedidos.get(i).getProducto().getImage()));
                 productoPedido.setCantidad(productosPedidos.get(i).getCantidad());
                 productoPedido.setTalla(productosPedidos.get(i).getTalla());
+                productoPedido.setDevuelto(productosPedidos.get(i).isDevuelto());
                 productosPedido.add(productoPedido);
             }
         }

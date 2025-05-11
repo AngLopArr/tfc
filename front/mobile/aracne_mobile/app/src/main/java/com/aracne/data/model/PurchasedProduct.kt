@@ -5,5 +5,6 @@ data class PurchasedProduct(
     val producto: Product,
     val cantidad: Int,
     val talla: String,
-    var devolver: Boolean?
+    var devolver: Boolean?,
+    val devuelto: Boolean
 )

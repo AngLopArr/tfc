@@ -307,6 +307,7 @@ class MainViewModel @Inject constructor(
                 val respuesta = shopRepository.makeReturn(idCliente, idPedido, productosPedido)
                 if (respuesta != null) {
                     devoluciones += respuesta
+                    getPurchases()
                 } else {
                     println("Error.")
                 }

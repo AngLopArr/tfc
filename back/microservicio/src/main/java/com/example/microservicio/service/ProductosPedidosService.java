@@ -28,6 +28,7 @@ public class ProductosPedidosService {
             producto.setProducto(productosCarrito.get(i).getProducto());
             producto.setCantidad(productosCarrito.get(i).getCantidad());
             producto.setTalla(productosCarrito.get(i).getTalla());
+            producto.setDevuelto(false);
             productosPedido.add(producto);
         }
         productosPedidosRepository.saveAll(productosPedido);
