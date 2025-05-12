@@ -218,7 +218,6 @@ function irFormularioEditar(botonEditar){
     }
 }
 
-
 barraBusqueda.addEventListener("input", () => {
     if(barraBusqueda.value == ""){
         pagina_actual = 1;

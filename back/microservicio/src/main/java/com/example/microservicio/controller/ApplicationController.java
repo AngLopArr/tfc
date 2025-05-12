@@ -589,7 +589,7 @@ public class ApplicationController {
     @GetMapping("/devoluciones/group/{group}")
     public ResponseEntity<ArrayList<Devolucion>> getDevoluciones(@PathVariable int group) {
         
-        ArrayList<Devolucion> devoluciones = devolucionesService.getDevoluciones(4, group);
+        ArrayList<Devolucion> devoluciones = devolucionesService.getDevoluciones(5, group);
 
         if(devoluciones.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -599,10 +599,10 @@ public class ApplicationController {
         }
     }
 
-    @GetMapping("/devoluciones/search/{group}")
+    @PostMapping("/devoluciones/search/{group}")
     public ResponseEntity<ArrayList<Devolucion>> getDevolucionesByDate(@PathVariable int group, @RequestBody Map<String, LocalDateTime> fechas) {
         
-        ArrayList<Devolucion> devoluciones = devolucionesService.getDevolucionesByDate(4, group, fechas.get("fechaInicio"), fechas.get("fechaFin"));
+        ArrayList<Devolucion> devoluciones = devolucionesService.getDevolucionesByDate(5, group, fechas.get("fechaInicio"), fechas.get("fechaFin"));
 
         if(devoluciones.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -624,7 +624,7 @@ public class ApplicationController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/devoluciones/total")
+    @PostMapping("/devoluciones/total")
     public ResponseEntity<Map<String, Integer>> getTotalDevolucionesByDate(@RequestBody Map<String, LocalDateTime> fechas) {
         
         int total = devolucionesService.getTotalDevolucionesByDate(fechas.get("fechaInicio"), fechas.get("fechaFin"));

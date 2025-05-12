@@ -20,39 +20,18 @@
     </div>
     
     <div class="container">
-        <div id="devoluciones">
+        <div class="titulo-devoluciones">
             <h2>Gestión de Devoluciones</h2>
-            <div class="devolucion" onclick="toggleDetalle('detalle1')">
-                <h3>Devolución realizada 15/01/2024</h3>
-                <p>En proceso - 2 artículos</p>
-            </div>
-            <div id="detalle1" class="devolucion-detalle">
-                <div class="producto">
-                    <p>Camiseta Blanca x1 <br><b>Talla M</b> - 15.00 €</p>
-                </div>
-                <div class="producto">
-                    <p>Pantalón Azul x1 <br><b>Talla L</b> - 25.00 €</p>
-                </div>
-                <br>
-                <button class="accept-btn">Aceptar</button>
-                <button class="reject-btn">Rechazar</button>
-            </div>
-            <div class="devolucion" onclick="toggleDetalle('detalle2')">
-                <h3>Devolución realizada 15/01/2024</h3>
-                <p>En proceso - 2 artículos</p>
-            </div>
-            <div id="detalle2" class="devolucion-detalle">
-                <div class="producto">
-                    <p>Camiseta Blanca x1 <br><b>Talla M</b> - 15.00 €</p>
-                </div>
-                <div class="producto">
-                    <p>Pantalón Azul x1 <br><b>Talla L</b> - 25.00 €</p>
-                </div>
-                <br>
-                <button class="accept-btn">Aceptar</button>
-                <button class="reject-btn">Rechazar</button>
+            <div class="busqueda-devoluciones">
+                <label for="fechaInicio">Buscar devoluciones entre</label>
+                <input type="date" id="fechaInicio" name="fechaInicio">
+                <label for="fechaFin">y</label>
+                <input type="date" id="fechaFin" name="fechaFin">
+                <button id="reset-devoluciones">Resetear búsqueda</button>
             </div>
         </div>
+        <div id="devoluciones"></div>
+        <footer><button id="boton-retroceder"><</button><span id="pagina-actual"></span> ... <span id="paginas-totales"></span><button id="boton-avanzar">></button></footer>
     </div>
 </body>
 <script src="js/shop.js"></script>
