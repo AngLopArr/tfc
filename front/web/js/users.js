@@ -1,16 +1,13 @@
 window.onload = function() {
-    // Se comprueba si el usuario está logueado, de no ser así, se le envía a la página de login
     if (localStorage.getItem('loggedIn') !== 'true') {
         window.location.href = 'login.html';
     }
 
-    // Se crea un evento de click para el botón de logout
     document.getElementById('logout').addEventListener('click', function() {
-        // Se borrará el elemento del local storage que almacena el estado de acceso
         localStorage.removeItem('loggedIn');
-        // Se borrará el elemento del local storage que almacena el nombre del usuario logueado
+
         localStorage.removeItem('user');
-        // Se enviará al cliente a la página de login
+
         window.location.href = 'login.html';
     });
 
@@ -159,6 +156,7 @@ getTotalEmployees();
 
 botonAvanzar.addEventListener("click", () => {
     pagina_actual += 1;
+    paginaActualSpan.innerText = pagina_actual;
     fillTable();
 
     if(pagina_actual.toString() === totalPaginas.innerText){
@@ -178,6 +176,7 @@ botonAvanzar.addEventListener("click", () => {
 
 botonRetroceder.addEventListener("click", () => {
     pagina_actual -= 1;
+    paginaActualSpan.innerText = pagina_actual;
     fillTable();
 
     if(pagina_actual.toString() === totalPaginas.innerText){

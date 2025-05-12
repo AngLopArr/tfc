@@ -1,5 +1,6 @@
 package com.example.microservicio.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -185,9 +186,9 @@ public class ApplicationController {
     }
 
     @GetMapping("/employees/group/{group}")
-    public ResponseEntity<ArrayList<Empleados>> get5Employees(@PathVariable int group) {
+    public ResponseEntity<ArrayList<Empleados>> get8Employees(@PathVariable int group) {
         
-        ArrayList<Empleados> empleados = empleadosService.get5Employees(group);
+        ArrayList<Empleados> empleados = empleadosService.get8Employees(group);
 
         if(empleados.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -198,9 +199,9 @@ public class ApplicationController {
     }
 
     @GetMapping("/employees/search/{group}/{name}")
-    public ResponseEntity<ArrayList<Empleados>> get5EmployeesByName(@PathVariable int group, @PathVariable String name) {
+    public ResponseEntity<ArrayList<Empleados>> get8EmployeesByName(@PathVariable int group, @PathVariable String name) {
         
-        ArrayList<Empleados> empleados = empleadosService.get5EmployeesByName(name, group);
+        ArrayList<Empleados> empleados = empleadosService.get8EmployeesByName(name, group);
 
         if(empleados.isEmpty()){
             return ResponseEntity.notFound().build();
@@ -583,6 +584,56 @@ public class ApplicationController {
         else{
             return ResponseEntity.ok(devoluciones);
         }
+    }
+
+    @GetMapping("/devoluciones/group/{group}")
+    public ResponseEntity<ArrayList<Devolucion>> getDevoluciones(@PathVariable int group) {
+        
+        ArrayList<Devolucion> devoluciones = devolucionesService.getDevoluciones(4, group);
+
+        if(devoluciones.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        else{
+            return ResponseEntity.ok(devoluciones);
+        }
+    }
+
+    @GetMapping("/devoluciones/search/{group}")
+    public ResponseEntity<ArrayList<Devolucion>> getDevolucionesByDate(@PathVariable int group, @RequestBody Map<String, LocalDateTime> fechas) {
+        
+        ArrayList<Devolucion> devoluciones = devolucionesService.getDevolucionesByDate(4, group, fechas.get("fechaInicio"), fechas.get("fechaFin"));
+
+        if(devoluciones.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        else{
+            return ResponseEntity.ok(devoluciones);
+        }
+    }
+
+    @GetMapping("/devoluciones")
+    public ResponseEntity<Map<String, Integer>> getTotalDevoluciones() {
+        
+        int total = devolucionesService.getTotalDevoluciones();
+
+        Map<String, Integer> response = new HashMap<>();
+
+        response.put("total", total);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/devoluciones/total")
+    public ResponseEntity<Map<String, Integer>> getTotalDevolucionesByDate(@RequestBody Map<String, LocalDateTime> fechas) {
+        
+        int total = devolucionesService.getTotalDevolucionesByDate(fechas.get("fechaInicio"), fechas.get("fechaFin"));
+
+        Map<String, Integer> response = new HashMap<>();
+
+        response.put("total", total);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/devoluciones/create/{id_cliente}/{id_pedido}")

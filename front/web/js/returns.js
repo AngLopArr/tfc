@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function toggleDetalle(id) {
         let detalle = document.getElementById(id);
         if (detalle) {
-            detalle.style.display = detalle.style.display === 'none' ? 'block' : 'none';
+            detalle.style.display = detalle.style.display === 'block' ? 'none' : 'block';
         }
     }
     

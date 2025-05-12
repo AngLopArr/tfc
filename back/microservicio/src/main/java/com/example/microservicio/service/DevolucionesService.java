@@ -26,6 +26,38 @@ public class DevolucionesService {
         return devolucionesRepository.findById(id).orElse(null);
     }
 
+    public ArrayList<Devolucion> getDevoluciones(int number, int group){
+        int offset = (group * number) - number;
+        ArrayList<Devoluciones> devoluciones = devolucionesRepository.getDevoluciones(number, offset).orElse(null);
+        ArrayList<Devolucion> devolucionesEnviar = new ArrayList<>();
+        if(devoluciones != null){
+            for (int i = 0; i < devoluciones.size(); i++) {
+                devolucionesEnviar.add(changeDevolucionToSend(devoluciones.get(i).getId_devolucion()));
+            }
+        }
+        return devolucionesEnviar;
+    }
+
+    public ArrayList<Devolucion> getDevolucionesByDate(int number, int group, LocalDateTime fechaInicio, LocalDateTime fechaFin){
+        int offset = (group * number) - number;
+        ArrayList<Devoluciones> devoluciones = devolucionesRepository.getDevolucionesByDate(fechaInicio, fechaFin, number, offset).orElse(null);
+        ArrayList<Devolucion> devolucionesEnviar = new ArrayList<>();
+        if(devoluciones != null){
+            for (int i = 0; i < devoluciones.size(); i++) {
+                devolucionesEnviar.add(changeDevolucionToSend(devoluciones.get(i).getId_devolucion()));
+            }
+        }
+        return devolucionesEnviar;
+    }
+
+    public int getTotalDevoluciones(){
+        return devolucionesRepository.getTotalDevoluciones();
+    }
+
+    public int getTotalDevolucionesByDate(LocalDateTime fechaInicio, LocalDateTime fechaFin){
+        return devolucionesRepository.getTotalDevolucionesByDate(fechaInicio, fechaFin);
+    }
+
     public Devoluciones createDevolucion(Devoluciones devolucion){
         devolucion.setFechaDevolucion(LocalDateTime.now());
         devolucion.setEstado("procesando");

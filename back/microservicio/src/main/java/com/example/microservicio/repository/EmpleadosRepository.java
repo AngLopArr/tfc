@@ -13,11 +13,11 @@ import com.example.microservicio.model.Empleados;
 public interface EmpleadosRepository extends JpaRepository<Empleados, Long> {
     Optional<Empleados> findByEmail(String email);
 
-    @Query("SELECT e FROM Empleados e ORDER BY e.id_empleado LIMIT 5 OFFSET :offset")
-    Optional<ArrayList<Empleados>> get5Employees(int offset);
+    @Query("SELECT e FROM Empleados e ORDER BY e.id_empleado LIMIT 8 OFFSET :offset")
+    Optional<ArrayList<Empleados>> get8Employees(int offset);
 
-    @Query("SELECT e FROM Empleados e WHERE e.name LIKE CONCAT('%', CONCAT(:name, '%')) ORDER BY e.id_empleado LIMIT 5 OFFSET :offset")
-    Optional<ArrayList<Empleados>> get5EmployeesByName(String name, int offset);
+    @Query("SELECT e FROM Empleados e WHERE e.name LIKE CONCAT('%', CONCAT(:name, '%')) ORDER BY e.id_empleado LIMIT 8 OFFSET :offset")
+    Optional<ArrayList<Empleados>> get8EmployeesByName(String name, int offset);
 
     @Query("SELECT COUNT(e.id_empleado) FROM Empleados e WHERE e.name LIKE CONCAT('%', CONCAT(:name, '%'))")
     int getTotalEmployeesByName(String name);

@@ -51,14 +51,14 @@ public class EmpleadosService {
         return empleadosRepository.findByEmail(email).orElse(null);
     }
 
-    public ArrayList<Empleados> get5Employees(int group){
-        int offset = (group * 5) - 5;
-        return empleadosRepository.get5Employees(offset).orElse(null);
+    public ArrayList<Empleados> get8Employees(int group){
+        int offset = (group * 8) - 8;
+        return empleadosRepository.get8Employees(offset).orElse(null);
     }
 
-    public ArrayList<Empleados> get5EmployeesByName(String name, int group){
-        int offset = (group * 5) - 5;
-        return empleadosRepository.get5EmployeesByName(name, offset).orElse(null);
+    public ArrayList<Empleados> get8EmployeesByName(String name, int group){
+        int offset = (group * 8) - 8;
+        return empleadosRepository.get8EmployeesByName(name, offset).orElse(null);
     }
 
     public int getTotalEmployees(){
