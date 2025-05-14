@@ -101,22 +101,10 @@ async function getTotalProducts(){
     if(barraBusqueda.value == ""){
         const response = await fetch("http://localhost:8080/aracne/inventory");
 
-        if(response.status === 404){
-            pagina_actual = 0;
-            paginaActualSpan.innerText = pagina_actual;
-            return;
-        }
-
         data = await response.json();
     }
     else{
         const response = await fetch("http://localhost:8080/aracne/inventory/total/" + barraBusqueda.value);
-
-        if(response.status === 404){
-            pagina_actual = 0;
-            paginaActualSpan.innerText = pagina_actual;
-            return;
-        }
 
         data = await response.json();
     }
@@ -218,18 +206,18 @@ function irFormularioEditar(botonEditar){
     }
 }
 
-barraBusqueda.addEventListener("input", () => {
+barraBusqueda.addEventListener("input", async () => {
     if(barraBusqueda.value == ""){
         pagina_actual = 1;
         paginaActualSpan.innerText = pagina_actual;
+        await fillTable();
         getTotalProducts();
-        fillTable();
     }
 });
 
-lupa.addEventListener("click", () => {
+lupa.addEventListener("click", async () => {
     pagina_actual = 1;
     paginaActualSpan.innerText = pagina_actual;
+    await fillTable();
     getTotalProducts();
-    fillTable();
 })

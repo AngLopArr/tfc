@@ -22,19 +22,32 @@ async function fillPage(){
     let data;
     maindiv.innerHTML = "";
 
-    /*if(fechaInicio.value != "" && fechaFin.value != ""){
-        const response = await fetch("http://localhost:8080/aracne/inventory/products/" + 4 + "/" + pagina_actual);
+    if(fechaInicio.value != "" && fechaFin.value != ""){
+        if(fechaFin.value > fechaInicio.value){
+            const fechas = {
+                fechaInicio: fechaInicio.value + "T00:00:00",
+                fechaFin: fechaFin.value + "T23:59:59"
+            };
 
-        if(response.status === 404){
-            pagina_actual = 0;
-            paginaActualSpan.innerText = pagina_actual;
-            return;
+            const response = await fetch("http://localhost:8080/aracne/devoluciones/search/" + pagina_actual, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(fechas)
+            });
+
+            if(response.status === 404){
+                pagina_actual = 0;
+                paginaActualSpan.innerText = pagina_actual;
+                return;
+            }
+            else{
+                paginaActualSpan.innerText = pagina_actual;
+            }
+
+            data = await response.json();
         }
-
-        data = await response.json();
-        alert("Todo ok.");
     }
-    else{*/
+    else{
         const response = await fetch("http://localhost:8080/aracne/devoluciones/group/" + pagina_actual);
 
         if(response.status === 404){
@@ -42,9 +55,12 @@ async function fillPage(){
             paginaActualSpan.innerText = pagina_actual;
             return;
         }
+        else{
+            paginaActualSpan.innerText = pagina_actual;
+        }
 
         data = await response.json();
-    /*}*/
+    }
 
     for (let index = 0; index < data.length; index++) {
         const devolucion = data[index];
@@ -79,28 +95,27 @@ fillPage();
 async function getTotalDevoluciones(){
     let data;
 
-    //if(barraBusqueda.value == ""){
+    if(fechaInicio.value != "" && fechaFin.value != ""){
+        if(fechaFin.value > fechaInicio.value){
+            const fechas = {
+                fechaInicio: fechaInicio.value + "T00:00:00",
+                fechaFin: fechaFin.value + "T23:59:59"
+            };
+
+            const response = await fetch("http://localhost:8080/aracne/devoluciones/total", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(fechas)
+            });
+
+            data = await response.json();
+        }
+    }
+    else{
         const response = await fetch("http://localhost:8080/aracne/devoluciones");
 
-        if(response.status === 404){
-            pagina_actual = 0;
-            paginaActualSpan.innerText = pagina_actual;
-            return;
-        }
-
         data = await response.json();
-    /*}
-    else{
-        const response = await fetch("http://localhost:8080/aracne/inventory/total/" + barraBusqueda.value);
-
-        if(response.status === 404){
-            pagina_actual = 0;
-            paginaActualSpan.innerText = pagina_actual;
-            return;
-        }
-
-        data = await response.json();
-    }*/
+    }
 
     total_products = data["total"];
 
@@ -168,39 +183,46 @@ botonRetroceder.addEventListener("click", () => {
     }
 });
 
-reset.addEventListener("click", () => {
+reset.addEventListener("click", async () => {
     fechaInicio.value = "";
     fechaFin.value = "";
     pagina_actual = 1;
-    paginaActualSpan.innerText = pagina_actual;
+    await fillPage();
     getTotalDevoluciones();
-    fillPage();
 });
 
-fechaInicio.addEventListener("change", () => {
+fechaInicio.addEventListener("change", async () => {
     if(fechaInicio.value != "" && fechaFin.value != ""){
         if(fechaFin.value > fechaInicio.value){
             pagina_actual = 1;
-            paginaActualSpan.innerText = pagina_actual;
+            await fillPage();
             getTotalDevoluciones();
-            fillPage();
         }
         else {
-            alert("La fecha de inicio no puede ser mayor a la fecha de fin.")
+            alert("La fecha de inicio no puede ser mayor a la fecha de fin.");
+            fechaInicio.value = "";
+            fechaFin.value = "";
+            pagina_actual = 1;
+            await fillPage();
+            getTotalDevoluciones();
         }
     }
 });
 
-fechaFin.addEventListener("change", () => {
+fechaFin.addEventListener("change", async () => {
     if(fechaInicio.value != "" && fechaFin.value != ""){
         if(fechaFin.value > fechaInicio.value){
             pagina_actual = 1;
-            paginaActualSpan.innerText = pagina_actual;
+            await fillPage();
             getTotalDevoluciones();
-            fillPage();
         }
         else {
-            alert("La fecha de inicio no puede ser mayor a la fecha de fin.")
+            alert("La fecha de inicio no puede ser mayor a la fecha de fin.");
+            fechaInicio.value = "";
+            fechaFin.value = "";
+            pagina_actual = 1;
+            await fillPage();
+            getTotalDevoluciones();
         }
     }
 });

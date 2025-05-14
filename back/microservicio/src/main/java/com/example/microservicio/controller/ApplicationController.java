@@ -601,7 +601,6 @@ public class ApplicationController {
 
     @PostMapping("/devoluciones/search/{group}")
     public ResponseEntity<ArrayList<Devolucion>> getDevolucionesByDate(@PathVariable int group, @RequestBody Map<String, LocalDateTime> fechas) {
-        
         ArrayList<Devolucion> devoluciones = devolucionesService.getDevolucionesByDate(5, group, fechas.get("fechaInicio"), fechas.get("fechaFin"));
 
         if(devoluciones.isEmpty()){
