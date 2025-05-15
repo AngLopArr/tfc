@@ -1,5 +1,6 @@
 package com.aracne.ui.screens
 
+import android.content.Intent
 import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.foundation.Image
@@ -29,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -46,14 +49,46 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.aracne.MainActivity
 import com.aracne.R
 import com.aracne.model.MainViewModel
+import com.aracne.ui.components.ShopDialog
 import kotlin.math.log
 
 @Composable
-fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel()){
-    var username by remember { mutableStateOf("") }
+fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel(), login: (Intent) -> Unit){
+    var credential by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var botonClicked by remember { mutableStateOf(false) }
+    var mostrarDialog by remember { mutableStateOf(false) }
+    var dialogFunction by remember { mutableStateOf({}) }
+    var dialogText by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    LaunchedEffect (botonClicked) {
+        if(botonClicked){
+            val cliente = mainViewModel.login(username = username, email = email, password = password)
+
+            if (cliente != null && cliente.success == true){
+                mainViewModel.saveId(cliente.id ?: 0)
+                mainViewModel.saveName(cliente.name ?: "")
+                dialogFunction = { mostrarDialog = false; login(Intent(context, MainActivity::class.java)) }
+                dialogText = "Se ha logueado con éxito."
+            }
+            else {
+                dialogFunction = { mostrarDialog = false }
+                dialogText = "Las credenciales no son correctas."
+            }
+        }
+        botonClicked = false
+    }
+
+    if(mostrarDialog){
+        ShopDialog(dialogFunction, dialogFunction, "Login", dialogText)
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -91,8 +126,8 @@ fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel()){
                     verticalArrangement = Arrangement.Center
                 ){
                     OutlinedTextField(
-                        value = username,
-                        onValueChange = { username = it },
+                        value = credential,
+                        onValueChange = { credential = it },
                         placeholder = { Text("Nombre de usuario o email",
                             style = TextStyle(
                                 fontSize = 14.sp
@@ -169,9 +204,15 @@ fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel()){
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         BotonLogin("Login") {
-                            mainViewModel.saveId(1)
-                            mainViewModel.saveName("Carla")
-                            Log.d("TAG", "LoginScreen: login")
+                            if(username.contains("@")){
+                                email = credential
+                                username = ""
+                            }
+                            else {
+                                username = credential
+                                email = ""
+                            }
+                            botonClicked = true
                         }
                     }
                     Spacer(modifier = Modifier.height(20.dp))
@@ -257,10 +298,4 @@ fun coloresTextFieldLogin(): TextFieldColors {
         focusedPlaceholderColor = colorResource(R.color.gray),
         cursorColor = colorResource(R.color.gray),
     )
-}
-
-@Preview
-@Composable
-fun SimpleComposablePreview() {
-    LoginScreen()
 }

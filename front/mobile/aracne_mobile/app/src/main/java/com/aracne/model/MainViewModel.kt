@@ -1,6 +1,7 @@
 package com.aracne.model
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -11,6 +12,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracne.data.model.Cantidad
+import com.aracne.data.model.Client
 import com.aracne.data.model.Detalle
 import com.aracne.data.model.GeneralResponseSuccess
 import com.aracne.data.model.Password
@@ -368,6 +370,18 @@ class MainViewModel @Inject constructor(
                 println("Error: ${e.message}")
             }
         }
+    }
+
+    suspend fun login(username: String = "", email: String = "", password: String): Client? {
+        try {
+            val respuesta = shopRepository.login(Client(null, null, null, if (username != "") username else null, if (email != "") email else null, password))
+            if(respuesta != null){
+                return respuesta
+            }
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        }
+        return null
     }
 
     fun logout(context: Context){

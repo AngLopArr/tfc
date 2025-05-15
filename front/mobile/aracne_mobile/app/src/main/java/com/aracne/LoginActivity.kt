@@ -22,7 +22,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AracneTheme {
-                LoginScreen()
+                LoginScreen(login = { intent -> startActivity(intent) })
             }
         }
     }
