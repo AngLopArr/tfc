@@ -68,6 +68,7 @@ public class DevolucionesService {
         Devoluciones devolucion = devolucionesRepository.findById(idDevolucion).orElse(null);
         if(devolucion != null){
             devolucion.setEstado(estado);
+            devolucionesRepository.save(devolucion);
             return true;
         }
         else{

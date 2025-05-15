@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -36,7 +37,7 @@ import com.aracne.ui.navigation.Destinations
 fun ProfileScreen(navController: NavHostController, mainViewModel: MainViewModel){
     var botonDeleteClicked by remember { mutableStateOf(false) }
     var mostrarDialog by remember { mutableStateOf(false) }
-
+    val context = LocalContext.current
     LaunchedEffect(botonDeleteClicked) {
         if(botonDeleteClicked){
             mostrarDialog = true
@@ -135,7 +136,7 @@ fun ProfileScreen(navController: NavHostController, mainViewModel: MainViewModel
             }
             Card(
                 modifier = Modifier.padding(15.dp, 0.dp, 15.dp, 15.dp).fillMaxWidth().height(50.dp).clickable {
-
+                    mainViewModel.logout(context)
                 },
                 colors = CardColors(
                     containerColor = MaterialTheme.colorScheme.background,

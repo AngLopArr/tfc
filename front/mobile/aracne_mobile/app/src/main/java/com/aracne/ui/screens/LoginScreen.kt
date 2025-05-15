@@ -1,5 +1,6 @@
 package com.aracne.ui.screens
 
+import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,17 +45,23 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.aracne.R
+import com.aracne.model.MainViewModel
+import kotlin.math.log
 
 @Composable
-fun LoginScreen(){
+fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel()){
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     Box(
-        modifier = Modifier.fillMaxSize().paint(
-            // Replace with your image id
-            painterResource(id = R.drawable.background),
-            contentScale = ContentScale.FillBounds)
+        modifier = Modifier
+            .fillMaxSize()
+            .paint(
+                // Replace with your image id
+                painterResource(id = R.drawable.background),
+                contentScale = ContentScale.FillBounds
+            )
     ){
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,10 +71,15 @@ fun LoginScreen(){
             Image(
                 painter = painterResource(id = R.drawable.big_logo),
                 contentDescription = "logo",
-                modifier = Modifier.size(440.dp).padding(20.dp, 45.dp, 20.dp, 0.dp)
+                modifier = Modifier
+                    .size(440.dp)
+                    .padding(20.dp, 45.dp, 20.dp, 0.dp)
             )
             Card(
-                modifier = Modifier.fillMaxWidth().height(350.dp).padding(25.dp, 0.dp, 25.dp, 45.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(350.dp)
+                    .padding(25.dp, 0.dp, 25.dp, 45.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = colorResource(R.color.white),
                 )
@@ -86,9 +98,15 @@ fun LoginScreen(){
                                 fontSize = 14.sp
                             )
                         ) },
-                        modifier = Modifier.fillMaxWidth().padding(PaddingValues(15.dp, 15.dp, 15.dp, 0.dp)).border(width = 5.dp,
-                            color = colorResource(id = R.color.light_gray), shape = RoundedCornerShape(3.5.dp)
-                        ).height(50.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(PaddingValues(15.dp, 15.dp, 15.dp, 0.dp))
+                            .border(
+                                width = 5.dp,
+                                color = colorResource(id = R.color.light_gray),
+                                shape = RoundedCornerShape(3.5.dp)
+                            )
+                            .height(50.dp),
                         textStyle = TextStyle(fontSize = 14.sp),
                         colors = coloresTextFieldLogin()
                     )
@@ -99,13 +117,22 @@ fun LoginScreen(){
                             style = TextStyle(
                                 fontSize = 14.sp
                             )) },
-                        modifier = Modifier.fillMaxWidth().padding(PaddingValues(15.dp, 15.dp, 15.dp, 0.dp)).border(width = 5.dp,
-                            color = colorResource(id = R.color.light_gray), shape = RoundedCornerShape(3.5.dp)).height(50.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(PaddingValues(15.dp, 15.dp, 15.dp, 0.dp))
+                            .border(
+                                width = 5.dp,
+                                color = colorResource(id = R.color.light_gray),
+                                shape = RoundedCornerShape(3.5.dp)
+                            )
+                            .height(50.dp),
                         textStyle = TextStyle(fontSize = 14.sp),
                         colors = coloresTextFieldLogin()
                     )
                     Row(
-                        modifier = Modifier.fillMaxWidth().height(40.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Checkbox(
@@ -135,15 +162,23 @@ fun LoginScreen(){
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     Row(
-                        modifier = Modifier.fillMaxWidth().height(40.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ){
-                        BotonLogin("Login") {}
+                        BotonLogin("Login") {
+                            mainViewModel.saveId(1)
+                            mainViewModel.saveName("Carla")
+                            Log.d("TAG", "LoginScreen: login")
+                        }
                     }
                     Spacer(modifier = Modifier.height(20.dp))
                     Row(
-                        modifier = Modifier.fillMaxWidth().height(40.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ){
@@ -175,23 +210,30 @@ fun BotonLogin(contenido: String, onClick: () -> Unit){
     var isPressed by remember { mutableStateOf(false) }
     val backgroundColor = if (isPressed) R.color.purple_001 else R.color.purple_002
     Box(contentAlignment = Alignment.Center,
-        modifier = Modifier.width(150.dp).height(40.dp).background(
-            color = colorResource(backgroundColor),
-            shape = RoundedCornerShape(12.dp)).pointerInteropFilter {
-            when (it.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    isPressed = true
-                    true
+        modifier = Modifier
+            .width(150.dp)
+            .height(40.dp)
+            .background(
+                color = colorResource(backgroundColor),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        isPressed = true
+                        true
+                    }
+
+                    MotionEvent.ACTION_UP,
+                    MotionEvent.ACTION_CANCEL -> {
+                        isPressed = false
+                        onClick()
+                        true
+                    }
+
+                    else -> false
                 }
-                MotionEvent.ACTION_UP,
-                MotionEvent.ACTION_CANCEL -> {
-                    isPressed = false
-                    onClick()
-                    true
-                }
-                else -> false
             }
-        }
     )
     {
         Text(

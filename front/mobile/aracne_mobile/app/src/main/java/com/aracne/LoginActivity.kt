@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.Text
+import com.aracne.ui.screens.LoginScreen
 import com.aracne.ui.theme.AracneTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,8 +22,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AracneTheme {
-                Text("Login")
-                /*LoginScreen( onClickAcceder = { intent -> startActivity(intent) })*/
+                LoginScreen()
             }
         }
     }

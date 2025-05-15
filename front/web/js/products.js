@@ -36,6 +36,9 @@ async function fillTable(){
             paginaActualSpan.innerText = pagina_actual;
             return;
         }
+        else {
+            paginaActualSpan.innerText = pagina_actual;
+        }
 
         data = await response.json();
     }
@@ -46,6 +49,9 @@ async function fillTable(){
             pagina_actual = 0;
             paginaActualSpan.innerText = pagina_actual;
             return;
+        }
+        else {
+            paginaActualSpan.innerText = pagina_actual;
         }
 
         data = await response.json();
@@ -137,7 +143,6 @@ getTotalProducts();
 
 botonAvanzar.addEventListener("click", () => {
     pagina_actual += 1;
-    paginaActualSpan.innerText = pagina_actual;
     fillTable();
 
     if(pagina_actual.toString() === totalPaginas.innerText){
@@ -157,7 +162,6 @@ botonAvanzar.addEventListener("click", () => {
 
 botonRetroceder.addEventListener("click", () => {
     pagina_actual -= 1;
-    paginaActualSpan.innerText = pagina_actual;
     fillTable();
 
     if(pagina_actual.toString() === totalPaginas.innerText){
@@ -183,7 +187,6 @@ async function eliminarProducto(botonEliminar){
         headers: { "Content-Type": "application/json" }
     });
 
-    // Tomamos la respuesta
     const data = await response.json();
     let exito = data["success"];
     
@@ -209,7 +212,6 @@ function irFormularioEditar(botonEditar){
 barraBusqueda.addEventListener("input", async () => {
     if(barraBusqueda.value == ""){
         pagina_actual = 1;
-        paginaActualSpan.innerText = pagina_actual;
         await fillTable();
         getTotalProducts();
     }
@@ -217,7 +219,6 @@ barraBusqueda.addEventListener("input", async () => {
 
 lupa.addEventListener("click", async () => {
     pagina_actual = 1;
-    paginaActualSpan.innerText = pagina_actual;
     await fillTable();
     getTotalProducts();
 })

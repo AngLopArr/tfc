@@ -656,7 +656,6 @@ public class ApplicationController {
 
     @PutMapping("/devoluciones/update/{id}")
     public ResponseEntity<Map<String, Object>> updateEstadoDevolucion(@PathVariable Long id, @RequestBody Map<String, String> estado) {
-
         boolean successfulUpdate = devolucionesService.cambiarEstadoDevolucion(id, estado.get("estado"));
 
         Map<String, Object> response = new HashMap<>();

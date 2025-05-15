@@ -67,7 +67,7 @@ async function fillPage(){
         maindiv.innerHTML += `
             <div class="devolucion" onclick="toggleDetalle(${devolucion.id_devolucion})">
                 <h3>Devolución realizada ${devolucion.fechaDevolucion.replace("T", " ").substring(0, 16)}</h3>
-                <p><span class="estado_devolucion">${devolucion.estado}</span> - ${Object.keys(devolucion.productosDevueltos).length} artículos</p>
+                <p><span class="estado_devolucion" id="estado_devolucion_${devolucion.id_devolucion}">${devolucion.estado}</span> - ${Object.keys(devolucion.productosDevueltos).length} artículos</p>
             </div>
             <div id="${devolucion.id_devolucion}" class="devolucion-detalle"></div>
         `;
@@ -81,12 +81,29 @@ async function fillPage(){
                 <br>
             `
         }
+        
         if(devolucion.estado == "procesando"){
             detalle.innerHTML += `
                 <button class="accept-btn" id_devolucion="${devolucion.id_devolucion}">Aceptar</button>
                 <button class="reject-btn" id_devolucion="${devolucion.id_devolucion}">Rechazar</button>
             `
         }
+    }
+
+    const botonesAceptar =  document.querySelectorAll(".accept-btn");
+
+    for (let index = 0; index < botonesAceptar.length; index++) {
+        botonesAceptar[index].addEventListener("click", async () => {
+            await actualizarDevolucion(botonesAceptar[index], "aceptada");
+        });
+    }
+
+    const botonesRechazar =  document.querySelectorAll(".reject-btn");
+
+    for (let index = 0; index < botonesRechazar.length; index++) {
+        botonesRechazar[index].addEventListener("click", async () => {
+            await actualizarDevolucion(botonesRechazar[index], "rechazada");
+        });
     }
 }
 
@@ -226,3 +243,30 @@ fechaFin.addEventListener("change", async () => {
         }
     }
 });
+
+async function actualizarDevolucion(boton, state){
+    let id = boton.getAttribute("id_devolucion");
+    let estado = { estado: state }
+
+    const response = await fetch("http://localhost:8080/aracne/devoluciones/update/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(estado)
+    });
+
+    const data = await response.json();
+    let exito = data["success"];
+    
+    if(exito){
+        alert("La devolución se ha procesado correctamente.");
+        let botones = document.querySelectorAll(`[id_devolucion="${id}"]`);
+        for (let i = 0; i < botones.length; i++) {
+            botones[i].hidden = true;
+        }
+        let estado = document.getElementById(`estado_devolucion_${id}`);
+        estado.innerHTML = state;
+    }
+    else{
+        alert("No se ha podido procesar la devolución.");
+    }
+}

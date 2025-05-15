@@ -1,9 +1,13 @@
 package com.aracne.model
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aracne.data.model.Cantidad
@@ -17,15 +21,22 @@ import com.aracne.data.model.PurchasedProduct
 import com.aracne.data.model.Return
 import com.aracne.data.model.ReturnedProduct
 import com.aracne.data.model.Talla
+import com.aracne.data.repository.PreferencesRepository
 import com.aracne.data.repository.ShopRepository
+import com.aracne.di.dataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val shopRepository: ShopRepository
+    private val shopRepository: ShopRepository,
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
     private val idCliente: Long = 1
@@ -37,6 +48,29 @@ class MainViewModel @Inject constructor(
     var devoluciones by mutableStateOf(listOf<Return>())
     var grupoProductosActuales by mutableIntStateOf(1)
     var total by mutableIntStateOf(0)
+
+    suspend fun getId(): Long{
+      return preferencesRepository.idFlow.first()
+    }
+
+    fun saveId(id: Long) {
+        viewModelScope.launch {
+            preferencesRepository.saveId(id)
+        }
+    }
+
+    val name: StateFlow<String> =
+        preferencesRepository.nameFlow.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(10000),
+            initialValue = ""
+        )
+
+    fun saveName(name: String) {
+        viewModelScope.launch {
+            preferencesRepository.saveName(name)
+        }
+    }
 
     suspend fun changePassword(password: Password): GeneralResponseSuccess? {
         try {
@@ -329,6 +363,19 @@ class MainViewModel @Inject constructor(
                     devoluciones = respuesta
                 } else {
                     println("Error.")
+                }
+            } catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun logout(context: Context){
+        viewModelScope.launch {
+            try {
+                val dataStore: DataStore<Preferences> = context.dataStore
+                dataStore.edit { preferences ->
+                    preferences.clear()
                 }
             } catch (e: Exception) {
                 println("Error: ${e.message}")
