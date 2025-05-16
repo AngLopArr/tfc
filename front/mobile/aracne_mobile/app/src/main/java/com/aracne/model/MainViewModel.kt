@@ -61,16 +61,23 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    val name: StateFlow<String> =
-        preferencesRepository.nameFlow.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(10000),
-            initialValue = ""
-        )
+    suspend fun getName(): String {
+        return preferencesRepository.nameFlow.first()
+    }
 
     fun saveName(name: String) {
         viewModelScope.launch {
             preferencesRepository.saveName(name)
+        }
+    }
+
+    suspend fun getLoggedIn(): Boolean {
+        return preferencesRepository.loggedInFlow.first()
+    }
+
+    fun saveLoggedIn(loggedin: Boolean) {
+        viewModelScope.launch {
+            preferencesRepository.saveLoggedIn(loggedin)
         }
     }
 
@@ -374,7 +381,21 @@ class MainViewModel @Inject constructor(
 
     suspend fun login(username: String = "", email: String = "", password: String): Client? {
         try {
+            Log.d("TAG", "login: $username")
             val respuesta = shopRepository.login(Client(null, null, null, if (username != "") username else null, if (email != "") email else null, password))
+            if(respuesta != null){
+                return respuesta
+            }
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        }
+        return null
+    }
+
+    suspend fun register(username: String, email: String, password: String, nombre: String): GeneralResponseSuccess? {
+        try {
+            Log.d("TAG", "login: $username")
+            val respuesta = shopRepository.register(Client(null, null, nombre, username, email, password))
             if(respuesta != null){
                 return respuesta
             }

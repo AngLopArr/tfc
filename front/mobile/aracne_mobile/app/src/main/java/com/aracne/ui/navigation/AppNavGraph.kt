@@ -1,5 +1,6 @@
 package com.aracne.ui.navigation
 
+import android.content.Intent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -23,7 +24,7 @@ import com.aracne.ui.screens.ReturnsScreen
 import com.aracne.ui.screens.ShoppingCartScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, mainViewModel: MainViewModel = hiltViewModel()){
+fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, logout: (Intent) -> Unit, mainViewModel: MainViewModel = hiltViewModel()){
     mainViewModel.getPurchases()
     mainViewModel.getReturns()
     NavHost(navController = navController, startDestination = Destinations.PRODUCTOS, modifier = Modifier.padding(innerPadding)){
@@ -34,7 +35,7 @@ fun AppNavGraph(navController: NavHostController, innerPadding: PaddingValues, m
             ShoppingCartScreen(mainViewModel, navController)
         }
         composable(Destinations.PROFILE) {
-            ProfileScreen(navController, mainViewModel)
+            ProfileScreen(navController, mainViewModel, logout)
         }
         composable(route = Destinations.PRODUCTO) {
             ProductScreen(navController, mainViewModel)

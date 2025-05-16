@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,21 +50,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.aracne.MainActivity
 import com.aracne.R
 import com.aracne.model.MainViewModel
 import com.aracne.ui.components.ShopDialog
+import com.aracne.ui.navigation.Destinations
 import kotlin.math.log
 
 @Composable
-fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel(), login: (Intent) -> Unit){
+fun LoginScreen(mainViewModel: MainViewModel, navController: NavHostController, login: (Intent) -> Unit){
     var credential by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var botonClicked by remember { mutableStateOf(false) }
     var mostrarDialog by remember { mutableStateOf(false) }
-    var dialogFunction by remember { mutableStateOf({}) }
     var dialogText by remember { mutableStateOf("") }
     val context = LocalContext.current
 
@@ -74,11 +77,10 @@ fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel(), login: (Intent) 
             if (cliente != null && cliente.success == true){
                 mainViewModel.saveId(cliente.id ?: 0)
                 mainViewModel.saveName(cliente.name ?: "")
-                dialogFunction = { mostrarDialog = false; login(Intent(context, MainActivity::class.java)) }
-                dialogText = "Se ha logueado con éxito."
+                login(Intent(context, MainActivity::class.java))
             }
             else {
-                dialogFunction = { mostrarDialog = false }
+                mostrarDialog = true
                 dialogText = "Las credenciales no son correctas."
             }
         }
@@ -86,7 +88,7 @@ fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel(), login: (Intent) 
     }
 
     if(mostrarDialog){
-        ShopDialog(dialogFunction, dialogFunction, "Login", dialogText)
+        ShopDialog({ mostrarDialog = false }, { mostrarDialog = false }, "Login", dialogText)
     }
 
     Box(
@@ -154,7 +156,7 @@ fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel(), login: (Intent) 
                             )) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(PaddingValues(15.dp, 15.dp, 15.dp, 0.dp))
+                            .padding(PaddingValues(15.dp, 10.dp, 15.dp, 0.dp))
                             .border(
                                 width = 5.dp,
                                 color = colorResource(id = R.color.light_gray),
@@ -164,38 +166,7 @@ fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel(), login: (Intent) 
                         textStyle = TextStyle(fontSize = 14.sp),
                         colors = coloresTextFieldLogin()
                     )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Checkbox(
-                            checked = false,
-                            onCheckedChange = {},
-                            colors = CheckboxColors(
-                                checkedCheckmarkColor = colorResource(R.color.gray),
-                                uncheckedCheckmarkColor = colorResource(R.color.gray),
-                                checkedBoxColor = colorResource(R.color.light_gray),
-                                uncheckedBoxColor = colorResource(R.color.light_gray),
-                                disabledCheckedBoxColor = colorResource(R.color.light_gray),
-                                disabledUncheckedBoxColor = colorResource(R.color.light_gray),
-                                disabledIndeterminateBoxColor = colorResource(R.color.light_gray),
-                                checkedBorderColor = colorResource(R.color.light_gray),
-                                uncheckedBorderColor = colorResource(R.color.light_gray),
-                                disabledBorderColor = colorResource(R.color.light_gray),
-                                disabledUncheckedBorderColor = colorResource(R.color.light_gray),
-                                disabledIndeterminateBorderColor = colorResource(R.color.light_gray)
-                            )
-                        )
-                        Text(text = "Recuérdame",
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                color = colorResource(R.color.gray)
-                            )
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -235,7 +206,7 @@ fun LoginScreen(mainViewModel: MainViewModel = hiltViewModel(), login: (Intent) 
                                 color = colorResource(R.color.purple_000)
                             ),
                             modifier = Modifier.clickable {
-
+                                navController.navigate(Destinations.REGISTRY)
                             }
                         )
                     }

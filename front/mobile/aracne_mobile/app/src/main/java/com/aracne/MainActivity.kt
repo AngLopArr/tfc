@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,9 +39,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -50,13 +53,14 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect (Unit) {
                     lifecycleScope.launch {
                         val userId = mainViewModel.getId()
+                        val name = mainViewModel.getName()
 
-                        if (userId == 0L) {
+                        if (userId == 0L && name == "") {
                             startActivity(Intent(this@MainActivity, LoginActivity::class.java))
                             finish()
                         } else {
                             setContent {
-                                MainApp(navController)
+                                MainApp(navController) { intent -> startActivity(intent) }
                             }
                         }
                     }
@@ -67,7 +71,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainApp(navController: NavHostController){
+fun MainApp(navController: NavHostController, logout: (Intent) -> Unit){
     val currentScreen: MutableState<String> = remember { mutableStateOf(Destinations.PRODUCTOS) }
     LaunchedEffect(navController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -89,5 +93,5 @@ fun MainApp(navController: NavHostController){
                 currentScreen = currentScreen.value
             )
         }
-    ) { innerPadding -> AppNavGraph(navController, innerPadding) }
+    ) { innerPadding -> AppNavGraph(navController, innerPadding, logout) }
 }
