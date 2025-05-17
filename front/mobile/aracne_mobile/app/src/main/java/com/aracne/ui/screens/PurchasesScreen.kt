@@ -368,7 +368,7 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
     }
     else{
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(35.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){

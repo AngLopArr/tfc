@@ -13,14 +13,12 @@ import kotlinx.coroutines.flow.map
 class PreferencesRepository(private val dataStore: DataStore<Preferences>) {
     private val USERID = longPreferencesKey("user_id")
 
-    private val NAME = stringPreferencesKey("role")
-
-    private val LOGGEDIN = booleanPreferencesKey("logged_in")
+    private val NAME = stringPreferencesKey("name")
 
     val idFlow: Flow<Long>
     = dataStore.data
     .map { preferences ->
-        preferences[USERID] ?: 0
+        preferences[USERID] ?: 0L
     }
 
     suspend fun saveId(id: Long) {
@@ -37,17 +35,6 @@ class PreferencesRepository(private val dataStore: DataStore<Preferences>) {
     suspend fun saveName(name: String) {
         dataStore.edit { preferences ->
             preferences[NAME] = name
-        }
-    }
-
-    val loggedInFlow: Flow<Boolean> = dataStore.data
-        .map { preferences ->
-            preferences[LOGGEDIN] ?: false
-        }
-
-    suspend fun saveLoggedIn(loggedIn: Boolean) {
-        dataStore.edit { preferences ->
-            preferences[LOGGEDIN] = loggedIn
         }
     }
 }

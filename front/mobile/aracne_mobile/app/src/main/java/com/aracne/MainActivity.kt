@@ -43,7 +43,6 @@ import kotlin.math.log
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -51,18 +50,18 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val mainViewModel: MainViewModel = hiltViewModel()
                 LaunchedEffect (Unit) {
-                    lifecycleScope.launch {
-                        val userId = mainViewModel.getId()
-                        val name = mainViewModel.getName()
+                    val userId = mainViewModel.getId()
+                    val name = mainViewModel.getName()
 
-                        if (userId == 0L && name == "") {
-                            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
-                            finish()
-                        } else {
-                            setContent {
-                                MainApp(navController) { intent -> startActivity(intent) }
-                            }
+                    if (userId != 0L && name != "") {
+                        setContent {
+                            mainViewModel.idCliente = userId
+                            mainViewModel.nameCliente = name
+                            MainApp(navController, mainViewModel) { intent -> startActivity(intent) }
                         }
+                    } else {
+                        startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                        finish()
                     }
                 }
             }
@@ -71,7 +70,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainApp(navController: NavHostController, logout: (Intent) -> Unit){
+fun MainApp(navController: NavHostController, mainViewModel: MainViewModel, logout: (Intent) -> Unit){
     val currentScreen: MutableState<String> = remember { mutableStateOf(Destinations.PRODUCTOS) }
     LaunchedEffect(navController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -93,5 +92,5 @@ fun MainApp(navController: NavHostController, logout: (Intent) -> Unit){
                 currentScreen = currentScreen.value
             )
         }
-    ) { innerPadding -> AppNavGraph(navController, innerPadding, logout) }
+    ) { innerPadding -> AppNavGraph(navController, innerPadding, logout, mainViewModel) }
 }

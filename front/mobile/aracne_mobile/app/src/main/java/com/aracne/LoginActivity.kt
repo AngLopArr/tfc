@@ -31,7 +31,7 @@ class LoginActivity : ComponentActivity() {
         setContent {
             AracneTheme {
                 val navController = rememberNavController()
-                LoginApp(navController) { intent -> startActivity(intent) }
+                LoginApp(navController) { intent -> startActivity(intent); finish() }
             }
         }
     }

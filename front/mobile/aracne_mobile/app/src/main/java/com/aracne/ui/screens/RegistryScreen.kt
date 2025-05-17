@@ -64,29 +64,44 @@ fun RegistryScreen(mainViewModel: MainViewModel, navController: NavHostControlle
 
     LaunchedEffect (botonClicked) {
         if(botonClicked){
-            val cliente = mainViewModel.register(username = username, email = email, password = password, nombre = nombre)
-
-            if (cliente?.success == true){
-                email = ""
-                username = ""
-                nombre = ""
-                password = ""
-                repetirPassword = ""
-                mostrarDialog = true
-                dialogFunction = { mostrarDialog = false; navController.navigate(Destinations.LOGIN) }
-                dialogText = "El registro se ha realizado con éxito."
+            val emailExists = mainViewModel.emailExists(email)
+            val usernameExists = mainViewModel.usernameExists(username)
+            if(emailExists?.exists != true){
+                if(usernameExists?.exists != true){
+                    val cliente = mainViewModel.register(username = username, email = email, password = password, nombre = nombre)
+                    if (cliente?.success == true){
+                        email = ""
+                        username = ""
+                        nombre = ""
+                        password = ""
+                        repetirPassword = ""
+                        mostrarDialog = true
+                        dialogFunction = { mostrarDialog = false; navController.navigate(Destinations.LOGIN) }
+                        dialogText = "El registro se ha realizado con éxito"
+                    }
+                    else {
+                        mostrarDialog = true
+                        dialogFunction = { mostrarDialog = false }
+                        dialogText = "Ha ocurrido un error a la hora de gestionar el registro. Inténtelo de nuevo más tarde"
+                    }
+                }
+                else{
+                    mostrarDialog = true
+                    dialogFunction = { mostrarDialog = false }
+                    dialogText = "El nombre de usuario indicado ya se encuentra asociado a una cuenta"
+                }
             }
-            else {
+            else{
                 mostrarDialog = true
                 dialogFunction = { mostrarDialog = false }
-                dialogText = "Ha ocurrido un error a la hora de gestionar el registro. Inténtelo de nuevo más tarde."
+                dialogText = "El email indicado ya se encuentra asociado a una cuenta"
             }
         }
         botonClicked = false
     }
 
     if(mostrarDialog){
-        ShopDialog({ mostrarDialog = false }, { mostrarDialog = false }, "Registro", dialogText)
+        ShopDialog(dialogFunction, dialogFunction, "Registro", dialogText)
     }
 
     Box(
@@ -236,7 +251,28 @@ fun RegistryScreen(mainViewModel: MainViewModel, navController: NavHostControlle
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         BotonLogin("Registrarse") {
-                            botonClicked = true
+                            if(username != "" && email != "" && nombre != "" && password != "" && repetirPassword != ""){
+                                if(email.contains("@")){
+                                    if(password == repetirPassword){
+                                        botonClicked = true
+                                    }
+                                    else{
+                                        mostrarDialog = true
+                                        dialogFunction = { mostrarDialog = false }
+                                        dialogText = "Las contraseñas no coinciden"
+                                    }
+                                }
+                                else {
+                                    mostrarDialog = true
+                                    dialogFunction = { mostrarDialog = false }
+                                    dialogText = "El formato del email es incorrecto"
+                                }
+                            }
+                            else{
+                                mostrarDialog = true
+                                dialogFunction = { mostrarDialog = false }
+                                dialogText = "Faltan campos por rellenar"
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(20.dp))

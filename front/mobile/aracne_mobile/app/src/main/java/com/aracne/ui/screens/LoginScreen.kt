@@ -81,7 +81,7 @@ fun LoginScreen(mainViewModel: MainViewModel, navController: NavHostController, 
             }
             else {
                 mostrarDialog = true
-                dialogText = "Las credenciales no son correctas."
+                dialogText = "Las credenciales no son correctas"
             }
         }
         botonClicked = false
@@ -175,7 +175,7 @@ fun LoginScreen(mainViewModel: MainViewModel, navController: NavHostController, 
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         BotonLogin("Login") {
-                            if(username.contains("@")){
+                            if(credential.contains("@")){
                                 email = credential
                                 username = ""
                             }

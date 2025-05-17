@@ -223,7 +223,7 @@ fun ReturnsScreen(mainViewModel: MainViewModel){
     }
     else{
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(34.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){

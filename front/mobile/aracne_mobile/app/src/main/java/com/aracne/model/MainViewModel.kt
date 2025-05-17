@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.aracne.data.model.Cantidad
 import com.aracne.data.model.Client
 import com.aracne.data.model.Detalle
+import com.aracne.data.model.GeneralResponseExists
 import com.aracne.data.model.GeneralResponseSuccess
 import com.aracne.data.model.Password
 import com.aracne.data.model.Product
@@ -41,8 +42,8 @@ class MainViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
-    private val idCliente: Long = 1
-    val nameCliente: String = "Carla"
+    var idCliente: Long = 0
+    var nameCliente: String = ""
     var productos by mutableStateOf(listOf<Product>())
     var product by mutableStateOf(Product(0, "",  0.0, 0, 0, 0, 0, ""))
     var carrito by mutableStateOf(listOf<ProductInCart>())
@@ -55,30 +56,16 @@ class MainViewModel @Inject constructor(
       return preferencesRepository.idFlow.first()
     }
 
-    fun saveId(id: Long) {
-        viewModelScope.launch {
-            preferencesRepository.saveId(id)
-        }
+    suspend fun saveId(id: Long) {
+        preferencesRepository.saveId(id)
     }
 
     suspend fun getName(): String {
         return preferencesRepository.nameFlow.first()
     }
 
-    fun saveName(name: String) {
-        viewModelScope.launch {
-            preferencesRepository.saveName(name)
-        }
-    }
-
-    suspend fun getLoggedIn(): Boolean {
-        return preferencesRepository.loggedInFlow.first()
-    }
-
-    fun saveLoggedIn(loggedin: Boolean) {
-        viewModelScope.launch {
-            preferencesRepository.saveLoggedIn(loggedin)
-        }
+    suspend fun saveName(name: String) {
+        preferencesRepository.saveName(name)
     }
 
     suspend fun changePassword(password: Password): GeneralResponseSuccess? {
@@ -379,9 +366,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun login(username: String = "", email: String = "", password: String): Client? {
+    suspend fun login(username: String?, email: String?, password: String): Client? {
         try {
-            Log.d("TAG", "login: $username")
             val respuesta = shopRepository.login(Client(null, null, null, if (username != "") username else null, if (email != "") email else null, password))
             if(respuesta != null){
                 return respuesta
@@ -394,8 +380,31 @@ class MainViewModel @Inject constructor(
 
     suspend fun register(username: String, email: String, password: String, nombre: String): GeneralResponseSuccess? {
         try {
-            Log.d("TAG", "login: $username")
             val respuesta = shopRepository.register(Client(null, null, nombre, username, email, password))
+            if(respuesta != null){
+                return respuesta
+            }
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        }
+        return null
+    }
+
+    suspend fun usernameExists(username: String): GeneralResponseExists? {
+        try {
+            val respuesta = shopRepository.usernameExists(username)
+            if(respuesta != null){
+                return respuesta
+            }
+        } catch (e: Exception) {
+            println("Error: ${e.message}")
+        }
+        return null
+    }
+
+    suspend fun emailExists(email: String): GeneralResponseExists? {
+        try {
+            val respuesta = shopRepository.emailExists(email)
             if(respuesta != null){
                 return respuesta
             }
