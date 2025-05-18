@@ -63,16 +63,20 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
     var pedidoReturn by remember { mutableLongStateOf(0) }
     var returnButtonClicked by remember { mutableStateOf(false) }
     var mostrarDialog by remember { mutableStateOf(false) }
+    var dialogText by remember { mutableStateOf("") }
+    var dialogFunction by remember { mutableStateOf({}) }
 
     LaunchedEffect(returnButtonClicked) {
         if(returnButtonClicked){
             mostrarDialog = true
+            dialogText = "¿Está seguro de que desea procesar esta devolución?"
+            dialogFunction = { mainViewModel.makeReturn(pedidoReturn, productsToReturn); navController.navigate(Destinations.RETURNS); mostrarDialog = false }
         }
         returnButtonClicked = false
     }
 
     if(mostrarDialog){
-        ShopDialog({ mostrarDialog = false }, { mainViewModel.makeReturn(pedidoReturn, productsToReturn); navController.navigate(Destinations.RETURNS); mostrarDialog = false }, "Procesar devolución", "¿Está seguro de que desea procesar esta devolución?")
+        ShopDialog({ mostrarDialog = false }, dialogFunction, "Procesar devolución", dialogText)
     }
 
     if(mainViewModel.pedidos.isNotEmpty()){
@@ -335,9 +339,16 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                                         productsToReturn += product
                                                     }
                                                 }
-                                                if(mainViewModel.prepareReturn(productsToReturn)){
-                                                    pedidoReturn = item.id_pedido
-                                                    returnButtonClicked = true
+                                                if(item.estado != "procesando"){
+                                                    if(mainViewModel.prepareReturn(productsToReturn)){
+                                                        pedidoReturn = item.id_pedido
+                                                        returnButtonClicked = true
+                                                    }
+                                                }
+                                                else {
+                                                    mostrarDialog = true
+                                                    dialogText = "No se pueden crear devoluciones a partir de pedidos en procesamiento"
+                                                    dialogFunction = { mostrarDialog = false }
                                                 }
                                             }
                                             )
