@@ -21,4 +21,7 @@ public interface ProductosCarritoRepository extends JpaRepository<ProductosCarri
 
     @Query("SELECT pc FROM ProductosCarrito pc WHERE pc.cliente.id_cliente = :idCliente AND pc.producto.id_producto = :idProducto AND pc.talla = :talla")
     Optional<ProductosCarrito> findByClienteIdProductoIdAndTalla(Long idCliente, Long idProducto, String talla);
+
+    @Query("SELECT pc FROM ProductosCarrito pc WHERE pc.producto.id_producto = :idProducto")
+    Optional<List<ProductosCarrito>> getProductosByProductoId(Long idProducto);
 }

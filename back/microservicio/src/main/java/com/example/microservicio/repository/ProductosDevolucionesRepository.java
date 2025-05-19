@@ -16,4 +16,7 @@ public interface ProductosDevolucionesRepository extends JpaRepository<Productos
 
     @Query("SELECT pd FROM ProductosDevoluciones pd WHERE pd.devolucion.id_devolucion = :id")
     Optional<ArrayList<ProductosDevoluciones>> getProductosDevoluciones(Long id);
+
+    @Query("SELECT pd FROM ProductosDevoluciones pd WHERE pd.producto.id_producto = :id")
+    Optional<ArrayList<ProductosDevoluciones>> getProductosDevolucionesByProductoId(Long id);
 }

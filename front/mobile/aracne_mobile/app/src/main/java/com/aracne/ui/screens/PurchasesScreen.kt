@@ -339,7 +339,7 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                                         productsToReturn += product
                                                     }
                                                 }
-                                                if(item.estado != "procesando"){
+                                                if(item.estado != "procesando" && item.estado != "entregando"){
                                                     if(mainViewModel.prepareReturn(productsToReturn)){
                                                         pedidoReturn = item.id_pedido
                                                         returnButtonClicked = true
@@ -347,7 +347,7 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                                 }
                                                 else {
                                                     mostrarDialog = true
-                                                    dialogText = "No se pueden crear devoluciones a partir de pedidos en procesamiento"
+                                                    dialogText = "No se pueden crear devoluciones a partir de pedidos en procesamiento o en proceso de entrega"
                                                     dialogFunction = { mostrarDialog = false }
                                                 }
                                             }

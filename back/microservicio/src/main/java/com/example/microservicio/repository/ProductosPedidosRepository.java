@@ -16,4 +16,7 @@ public interface ProductosPedidosRepository extends JpaRepository<ProductosPedid
 
     @Query("SELECT pp FROM ProductosPedidos pp WHERE pp.pedido.id = :id")
     Optional<ArrayList<ProductosPedidos>> getProductosPedidos(Long id);
+
+    @Query("SELECT pp FROM ProductosPedidos pp WHERE pp.producto.id_producto = :id")
+    Optional<ArrayList<ProductosPedidos>> getProductosPedidosByProductoId(Long id);
 }

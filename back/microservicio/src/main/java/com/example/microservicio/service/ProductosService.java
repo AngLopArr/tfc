@@ -7,12 +7,29 @@ import org.springframework.stereotype.Service;
 
 import com.example.microservicio.model.Producto;
 import com.example.microservicio.model.Productos;
+import com.example.microservicio.model.ProductosCarrito;
+import com.example.microservicio.model.ProductosDevoluciones;
+import com.example.microservicio.model.ProductosPedidos;
+import com.example.microservicio.repository.ProductosCarritoRepository;
+import com.example.microservicio.repository.ProductosDevolucionesRepository;
+import com.example.microservicio.repository.ProductosPedidosRepository;
 import com.example.microservicio.repository.ProductosRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductosService {
     @Autowired 
     ProductosRepository productosRepository;
+
+    @Autowired 
+    ProductosCarritoRepository productosCarritoRepository;
+
+    @Autowired 
+    ProductosPedidosRepository productosPedidosRepository;
+
+    @Autowired 
+    ProductosDevolucionesRepository productosDevolucionesRepository;
 
     public Productos productExists(String name){
         return productosRepository.findByName(name).orElse(null);
@@ -73,10 +90,33 @@ public class ProductosService {
         }
     }
 
+    @Transactional
     public boolean deleteProduct(Long productoId){
         Productos productoDelete = productosRepository.findById(productoId).orElse(null);
 
         if(productoDelete != null){
+            ArrayList<ProductosCarrito> productosCarrito = (ArrayList<ProductosCarrito>) productosCarritoRepository.getProductosByProductoId(productoId).orElse(null);
+            ArrayList<ProductosPedidos> productosPedidos = (ArrayList<ProductosPedidos>) productosPedidosRepository.getProductosPedidosByProductoId(productoId).orElse(null);
+            ArrayList<ProductosDevoluciones> productosDevoluciones = (ArrayList<ProductosDevoluciones>) productosDevolucionesRepository.getProductosDevolucionesByProductoId(productoId).orElse(null);
+
+            if(productosCarrito != null){
+                for (int i = 0; i < productosCarrito.size(); i++) {
+                    productosCarritoRepository.delete(productosCarrito.get(i));
+                }
+            }
+
+            if(productosPedidos != null){
+                for (int i = 0; i < productosPedidos.size(); i++) {
+                    productosPedidosRepository.delete(productosPedidos.get(i));
+                }
+            }
+
+            if(productosDevoluciones != null){
+                for (int i = 0; i < productosDevoluciones.size(); i++) {
+                    productosDevolucionesRepository.delete(productosDevoluciones.get(i));
+                }
+            }
+            
             productosRepository.delete(productoDelete);
             return true;
         }
@@ -106,47 +146,3 @@ public class ProductosService {
         }
     }
 }
-
-/*
-DELIMITER //
-
-CREATE PROCEDURE EliminarProductosViejosDelCarrito()
-BEGIN
-    DECLARE productoId INT;
-    DECLARE cantidad INT;
-
-    -- Cursor para obtener los productos del carrito que han estado por más de 24 horas
-    DECLARE carrito_cursor CURSOR FOR 
-        SELECT id_producto, cantidad FROM carrito WHERE TIMESTAMPDIFF(HOUR, fecha_agregado, NOW()) >= 24;
-
-    -- Abrir el cursor
-    OPEN carrito_cursor;
-
-    -- Obtener el primer registro
-    FETCH carrito_cursor INTO productoId, cantidad;
-
-    -- Recorrer todos los productos en el carrito
-    WHILE DONE = 0 DO
-        -- Actualizar el stock del producto
-        UPDATE productos
-        SET stock = stock + cantidad
-        WHERE id_producto = productoId;
-
-        -- Obtener el siguiente producto
-        FETCH carrito_cursor INTO productoId, cantidad;
-    END WHILE;
-
-    -- Cerrar el cursor
-    CLOSE carrito_cursor;
-
-    -- Eliminar los productos del carrito
-    DELETE FROM carrito WHERE TIMESTAMPDIFF(HOUR, fecha_agregado, NOW()) >= 24;
-END;
-//
-
-DELIMITER ;
-
-CREATE EVENT IF NOT EXISTS eliminar_productos_viejos
-ON SCHEDULE EVERY 1 DAY
-DO CALL EliminarProductosViejosDelCarrito();
- */

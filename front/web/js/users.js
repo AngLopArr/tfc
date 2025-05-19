@@ -49,6 +49,9 @@ async function fillTable(){
             paginaActualSpan.innerText = pagina_actual;
             return;
         }
+        else{
+            paginaActualSpan.innerText = pagina_actual;
+        }
 
         data = await response.json();
     }
@@ -59,6 +62,9 @@ async function fillTable(){
             pagina_actual = 0;
             paginaActualSpan.innerText = pagina_actual;
             return;
+        }
+        else{
+            paginaActualSpan.innerText = pagina_actual;
         }
 
         data = await response.json();
@@ -84,7 +90,7 @@ async function fillTable(){
 
     for (let index = 0; index < botonesEliminar.length; index++) {
         botonesEliminar[index].addEventListener("click", () => {
-            let confirmacion = confirm("Esta acción eliminará el producto permanentemente. ¿Está seguro/a de que desea continuar?");
+            let confirmacion = confirm("Esta acción eliminará al empleado permanentemente. ¿Está seguro/a de que desea continuar?");
             if(confirmacion){
                 eliminarProducto(botonesEliminar[index]);
             }
@@ -130,11 +136,11 @@ async function getTotalEmployees(){
 
     total_products = data["total"];
 
-    if(Number.isInteger(total_products / 5)){
-        totalPaginas.innerText = (total_products / 5);
+    if(Number.isInteger(total_products / 8)){
+        totalPaginas.innerText = (total_products / 8);
     }
     else{
-        totalPaginas.innerText = ((total_products / 5) + 1).toString().replace(/\..*/, "");
+        totalPaginas.innerText = ((total_products / 8) + 1).toString().replace(/\..*/, "");
     }
 
     if(pagina_actual.toString() === totalPaginas.innerText){
@@ -156,7 +162,6 @@ getTotalEmployees();
 
 botonAvanzar.addEventListener("click", () => {
     pagina_actual += 1;
-    paginaActualSpan.innerText = pagina_actual;
     fillTable();
 
     if(pagina_actual.toString() === totalPaginas.innerText){
@@ -176,7 +181,6 @@ botonAvanzar.addEventListener("click", () => {
 
 botonRetroceder.addEventListener("click", () => {
     pagina_actual -= 1;
-    paginaActualSpan.innerText = pagina_actual;
     fillTable();
 
     if(pagina_actual.toString() === totalPaginas.innerText){
@@ -224,7 +228,6 @@ function irFormularioEditar(botonEditar){
 barraBusqueda.addEventListener("input", () => {
     if(barraBusqueda.value == ""){
         pagina_actual = 1;
-        paginaActualSpan.innerText = pagina_actual;
         getTotalEmployees();
         fillTable();
     }
@@ -232,7 +235,6 @@ barraBusqueda.addEventListener("input", () => {
 
 lupa.addEventListener("click", () => {
     pagina_actual = 1;
-    paginaActualSpan.innerText = pagina_actual;
     getTotalEmployees();
     fillTable();
 })

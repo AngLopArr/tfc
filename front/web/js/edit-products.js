@@ -14,6 +14,7 @@ const tallaMInput = document.getElementById("tallaMInput");
 const tallaLInput = document.getElementById("tallaLInput");
 const tallaXLInput = document.getElementById("tallaXLInput");
 const botonEditar = document.getElementById("boton-productos");
+const role = localStorage.getItem('role');
 let nombreOriginal;
 
 function toggleNumberInput(checkbox) {
@@ -124,7 +125,12 @@ async function editarProducto(event){
         
         if(exito){
             alert("El producto se ha modificado correctamente.");
-            window.location.href = 'products.html';
+            if (role == "admin") {
+                window.location.href = 'products.html';
+            } 
+            else if (role == "employee") {
+                window.location.href = 'products-employee.html';
+            }
         }
     }
 }
