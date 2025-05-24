@@ -334,6 +334,7 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                                 color = colorResource(R.color.purple_000),
                                                 fontSize = (16.5).sp
                                             ), modifier = Modifier.clickable {
+                                                productsToReturn = listOf<PurchasedProduct>()
                                                 for(product in item.productos){
                                                     if(product.devolver == true){
                                                         productsToReturn += product
@@ -343,6 +344,11 @@ fun PurchasesScreen(mainViewModel: MainViewModel, navController: NavHostControll
                                                     if(mainViewModel.prepareReturn(productsToReturn)){
                                                         pedidoReturn = item.id_pedido
                                                         returnButtonClicked = true
+                                                    }
+                                                    else{
+                                                        mostrarDialog = true
+                                                        dialogText = "No se ha seleccionado ningún producto"
+                                                        dialogFunction = { mostrarDialog = false }
                                                     }
                                                 }
                                                 else {
