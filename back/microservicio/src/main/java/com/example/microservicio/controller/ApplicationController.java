@@ -460,7 +460,6 @@ public class ApplicationController {
                 productoCarrito.setProducto(producto);
                 ProductoCarrito nuevoProducto = productosCarritoService.añadirAlCarrito(productoCarrito);
                 
-                System.out.println(nuevoProducto);
                 if(nuevoProducto != null){
                     return ResponseEntity.ok(nuevoProducto);
                 }
