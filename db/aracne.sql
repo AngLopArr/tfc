@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-05-2025 a las 12:35:22
+-- Tiempo de generación: 29-05-2025 a las 16:30:09
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -134,15 +134,12 @@ CREATE TABLE `inventario` (
 --
 
 INSERT INTO `inventario` (`id_producto`, `image`, `l`, `m`, `name`, `price`, `s`, `xl`) VALUES
-(17, 'https://static.kiabi.es/images/pantalon-de-lino-purpura-ded73_1_hd1.jpg?width=800', 2, 1, 'Pantalones', 12.55, 0, 2),
 (18, 'https://static.kiabi.es/images/pantalon-de-lino-purpura-ded73_1_hd1.jpg?width=800', 16, 11, 'Pantalones de lino púrpuras', 12.55, 8, 20),
-(20, 'https://static.kiabi.es/images/pantalon-de-lino-purpura-ded73_1_hd1.jpg?width=800', 15, 0, 'Pantalones de lino violetas', 16.87, 11, 0),
 (22, 'https://dam.elcorteingles.es/producto/www-8434685497732-00.jpg?impolicy=Resize&width=967&height=1200', 6, 13, 'Camiseta blanca básica', 12.55, 18, 16),
-(25, 'https://static.kiabi.es/images/pantalon-de-lino-purpura-ded73_1_hd1.jpg?width=800', 12, 15, 'Pantalones de lino', 14.55, 12, 0),
 (28, 'https://m.media-amazon.com/images/I/61FkCXfR8gL._AC_UY1000_.jpg', 0, 27, 'Falda beige', 18.55, 14, 0),
 (29, 'https://i.etsystatic.com/52339591/r/il/3fa75b/6021812050/il_fullxfull.6021812050_e8d2.jpg', 23, 15, 'Vestido azul royal ', 54.85, 0, 19),
 (30, 'https://fiftyoutlet.com/dw/image/v2/AAYL_PRD/on/demandware.static/-/Sites-gc-spf-master-catalog/default/dwbab08498/images/hi-res/P_044702621FM.jpg?sw=600&sh=900&sm=fit', 11, 11, 'Pantalones de lino verdes', 23.95, 16, 19),
-(31, 'https://cdn.palbincdn.com/users/30665/images/IMG_20230216_231150-1676585663.jpg', 65, 87, 'Pantalones vaqueros azul intermedio anchos', 32, 54, 75),
+(31, 'https://cdn.grupoelcorteingles.es/SGFM/dctm/MEDIA03/202405/14/00129311109911____12__967x1200.jpg', 65, 87, 'Pantalones vaqueros azul intermedio anchos', 32, 54, 75),
 (32, 'https://m.media-amazon.com/images/I/61sPxoSftVL._AC_UY1000_.jpg', 14, 12, 'Pantalones vaqueros azul claro anchos', 32, 13, 24),
 (33, 'https://img1.shopcider.com/product/1739247747000-KGZGhT.jpg?x-oss-process=image/resize,w_700,m_lfit/quality,Q_60/format,webp', 40, 12, 'Pantalones vaqueros negros anchos con bolsillos laterales', 34.5, 50, 74),
 (34, 'https://media.boohoo.com/i/boohoo/fzz57769_white_xl_3/mujer-top-de-tela-con-escote-bardot-y-mangas-anchas', 23, 53, 'Top corset blanco con mangas bombacho', 21.55, 42, 15),
@@ -206,7 +203,6 @@ CREATE TABLE `productos_devoluciones` (
 --
 
 INSERT INTO `productos_devoluciones` (`id`, `cantidad_devuelta`, `talla`, `id_devolucion`, `id_producto`) VALUES
-(16, 4, 'S', 11, 17),
 (17, 1, 'S', 11, 22),
 (18, 2, 'M', 12, 28);
 
@@ -230,10 +226,7 @@ CREATE TABLE `productos_pedidos` (
 --
 
 INSERT INTO `productos_pedidos` (`id_pedidos_productos`, `cantidad`, `talla`, `id_pedido`, `id_producto`, `devuelto`) VALUES
-(36, 4, 'S', 9, 17, b'1'),
 (37, 1, 'S', 9, 22, b'1'),
-(38, 1, 'S', 9, 20, b'0'),
-(39, 1, 'M', 9, 17, b'0'),
 (40, 2, 'M', 10, 28, b'0'),
 (41, 2, 'M', 12, 28, b'0'),
 (42, 2, 'S', 13, 22, b'0'),
