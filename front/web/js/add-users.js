@@ -1,15 +1,13 @@
 window.onload = function() {
-    // Se comprueba si el usuario está logueado, de no ser así, se le envía a la página de login
     if (localStorage.getItem('loggedIn') !== 'true') {
         window.location.href = 'login.html';
     }
     
     document.getElementById('logout').addEventListener('click', function() {
-        // Se borrará el elemento del local storage que almacena el estado de acceso
         localStorage.removeItem('loggedIn');
-        // Se borrará el elemento del local storage que almacena el nombre del usuario logueado
+
         localStorage.removeItem('user');
-        // Se enviará al cliente a la página de login
+
         window.location.href = 'login.html';
     });
     
@@ -51,7 +49,6 @@ getRoles();
 async function checkEmployeeEmail(email){
     const response = await fetch("http://localhost:8080/aracne/employees/email/" + email);
     const data = await response.json();
-    // Se retorna la respuesta, true si este existe, y false si no
     return data["exists"];
 }
 
@@ -95,15 +92,12 @@ async function creation(event) {
             password: passwordEmployee.value
         };
 
-    
-        // Se realiza la petición de login a la API pasándole el usuario
         const response = await fetch("http://localhost:8080/aracne/employees/create", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(empleado)
         });
     
-        // Tomamos la respuesta
         const data = await response.json();
         let exito = data["success"];
         

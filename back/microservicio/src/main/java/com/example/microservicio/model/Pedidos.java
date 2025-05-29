@@ -34,7 +34,6 @@ public class Pedidos {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Devoluciones> devoluciones;
 
-    // Getters y Setters
     public Long getId_pedido() {
         return id_pedido;
     }

@@ -16,7 +16,7 @@ public class ClientesService {
 
     public Clientes login(Clientes cliente) {
         Clientes clienteComprobar;
-        // Tomo el usuario correspondiente al username del usuario pasado
+
         if(cliente.getUsername() != null){
             clienteComprobar = getClientByUsername(cliente.getUsername());
         }
@@ -27,10 +27,7 @@ public class ClientesService {
             return null;
         }
 
-        // Si este usuario existe, es decir, no es null
         if(clienteComprobar != null){
-            // Empleo el método checkPassword para comprobar que la contraseña pasada coincide con la correspondiente al usuario con el que se
-            // está intentando acceder y retorno true o false según el resultado
             if(passwordCheck.checkPassword(clienteComprobar.getPassword(), cliente.getPassword())){ 
                 return clienteComprobar;
             }
@@ -39,7 +36,6 @@ public class ClientesService {
             }
         }
         else {
-            // Si el usuario no existe, se devuelve false
             return null;
         } 
     }
@@ -55,10 +51,8 @@ public class ClientesService {
             return "El nombre de usuario indicado ya se encuentra asodicado a otra cuenta.";
         }
         else{
-            // Hashea la contraseña antes de guardarla
             String passwordHasheada = passwordCheck.hashString(cliente.getPassword());
 
-            // Reemplazo la contraseña por su versión hasheada
             cliente.setPassword(passwordHasheada);
             clientesRepository.save(cliente);
             return "El registro se ha realizado correctamente.";
@@ -96,17 +90,14 @@ public class ClientesService {
         }
     }
 
-    // Método para buscar un usuario por su id
     public Clientes getClientById(Long id) {
         return clientesRepository.findById(id).orElse(null);
     }
 
-    // Método para buscar un usuario por su nombre de usuario
     public Clientes getClientByUsername(String username) {
         return clientesRepository.findByUsername(username).orElse(null);
     }
 
-    // Método para buscar un usuario por su email
     public Clientes getClientByEmail(String email) {
         return clientesRepository.findByEmail(email).orElse(null);
     }

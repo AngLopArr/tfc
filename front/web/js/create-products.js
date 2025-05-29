@@ -23,7 +23,6 @@ boton.addEventListener("click", e => creation(e));
 async function checkProductName(name){
     const response = await fetch("http://localhost:8080/aracne/inventory/name/" + name);
     const data = await response.json();
-    // Se retorna la respuesta, true si este existe, y false si no
     return data["exists"];
 }
 
@@ -69,15 +68,12 @@ async function creation(event) {
             image: imagenProducto.value
         };
 
-    
-        // Se realiza la petición de login a la API pasándole el usuario
         const response = await fetch("http://localhost:8080/aracne/inventory/create", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(producto)
         });
     
-        // Tomamos la respuesta
         const data = await response.json();
         let exito = data["success"];
         

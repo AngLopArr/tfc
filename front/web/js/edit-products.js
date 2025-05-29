@@ -112,14 +112,12 @@ async function editarProducto(event){
 
         console.log(typeof precioProducto.value)
 
-        // Se realiza la petición de login a la API pasándole el usuario
         const response = await fetch("http://localhost:8080/aracne/inventory/update", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(producto)
         });
     
-        // Tomamos la respuesta
         const data = await response.json();
         let exito = data["success"];
         

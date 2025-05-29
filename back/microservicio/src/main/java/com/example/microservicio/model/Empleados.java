@@ -7,12 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-// Clase que representa cada uno de los mensajes cifrados entre usuarios: esta clase existe como entidad en la base de datos que almacena la información de 
-// cada mensaje, su contenido cifrado, la clave que lo descifra y una firma digital para confirmar su integridad y la identidad del remitente
 @Entity
 @Table(name = "empleados")
 public class Empleados {
-	// Id del mensaje
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_empleado;
@@ -26,7 +23,6 @@ public class Empleados {
 
     private String password;
 
-    // Getters y setters
     public Long getId_empleado() {
         return id_empleado;
     }

@@ -18,7 +18,7 @@ public class EmpleadosService {
 
     public Empleados login(Empleados empleado) {
         Empleados empleadoComprobar;
-        // Tomo el usuario correspondiente al username del usuario pasado
+
         if(!empleado.getEmail().equals("")){
             empleadoComprobar = getEmployeeByEmail(empleado.getEmail());
         }
@@ -26,10 +26,7 @@ public class EmpleadosService {
             return null;
         }
 
-        // Si este usuario existe, es decir, no es null
         if(empleadoComprobar != null){
-            // Empleo el método checkPassword para comprobar que la contraseña pasada coincide con la correspondiente al usuario con el que se
-            // está intentando acceder y retorno true o false según el resultado
             if(passwordCheck.checkPassword(empleadoComprobar.getPassword(), empleado.getPassword())){ 
                 return empleadoComprobar;
             }
@@ -38,7 +35,6 @@ public class EmpleadosService {
             }
         }
         else {
-            // Si el usuario no existe, se devuelve false
             return null;
         } 
     }
@@ -76,10 +72,8 @@ public class EmpleadosService {
             return false;
         }
         else{
-            // Hashea la contraseña antes de guardarla
             String passwordHasheada = passwordCheck.hashString(empleado.getPassword());
 
-            // Reemplazo la contraseña por su versión hasheada
             empleado.setPassword(passwordHasheada);
             empleadosRepository.save(empleado);
             return getEmployeeByEmail(empleado.getEmail()) != null;
@@ -92,7 +86,6 @@ public class EmpleadosService {
         if(empleadoUpdate != null){
             String passwordHasheada = passwordCheck.hashString(empleado.getPassword());
 
-            // Reemplazo la contraseña por su versión hasheada
             empleado.setPassword(passwordHasheada);
             empleadosRepository.save(empleado);
             return true;

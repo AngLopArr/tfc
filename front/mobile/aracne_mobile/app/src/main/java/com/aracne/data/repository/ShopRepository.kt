@@ -16,8 +16,6 @@ import com.aracne.data.model.Total
 import com.aracne.data.remote.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.http.Body
-import retrofit2.http.Path
 
 class ShopRepository {
     suspend fun usernameExists(username: String): GeneralResponseExists? {

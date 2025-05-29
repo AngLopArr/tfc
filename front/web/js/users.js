@@ -206,7 +206,6 @@ async function eliminarProducto(botonEliminar){
         headers: { "Content-Type": "application/json" }
     });
 
-    // Tomamos la respuesta
     const data = await response.json();
     let exito = data["success"];
     

@@ -41,7 +41,6 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
 import com.aracne.data.model.GeneralResponseSuccess
-import com.aracne.data.model.ProductInCart
 import com.aracne.model.MainViewModel
 import com.aracne.ui.components.BotonProductoCantidad
 import com.aracne.ui.components.BotonProductoTalla
@@ -174,7 +173,7 @@ fun ModifyProductInCartScreen(productoId: Long, navController: NavHostController
                         )
                     )
                 }
-                Row() {
+                Row {
                     Text(
                         "$selectedStock unidades",
                         modifier = Modifier.padding(PaddingValues(5.dp, 0.dp, 5.dp, 5.dp)),

@@ -1,6 +1,5 @@
 package com.aracne.ui.screens
 
-import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,7 +40,6 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.aracne.R
-import com.aracne.data.model.Password
 import com.aracne.data.model.ProductInCart
 import com.aracne.model.MainViewModel
 import com.aracne.ui.components.BotonProductoCantidad
@@ -140,7 +138,7 @@ fun ProductScreen(navController: NavHostController, mainViewModel: MainViewModel
                         )
                     )
                 }
-                Row() {
+                Row {
                     Text(
                         "$selectedStock unidades",
                         modifier = Modifier.padding(PaddingValues(5.dp, 0.dp, 5.dp, 5.dp)),
@@ -250,7 +248,7 @@ fun BotonAnadirCarrito(contenido: String, onClick: () -> Unit){
     )
     {
         Text(
-            "Añadir al carrito",
+            contenido,
             style = TextStyle(
                 fontSize = 15.sp
             )

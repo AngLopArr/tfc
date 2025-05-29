@@ -12,20 +12,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-// Clase que representa cada uno de los usuarios de la aplicación
 @Entity
 @Table(name = "inventario")
 public class Productos {
-	// Id del usuario
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_producto;
 
-    // Nombre del usuario, este ha de ser único
     @Column(unique = true)
     private String name;
     
-    // Contraseña del usuario
     private double price;
 
     private int s;
@@ -48,7 +44,6 @@ public class Productos {
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductosDevoluciones> devoluciones;
 
-    // Getters and Setters
     public Long getId_producto() {
         return id_producto;
     }

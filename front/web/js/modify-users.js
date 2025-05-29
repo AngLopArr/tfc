@@ -63,7 +63,6 @@ fillForm();
 async function checkEmployeeEmail(email){
     const response = await fetch("http://localhost:8080/aracne/employees/email/" + email);
     const data = await response.json();
-    // Se retorna la respuesta, true si este existe, y false si no
     return data["exists"];
 }
 
@@ -108,16 +107,13 @@ async function editarEmpleado(event) {
             role: selectorRoles.value,
             password: passwordEmployee.value
         };
-
     
-        // Se realiza la petición de login a la API pasándole el usuario
         const response = await fetch("http://localhost:8080/aracne/employees/update", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(empleado)
         });
     
-        // Tomamos la respuesta
         const data = await response.json();
         let exito = data["success"];
         

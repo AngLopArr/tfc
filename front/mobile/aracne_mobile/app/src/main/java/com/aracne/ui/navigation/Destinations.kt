@@ -1,8 +1,5 @@
 package com.aracne.ui.navigation
 
-/**
- * Objeto que define las diferentes rutas de navigación de la aplicación
- */
 object Destinations {
     const val LOGIN = "login"
     const val REGISTRY = "registry"

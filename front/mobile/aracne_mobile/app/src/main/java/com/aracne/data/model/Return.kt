@@ -1,7 +1,5 @@
 package com.aracne.data.model
 
-import java.util.Date
-
 data class Return (
     val id_devolucion: Long,
     val id_pedido: Long,
