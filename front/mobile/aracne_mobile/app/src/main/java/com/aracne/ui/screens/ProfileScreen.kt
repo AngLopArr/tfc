@@ -48,7 +48,7 @@ fun ProfileScreen(navController: NavHostController, mainViewModel: MainViewModel
     }
 
     if(mostrarDialog){
-        ShopDialog({ mostrarDialog = false }, { mainViewModel.deleteClient(); mostrarDialog = false }, "Eliminar perfil", "¿Está seguro de que desea eliminar su perfil? Esta acción es irreversible")
+        ShopDialog({ mostrarDialog = false }, { mainViewModel.deleteClient(); mostrarDialog = false; mainViewModel.logout(context); logout(Intent(context, LoginActivity::class.java)) }, "Eliminar perfil", "¿Está seguro de que desea eliminar su perfil? Esta acción es irreversible")
     }
 
     Column (
